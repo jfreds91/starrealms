@@ -1,0 +1,1506 @@
+# Card definitions for Core Set, Colony Wars, and Frontiers.
+#
+# Hand-authored; the engine reads only this file and data/sets.toml.
+# `id` matches the official gallery id (and assets/cards/<id>.webp).
+# cost/defense/outpost/faction/kind are checked against data/upstream/review.csv
+# by the sr-core test suite.
+#
+# Abilities are lists of effects:
+#   primary  ship: resolves on play.  base: usable once per turn.
+#   ally     needs another in-play card of this card's faction.
+#   ally2    "double ally": needs two other cards of the faction.
+#   scrap    remove this card from play to the scrap heap, then resolve.
+#
+# Effects:
+#   { trade = n } { combat = n } { authority = n } { draw = n } { opp_discard = n }
+#   { choose = [[...], [...]] }                      pick one list
+#   { scrap = { from, min = 0, max = 1, reward } }   from: hand | discard | hand_or_discard | trade_row
+#                                                    reward: "draw_each" | "combat_cost" | { combat_each = n }
+#   { discard = { min = 0, max = 1, reward } }       reward: "draw_each" | { combat_each = n } | { trade_or_combat_each = n }
+#   "destroy_base"                                   may destroy any opponent base (ignores outposts)
+#   { acquire = { max_cost, filter = "any", dest = "discard" } }   free acquire; filter: any | ship | base | ship_or_base
+#   { next_acquire = { filter, dest, may = false } } dest: top_deck | hand
+#   { when = { cond, then = [...] } }                cond: "opp_has_base" | { own_bases_at_least = n }
+#   { draw_per_played = faction }                    Blob World
+#   { combat_per_scrapped_own = n }                  Reclamation Station
+#   { combat_per_scrapped = n }                      The Incinerator (hand/discard scraps this turn)
+#   "topdeck_base"                                   Repair Mech
+#   "copy_ship" | "copy_base"                        Stealth Needle / Stealth Tower
+#
+# Card-level flags:
+#   ally_all = true                  counts as an ally of every faction (Mech World)
+#   on_ship_played = { faction, combat }
+#   acquire_to_hand = true           on acquire, to hand if a card of this faction was played this turn
+#   returns_from_scrap = true        Mobile Market
+
+# ---------------------------------------------------------------- basics
+
+[[card]]
+id = "scout"
+name = "Scout"
+set = "basic"
+faction = "unaligned"
+kind = "ship"
+cost = 0
+primary = [{ trade = 1 }]
+
+[[card]]
+id = "viper"
+name = "Viper"
+set = "basic"
+faction = "unaligned"
+kind = "ship"
+cost = 0
+primary = [{ combat = 1 }]
+
+[[card]]
+id = "explorer"
+name = "Explorer"
+set = "basic"
+faction = "unaligned"
+kind = "ship"
+cost = 2
+primary = [{ trade = 2 }]
+scrap = [{ combat = 2 }]
+
+# ---------------------------------------------------------------- core: blob
+
+[[card]]
+id = "battleBlob"
+name = "Battle Blob"
+set = "core"
+faction = "blob"
+kind = "ship"
+cost = 6
+primary = [{ combat = 8 }]
+ally = [{ draw = 1 }]
+scrap = [{ combat = 4 }]
+
+[[card]]
+id = "battlePod"
+name = "Battle Pod"
+set = "core"
+faction = "blob"
+kind = "ship"
+cost = 2
+primary = [{ combat = 4 }, { scrap = { from = "trade_row" } }]
+ally = [{ combat = 2 }]
+
+[[card]]
+id = "blobCarrier"
+name = "Blob Carrier"
+set = "core"
+faction = "blob"
+kind = "ship"
+cost = 6
+primary = [{ combat = 7 }]
+ally = [{ acquire = { filter = "ship", dest = "top_deck" } }]
+
+[[card]]
+id = "blobDestroyer"
+name = "Blob Destroyer"
+set = "core"
+faction = "blob"
+kind = "ship"
+cost = 4
+primary = [{ combat = 6 }]
+ally = ["destroy_base", { scrap = { from = "trade_row" } }]
+
+[[card]]
+id = "blobFighter"
+name = "Blob Fighter"
+set = "core"
+faction = "blob"
+kind = "ship"
+cost = 1
+primary = [{ combat = 3 }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "blobWheel"
+name = "Blob Wheel"
+set = "core"
+faction = "blob"
+kind = "base"
+cost = 3
+defense = 5
+primary = [{ combat = 1 }]
+scrap = [{ trade = 3 }]
+
+[[card]]
+id = "blobWorld"
+name = "Blob World"
+set = "core"
+faction = "blob"
+kind = "base"
+cost = 8
+defense = 7
+primary = [{ choose = [[{ combat = 5 }], [{ draw_per_played = "blob" }]] }]
+
+[[card]]
+id = "mothership"
+name = "Mothership"
+set = "core"
+faction = "blob"
+kind = "ship"
+cost = 7
+primary = [{ combat = 6 }, { draw = 1 }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "ram"
+name = "Ram"
+set = "core"
+faction = "blob"
+kind = "ship"
+cost = 3
+primary = [{ combat = 5 }]
+ally = [{ combat = 2 }]
+scrap = [{ trade = 3 }]
+
+[[card]]
+id = "theHive"
+name = "The Hive"
+set = "core"
+faction = "blob"
+kind = "base"
+cost = 5
+defense = 5
+primary = [{ combat = 3 }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "tradePod"
+name = "Trade Pod"
+set = "core"
+faction = "blob"
+kind = "ship"
+cost = 2
+primary = [{ trade = 3 }]
+ally = [{ combat = 2 }]
+
+# ---------------------------------------------------------------- core: machine cult
+
+[[card]]
+id = "battleMech"
+name = "Battle Mech"
+set = "core"
+faction = "machine_cult"
+kind = "ship"
+cost = 5
+primary = [{ combat = 4 }, { scrap = { from = "hand_or_discard" } }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "battleStation"
+name = "Battle Station"
+set = "core"
+faction = "machine_cult"
+kind = "base"
+cost = 3
+defense = 5
+outpost = true
+scrap = [{ combat = 5 }]
+
+[[card]]
+id = "brainWorld"
+name = "Brain World"
+set = "core"
+faction = "machine_cult"
+kind = "base"
+cost = 8
+defense = 6
+outpost = true
+primary = [{ scrap = { from = "hand_or_discard", max = 2, reward = "draw_each" } }]
+
+[[card]]
+id = "junkyard"
+name = "Junkyard"
+set = "core"
+faction = "machine_cult"
+kind = "base"
+cost = 6
+defense = 5
+outpost = true
+primary = [{ scrap = { from = "hand_or_discard", min = 1 } }]
+
+[[card]]
+id = "machineBase"
+name = "Machine Base"
+set = "core"
+faction = "machine_cult"
+kind = "base"
+cost = 7
+defense = 6
+outpost = true
+primary = [{ draw = 1 }, { scrap = { from = "hand", min = 1 } }]
+
+[[card]]
+id = "mechWorld"
+name = "Mech World"
+set = "core"
+faction = "machine_cult"
+kind = "base"
+cost = 5
+defense = 6
+outpost = true
+ally_all = true
+
+[[card]]
+id = "missileBot"
+name = "Missile Bot"
+set = "core"
+faction = "machine_cult"
+kind = "ship"
+cost = 2
+primary = [{ combat = 2 }, { scrap = { from = "hand_or_discard" } }]
+ally = [{ combat = 2 }]
+
+[[card]]
+id = "missileMech"
+name = "Missile Mech"
+set = "core"
+faction = "machine_cult"
+kind = "ship"
+cost = 6
+primary = [{ combat = 6 }, "destroy_base"]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "patrolMech"
+name = "Patrol Mech"
+set = "core"
+faction = "machine_cult"
+kind = "ship"
+cost = 4
+primary = [{ choose = [[{ trade = 3 }], [{ combat = 5 }]] }]
+ally = [{ scrap = { from = "hand_or_discard", min = 1 } }]
+
+[[card]]
+id = "stealthNeedle"
+name = "Stealth Needle"
+set = "core"
+faction = "machine_cult"
+kind = "ship"
+cost = 4
+primary = ["copy_ship"]
+
+[[card]]
+id = "supplyBot"
+name = "Supply Bot"
+set = "core"
+faction = "machine_cult"
+kind = "ship"
+cost = 3
+primary = [{ trade = 2 }, { scrap = { from = "hand_or_discard" } }]
+ally = [{ combat = 2 }]
+
+[[card]]
+id = "tradeBot"
+name = "Trade Bot"
+set = "core"
+faction = "machine_cult"
+kind = "ship"
+cost = 1
+primary = [{ trade = 1 }, { scrap = { from = "hand_or_discard" } }]
+ally = [{ combat = 2 }]
+
+# ---------------------------------------------------------------- core: star empire
+
+[[card]]
+id = "battlecruiser"
+name = "Battlecruiser"
+set = "core"
+faction = "star_empire"
+kind = "ship"
+cost = 6
+primary = [{ combat = 5 }, { draw = 1 }]
+ally = [{ opp_discard = 1 }]
+scrap = [{ draw = 1 }, "destroy_base"]
+
+[[card]]
+id = "corvette"
+name = "Corvette"
+set = "core"
+faction = "star_empire"
+kind = "ship"
+cost = 2
+primary = [{ combat = 1 }, { draw = 1 }]
+ally = [{ combat = 2 }]
+
+[[card]]
+id = "dreadnaught"
+name = "Dreadnaught"
+set = "core"
+faction = "star_empire"
+kind = "ship"
+cost = 7
+primary = [{ combat = 7 }, { draw = 1 }]
+scrap = [{ combat = 5 }]
+
+[[card]]
+id = "fleetHq"
+name = "Fleet HQ"
+set = "core"
+faction = "star_empire"
+kind = "base"
+cost = 8
+defense = 8
+on_ship_played = { faction = "any", combat = 1 }
+
+[[card]]
+id = "imperialFighter"
+name = "Imperial Fighter"
+set = "core"
+faction = "star_empire"
+kind = "ship"
+cost = 1
+primary = [{ combat = 2 }, { opp_discard = 1 }]
+ally = [{ combat = 2 }]
+
+[[card]]
+id = "imperialFrigate"
+name = "Imperial Frigate"
+set = "core"
+faction = "star_empire"
+kind = "ship"
+cost = 3
+primary = [{ combat = 4 }, { opp_discard = 1 }]
+ally = [{ combat = 2 }]
+scrap = [{ draw = 1 }]
+
+[[card]]
+id = "recyclingStation"
+name = "Recycling Station"
+set = "core"
+faction = "star_empire"
+kind = "base"
+cost = 4
+defense = 4
+outpost = true
+primary = [{ choose = [[{ trade = 1 }], [{ discard = { max = 2, reward = "draw_each" } }]] }]
+
+[[card]]
+id = "royalRedoubt"
+name = "Royal Redoubt"
+set = "core"
+faction = "star_empire"
+kind = "base"
+cost = 6
+defense = 6
+outpost = true
+primary = [{ combat = 3 }]
+ally = [{ opp_discard = 1 }]
+
+[[card]]
+id = "spaceStation"
+name = "Space Station"
+set = "core"
+faction = "star_empire"
+kind = "base"
+cost = 4
+defense = 4
+outpost = true
+primary = [{ combat = 2 }]
+ally = [{ combat = 2 }]
+scrap = [{ trade = 4 }]
+
+[[card]]
+id = "surveyShip"
+name = "Survey Ship"
+set = "core"
+faction = "star_empire"
+kind = "ship"
+cost = 3
+primary = [{ trade = 1 }, { draw = 1 }]
+scrap = [{ opp_discard = 1 }]
+
+[[card]]
+id = "warWorld"
+name = "War World"
+set = "core"
+faction = "star_empire"
+kind = "base"
+cost = 5
+defense = 4
+outpost = true
+primary = [{ combat = 3 }]
+ally = [{ combat = 4 }]
+
+# ---------------------------------------------------------------- core: trade federation
+
+[[card]]
+id = "barterWorld"
+name = "Barter World"
+set = "core"
+faction = "trade_federation"
+kind = "base"
+cost = 4
+defense = 4
+primary = [{ choose = [[{ authority = 2 }], [{ trade = 2 }]] }]
+scrap = [{ combat = 5 }]
+
+[[card]]
+id = "centralOffice"
+name = "Central Office"
+set = "core"
+faction = "trade_federation"
+kind = "base"
+cost = 7
+defense = 6
+primary = [{ trade = 2 }, { next_acquire = { filter = "ship", dest = "top_deck", may = true } }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "commandShip"
+name = "Command Ship"
+set = "core"
+faction = "trade_federation"
+kind = "ship"
+cost = 8
+primary = [{ authority = 4 }, { combat = 5 }, { draw = 2 }]
+ally = ["destroy_base"]
+
+[[card]]
+id = "cutter"
+name = "Cutter"
+set = "core"
+faction = "trade_federation"
+kind = "ship"
+cost = 2
+primary = [{ authority = 4 }, { trade = 2 }]
+ally = [{ combat = 4 }]
+
+[[card]]
+id = "defenseCenter"
+name = "Defense Center"
+set = "core"
+faction = "trade_federation"
+kind = "base"
+cost = 5
+defense = 5
+outpost = true
+primary = [{ choose = [[{ authority = 3 }], [{ combat = 2 }]] }]
+ally = [{ combat = 2 }]
+
+[[card]]
+id = "embassyYacht"
+name = "Embassy Yacht"
+set = "core"
+faction = "trade_federation"
+kind = "ship"
+cost = 3
+primary = [{ authority = 3 }, { trade = 2 }, { when = { cond = { own_bases_at_least = 2 }, then = [{ draw = 2 }] } }]
+
+[[card]]
+id = "federationShuttle"
+name = "Federation Shuttle"
+set = "core"
+faction = "trade_federation"
+kind = "ship"
+cost = 1
+primary = [{ trade = 2 }]
+ally = [{ authority = 4 }]
+
+[[card]]
+id = "flagship"
+name = "Flagship"
+set = "core"
+faction = "trade_federation"
+kind = "ship"
+cost = 6
+primary = [{ combat = 5 }, { draw = 1 }]
+ally = [{ authority = 5 }]
+
+[[card]]
+id = "freighter"
+name = "Freighter"
+set = "core"
+faction = "trade_federation"
+kind = "ship"
+cost = 4
+primary = [{ trade = 4 }]
+ally = [{ next_acquire = { filter = "ship", dest = "top_deck", may = true } }]
+
+[[card]]
+id = "portOfCall"
+name = "Port of Call"
+set = "core"
+faction = "trade_federation"
+kind = "base"
+cost = 6
+defense = 6
+outpost = true
+primary = [{ trade = 3 }]
+scrap = [{ draw = 1 }, "destroy_base"]
+
+[[card]]
+id = "tradeEscort"
+name = "Trade Escort"
+set = "core"
+faction = "trade_federation"
+kind = "ship"
+cost = 5
+primary = [{ authority = 4 }, { combat = 4 }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "tradingPost"
+name = "Trading Post"
+set = "core"
+faction = "trade_federation"
+kind = "base"
+cost = 3
+defense = 4
+outpost = true
+primary = [{ choose = [[{ authority = 1 }], [{ trade = 1 }]] }]
+scrap = [{ combat = 3 }]
+
+# ---------------------------------------------------------------- colony wars: blob
+
+[[card]]
+id = "bioformer"
+name = "Bioformer"
+set = "colony_wars"
+faction = "blob"
+kind = "base"
+cost = 4
+defense = 4
+primary = [{ combat = 3 }]
+scrap = [{ trade = 3 }]
+
+[[card]]
+id = "cargoPod"
+name = "Cargo Pod"
+set = "colony_wars"
+faction = "blob"
+kind = "ship"
+cost = 3
+primary = [{ trade = 3 }]
+ally = [{ combat = 3 }]
+scrap = [{ combat = 3 }]
+
+[[card]]
+id = "leviathan"
+name = "Leviathan"
+set = "colony_wars"
+faction = "blob"
+kind = "ship"
+cost = 8
+primary = [{ combat = 9 }, { draw = 1 }, "destroy_base"]
+ally = [{ acquire = { max_cost = 3, dest = "hand" } }]
+
+[[card]]
+id = "moonwurm"
+name = "Moonwurm"
+set = "colony_wars"
+faction = "blob"
+kind = "ship"
+cost = 7
+primary = [{ combat = 8 }, { draw = 1 }]
+ally = [{ acquire = { max_cost = 2, dest = "hand" } }]
+
+[[card]]
+id = "parasite"
+name = "Parasite"
+set = "colony_wars"
+faction = "blob"
+kind = "ship"
+cost = 5
+primary = [{ choose = [[{ combat = 6 }], [{ acquire = { max_cost = 6 } }]] }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "plasmaVent"
+name = "Plasma Vent"
+set = "colony_wars"
+faction = "blob"
+kind = "base"
+cost = 6
+defense = 5
+primary = [{ combat = 4 }]
+scrap = ["destroy_base"]
+acquire_to_hand = true
+
+[[card]]
+id = "predator"
+name = "Predator"
+set = "colony_wars"
+faction = "blob"
+kind = "ship"
+cost = 2
+primary = [{ combat = 4 }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "ravager"
+name = "Ravager"
+set = "colony_wars"
+faction = "blob"
+kind = "ship"
+cost = 3
+primary = [{ combat = 6 }, { scrap = { from = "trade_row", max = 2 } }]
+
+[[card]]
+id = "stellarReef"
+name = "Stellar Reef"
+set = "colony_wars"
+faction = "blob"
+kind = "base"
+cost = 2
+defense = 3
+primary = [{ trade = 1 }]
+scrap = [{ combat = 3 }]
+
+[[card]]
+id = "swarmer"
+name = "Swarmer"
+set = "colony_wars"
+faction = "blob"
+kind = "ship"
+cost = 1
+primary = [{ combat = 3 }, { scrap = { from = "trade_row" } }]
+ally = [{ combat = 2 }]
+
+# ---------------------------------------------------------------- colony wars: machine cult
+
+[[card]]
+id = "battleBot"
+name = "Battle Bot"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "ship"
+cost = 1
+primary = [{ combat = 2 }, { scrap = { from = "hand" } }]
+ally = [{ combat = 2 }]
+
+[[card]]
+id = "convoyBot"
+name = "Convoy Bot"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "ship"
+cost = 3
+primary = [{ combat = 4 }, { scrap = { from = "hand_or_discard" } }]
+ally = [{ combat = 2 }]
+
+[[card]]
+id = "frontierStation"
+name = "Frontier Station"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "base"
+cost = 6
+defense = 6
+outpost = true
+primary = [{ choose = [[{ trade = 2 }], [{ combat = 3 }]] }]
+
+[[card]]
+id = "mechCruiser"
+name = "Mech Cruiser"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "ship"
+cost = 5
+primary = [{ combat = 6 }, { scrap = { from = "hand_or_discard" } }]
+ally = ["destroy_base"]
+
+[[card]]
+id = "miningMech"
+name = "Mining Mech"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "ship"
+cost = 4
+primary = [{ trade = 3 }, { scrap = { from = "hand_or_discard" } }]
+ally = [{ combat = 3 }]
+
+[[card]]
+id = "repairBot"
+name = "Repair Bot"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "ship"
+cost = 2
+primary = [{ trade = 2 }, { scrap = { from = "discard" } }]
+scrap = [{ combat = 2 }]
+
+[[card]]
+id = "stealthTower"
+name = "Stealth Tower"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "base"
+cost = 5
+defense = 5
+outpost = true
+primary = ["copy_base"]
+
+[[card]]
+id = "theIncinerator"
+name = "The Incinerator"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "base"
+cost = 8
+defense = 6
+outpost = true
+primary = [{ scrap = { from = "hand_or_discard", max = 2 } }]
+ally = [{ combat_per_scrapped = 2 }]
+
+[[card]]
+id = "theOracle"
+name = "The Oracle"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "base"
+cost = 4
+defense = 5
+outpost = true
+primary = [{ scrap = { from = "hand", min = 1 } }]
+ally = [{ combat = 3 }]
+
+[[card]]
+id = "theWrecker"
+name = "The Wrecker"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "ship"
+cost = 7
+primary = [{ combat = 6 }, { scrap = { from = "hand_or_discard", max = 2 } }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "warningBeacon"
+name = "Warning Beacon"
+set = "colony_wars"
+faction = "machine_cult"
+kind = "base"
+cost = 2
+defense = 2
+outpost = true
+primary = [{ combat = 2 }]
+acquire_to_hand = true
+
+# ---------------------------------------------------------------- colony wars: star empire
+
+[[card]]
+id = "agingBattleship"
+name = "Aging Battleship"
+set = "colony_wars"
+faction = "star_empire"
+kind = "ship"
+cost = 5
+primary = [{ combat = 5 }]
+ally = [{ draw = 1 }]
+scrap = [{ combat = 2 }, { draw = 2 }]
+
+[[card]]
+id = "commandCenter"
+name = "Command Center"
+set = "colony_wars"
+faction = "star_empire"
+kind = "base"
+cost = 4
+defense = 4
+outpost = true
+primary = [{ trade = 2 }]
+on_ship_played = { faction = "star_empire", combat = 2 }
+
+[[card]]
+id = "emperorSDreadnaught"
+name = "Emperor's Dreadnaught"
+set = "colony_wars"
+faction = "star_empire"
+kind = "ship"
+cost = 8
+primary = [{ combat = 8 }, { draw = 1 }, { opp_discard = 1 }]
+acquire_to_hand = true
+
+[[card]]
+id = "falcon"
+name = "Falcon"
+set = "colony_wars"
+faction = "star_empire"
+kind = "ship"
+cost = 3
+primary = [{ combat = 2 }, { draw = 1 }]
+scrap = [{ opp_discard = 1 }]
+
+[[card]]
+id = "gunship"
+name = "Gunship"
+set = "colony_wars"
+faction = "star_empire"
+kind = "ship"
+cost = 4
+primary = [{ combat = 5 }, { opp_discard = 1 }]
+scrap = [{ trade = 4 }]
+
+[[card]]
+id = "heavyCruiser"
+name = "Heavy Cruiser"
+set = "colony_wars"
+faction = "star_empire"
+kind = "ship"
+cost = 5
+primary = [{ combat = 4 }, { draw = 1 }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "imperialPalace"
+name = "Imperial Palace"
+set = "colony_wars"
+faction = "star_empire"
+kind = "base"
+cost = 7
+defense = 6
+outpost = true
+primary = [{ draw = 1 }, { opp_discard = 1 }]
+ally = [{ combat = 4 }]
+
+[[card]]
+id = "lancer"
+name = "Lancer"
+set = "colony_wars"
+faction = "star_empire"
+kind = "ship"
+cost = 2
+primary = [{ combat = 4 }, { when = { cond = "opp_has_base", then = [{ combat = 2 }] } }]
+ally = [{ opp_discard = 1 }]
+
+[[card]]
+id = "orbitalPlatform"
+name = "Orbital Platform"
+set = "colony_wars"
+faction = "star_empire"
+kind = "base"
+cost = 3
+defense = 4
+primary = [{ discard = { max = 1, reward = "draw_each" } }]
+ally = [{ combat = 3 }]
+
+[[card]]
+id = "starBarge"
+name = "Star Barge"
+set = "colony_wars"
+faction = "star_empire"
+kind = "ship"
+cost = 1
+primary = [{ trade = 2 }]
+ally = [{ combat = 2 }, { opp_discard = 1 }]
+
+[[card]]
+id = "supplyDepot"
+name = "Supply Depot"
+set = "colony_wars"
+faction = "star_empire"
+kind = "base"
+cost = 6
+defense = 5
+outpost = true
+primary = [{ discard = { max = 2, reward = { trade_or_combat_each = 2 } } }]
+ally = [{ draw = 1 }]
+
+# ---------------------------------------------------------------- colony wars: trade federation
+
+[[card]]
+id = "centralStation"
+name = "Central Station"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "base"
+cost = 4
+defense = 5
+primary = [{ trade = 2 }, { when = { cond = { own_bases_at_least = 3 }, then = [{ authority = 4 }, { draw = 1 }] } }]
+
+[[card]]
+id = "colonySeedShip"
+name = "Colony Seed Ship"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "ship"
+cost = 5
+primary = [{ trade = 3 }, { combat = 3 }, { authority = 3 }]
+acquire_to_hand = true
+
+[[card]]
+id = "factoryWorld"
+name = "Factory World"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "base"
+cost = 8
+defense = 6
+outpost = true
+primary = [{ trade = 3 }, { next_acquire = { filter = "ship_or_base", dest = "hand" } }]
+
+[[card]]
+id = "federationShipyard"
+name = "Federation Shipyard"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "base"
+cost = 6
+defense = 6
+outpost = true
+primary = [{ trade = 2 }]
+ally = [{ next_acquire = { filter = "ship_or_base", dest = "top_deck" } }]
+
+[[card]]
+id = "frontierFerry"
+name = "Frontier Ferry"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "ship"
+cost = 4
+primary = [{ trade = 3 }, { authority = 4 }]
+scrap = ["destroy_base"]
+
+[[card]]
+id = "loyalColony"
+name = "Loyal Colony"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "base"
+cost = 7
+defense = 6
+primary = [{ trade = 3 }, { combat = 3 }, { authority = 3 }]
+
+[[card]]
+id = "patrolCutter"
+name = "Patrol Cutter"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "ship"
+cost = 3
+primary = [{ trade = 2 }, { combat = 3 }]
+ally = [{ authority = 4 }]
+
+[[card]]
+id = "peacekeeper"
+name = "Peacekeeper"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "ship"
+cost = 6
+primary = [{ combat = 6 }, { authority = 6 }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "solarSkiff"
+name = "Solar Skiff"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "ship"
+cost = 1
+primary = [{ trade = 2 }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "storageSilo"
+name = "Storage Silo"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "base"
+cost = 2
+defense = 3
+primary = [{ authority = 2 }]
+ally = [{ trade = 2 }]
+
+[[card]]
+id = "tradeHauler"
+name = "Trade Hauler"
+set = "colony_wars"
+faction = "trade_federation"
+kind = "ship"
+cost = 2
+primary = [{ trade = 3 }]
+ally = [{ authority = 3 }]
+
+# ---------------------------------------------------------------- frontiers: blob
+
+[[card]]
+id = "blobAlpha"
+name = "Blob Alpha"
+set = "frontiers"
+faction = "blob"
+kind = "ship"
+cost = 6
+primary = [{ combat = 10 }]
+
+[[card]]
+id = "blobMiner"
+name = "Blob Miner"
+set = "frontiers"
+faction = "blob"
+kind = "ship"
+cost = 2
+primary = [{ trade = 3 }, { scrap = { from = "trade_row" } }]
+scrap = [{ combat = 2 }]
+
+[[card]]
+id = "burrower"
+name = "Burrower"
+set = "frontiers"
+faction = "blob"
+kind = "ship"
+cost = 3
+primary = [{ combat = 5 }]
+ally = [{ draw = 1 }]
+scrap = [{ acquire = { max_cost = 4 } }]
+
+[[card]]
+id = "crusher"
+name = "Crusher"
+set = "frontiers"
+faction = "blob"
+kind = "ship"
+cost = 3
+primary = [{ combat = 6 }]
+ally = [{ trade = 2 }]
+
+[[card]]
+id = "hiveQueen"
+name = "Hive Queen"
+set = "frontiers"
+faction = "blob"
+kind = "ship"
+cost = 7
+primary = [{ combat = 7 }, { draw = 1 }]
+ally = [{ combat = 3 }]
+ally2 = [{ combat = 3 }]
+
+[[card]]
+id = "infestedMoon"
+name = "Infested Moon"
+set = "frontiers"
+faction = "blob"
+kind = "base"
+cost = 6
+defense = 5
+primary = [{ combat = 4 }]
+ally = [{ draw = 1 }]
+ally2 = [{ draw = 1 }]
+
+[[card]]
+id = "moonwurmHatchling"
+name = "Moonwurm Hatchling"
+set = "frontiers"
+faction = "blob"
+kind = "ship"
+cost = 4
+primary = [{ choose = [[{ trade = 3 }], ["destroy_base"]] }]
+ally = [{ combat = 3 }]
+ally2 = [{ combat = 3 }]
+
+[[card]]
+id = "nestingGround"
+name = "Nesting Ground"
+set = "frontiers"
+faction = "blob"
+kind = "base"
+cost = 4
+defense = 5
+primary = [{ trade = 2 }]
+ally = [{ combat = 4 }]
+
+[[card]]
+id = "pulverizer"
+name = "Pulverizer"
+set = "frontiers"
+faction = "blob"
+kind = "ship"
+cost = 5
+primary = [{ scrap = { from = "trade_row", min = 1, reward = "combat_cost" } }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "spikeCluster"
+name = "Spike Cluster"
+set = "frontiers"
+faction = "blob"
+kind = "base"
+cost = 2
+defense = 3
+primary = [{ combat = 2 }]
+ally = [{ trade = 1 }]
+
+[[card]]
+id = "stinger"
+name = "Stinger"
+set = "frontiers"
+faction = "blob"
+kind = "ship"
+cost = 1
+primary = [{ combat = 3 }]
+ally = [{ combat = 3 }]
+scrap = [{ trade = 1 }]
+
+[[card]]
+id = "swarmCluster"
+name = "Swarm Cluster"
+set = "frontiers"
+faction = "blob"
+kind = "base"
+cost = 8
+defense = 8
+primary = [{ combat = 5 }]
+ally = [{ combat = 3 }]
+ally2 = [{ combat = 3 }]
+
+# ---------------------------------------------------------------- frontiers: machine cult
+
+[[card]]
+id = "builderBot"
+name = "Builder Bot"
+set = "frontiers"
+faction = "machine_cult"
+kind = "ship"
+cost = 1
+primary = [{ trade = 1 }, { scrap = { from = "discard" } }]
+ally = [{ trade = 1 }]
+scrap = [{ combat = 2 }]
+
+[[card]]
+id = "conversionYard"
+name = "Conversion Yard"
+set = "frontiers"
+faction = "machine_cult"
+kind = "base"
+cost = 5
+defense = 4
+outpost = true
+primary = [{ scrap = { from = "hand", reward = { combat_each = 4 } } }]
+
+[[card]]
+id = "defenseSystem"
+name = "Defense System"
+set = "frontiers"
+faction = "machine_cult"
+kind = "base"
+cost = 4
+defense = 5
+outpost = true
+primary = [{ combat = 2 }]
+ally = [{ combat = 2 }]
+
+[[card]]
+id = "destroyerBot"
+name = "Destroyer Bot"
+set = "frontiers"
+faction = "machine_cult"
+kind = "ship"
+cost = 3
+primary = [{ combat = 5 }, { scrap = { from = "discard" } }]
+
+[[card]]
+id = "enforcerMech"
+name = "Enforcer Mech"
+set = "frontiers"
+faction = "machine_cult"
+kind = "ship"
+cost = 5
+primary = [{ combat = 5 }, { scrap = { from = "hand_or_discard" } }]
+ally = ["destroy_base"]
+scrap = [{ draw = 1 }]
+
+[[card]]
+id = "integrationPort"
+name = "Integration Port"
+set = "frontiers"
+faction = "machine_cult"
+kind = "base"
+cost = 3
+defense = 5
+outpost = true
+primary = [{ trade = 1 }]
+
+[[card]]
+id = "nanobotSwarm"
+name = "Nanobot Swarm"
+set = "frontiers"
+faction = "machine_cult"
+kind = "ship"
+cost = 8
+primary = [{ combat = 5 }, { draw = 2 }, { scrap = { from = "hand_or_discard", max = 2 } }]
+
+[[card]]
+id = "neuralNexus"
+name = "Neural Nexus"
+set = "frontiers"
+faction = "machine_cult"
+kind = "base"
+cost = 7
+defense = 6
+outpost = true
+primary = [{ scrap = { from = "hand_or_discard", min = 1, reward = "combat_cost" } }]
+ally = [{ draw = 1 }]
+
+[[card]]
+id = "plasmaBot"
+name = "Plasma Bot"
+set = "frontiers"
+faction = "machine_cult"
+kind = "ship"
+cost = 2
+primary = [{ combat = 3 }, { scrap = { from = "hand" } }]
+ally = [{ combat = 2 }]
+
+[[card]]
+id = "reclamationStation"
+name = "Reclamation Station"
+set = "frontiers"
+faction = "machine_cult"
+kind = "base"
+cost = 6
+defense = 6
+outpost = true
+primary = [{ scrap = { from = "discard", min = 1 } }]
+scrap = [{ combat_per_scrapped_own = 3 }]
+
+[[card]]
+id = "repairMech"
+name = "Repair Mech"
+set = "frontiers"
+faction = "machine_cult"
+kind = "ship"
+cost = 4
+primary = [{ choose = [[{ trade = 3 }], ["topdeck_base"]] }]
+ally = [{ scrap = { from = "hand_or_discard" } }]
+
+# ---------------------------------------------------------------- frontiers: star empire
+
+[[card]]
+id = "capturedOutpost"
+name = "Captured Outpost"
+set = "frontiers"
+faction = "star_empire"
+kind = "base"
+cost = 3
+defense = 3
+outpost = true
+primary = [{ draw = 1 }, { discard = { min = 1, max = 1 } }]
+
+[[card]]
+id = "cargoCraft"
+name = "Cargo Craft"
+set = "frontiers"
+faction = "star_empire"
+kind = "ship"
+cost = 2
+primary = [{ trade = 2 }, { opp_discard = 1 }]
+ally = [{ combat = 4 }]
+
+[[card]]
+id = "farmShip"
+name = "Farm Ship"
+set = "frontiers"
+faction = "star_empire"
+kind = "ship"
+cost = 4
+primary = [{ trade = 3 }, { draw = 1 }, { discard = { min = 1, max = 1 } }]
+scrap = [{ combat = 4 }]
+
+[[card]]
+id = "frontierHawk"
+name = "Frontier Hawk"
+set = "frontiers"
+faction = "star_empire"
+kind = "ship"
+cost = 1
+primary = [{ combat = 3 }, { draw = 1 }, { discard = { min = 1, max = 1 } }]
+
+[[card]]
+id = "hammerhead"
+name = "Hammerhead"
+set = "frontiers"
+faction = "star_empire"
+kind = "ship"
+cost = 5
+primary = [{ combat = 3 }, { draw = 1 }, { opp_discard = 1 }]
+ally = [{ draw = 1 }, { discard = { min = 1, max = 1 } }]
+
+[[card]]
+id = "imperialFlagship"
+name = "Imperial Flagship"
+set = "frontiers"
+faction = "star_empire"
+kind = "ship"
+cost = 8
+primary = [{ combat = 7 }, { draw = 2 }]
+ally = [{ opp_discard = 1 }]
+
+[[card]]
+id = "jammingTerminal"
+name = "Jamming Terminal"
+set = "frontiers"
+faction = "star_empire"
+kind = "base"
+cost = 5
+defense = 6
+primary = [{ combat = 2 }, { opp_discard = 1 }]
+
+[[card]]
+id = "lightCruiser"
+name = "Light Cruiser"
+set = "frontiers"
+faction = "star_empire"
+kind = "ship"
+cost = 3
+primary = [{ combat = 4 }, { opp_discard = 1 }]
+ally = [{ combat = 2 }]
+ally2 = [{ draw = 1 }]
+
+[[card]]
+id = "orbitalGunPlatform"
+name = "Orbital Gun Platform"
+set = "frontiers"
+faction = "star_empire"
+kind = "base"
+cost = 4
+defense = 4
+outpost = true
+primary = [{ combat = 3 }]
+scrap = [{ trade = 3 }]
+
+[[card]]
+id = "siegeFortress"
+name = "Siege Fortress"
+set = "frontiers"
+faction = "star_empire"
+kind = "base"
+cost = 7
+defense = 5
+outpost = true
+primary = [{ combat = 5 }]
+ally = [{ combat = 4 }]
+
+[[card]]
+id = "warpgateCruiser"
+name = "Warpgate Cruiser"
+set = "frontiers"
+faction = "star_empire"
+kind = "ship"
+cost = 6
+primary = [{ discard = { max = 12, reward = { combat_each = 2 } } }, { draw = 1 }]
+ally = [{ draw = 1 }]
+
+# ---------------------------------------------------------------- frontiers: trade federation
+
+[[card]]
+id = "federationBattleship"
+name = "Federation Battleship"
+set = "frontiers"
+faction = "trade_federation"
+kind = "ship"
+cost = 7
+primary = [{ combat = 5 }, { authority = 5 }, { draw = 1 }]
+ally = ["destroy_base"]
+scrap = [{ authority = 10 }]
+
+[[card]]
+id = "federationCruiser"
+name = "Federation Cruiser"
+set = "frontiers"
+faction = "trade_federation"
+kind = "ship"
+cost = 5
+primary = [{ combat = 5 }, { authority = 4 }]
+ally = [{ combat = 2 }, { authority = 2 }]
+
+[[card]]
+id = "frontierRunner"
+name = "Frontier Runner"
+set = "frontiers"
+faction = "trade_federation"
+kind = "ship"
+cost = 1
+primary = [{ trade = 2 }, { authority = 2 }]
+
+[[card]]
+id = "gateship"
+name = "Gateship"
+set = "frontiers"
+faction = "trade_federation"
+kind = "ship"
+cost = 6
+primary = [{ acquire = { max_cost = 6, filter = "ship_or_base", dest = "top_deck" } }]
+ally = [{ authority = 5 }]
+
+[[card]]
+id = "ionStation"
+name = "Ion Station"
+set = "frontiers"
+faction = "trade_federation"
+kind = "base"
+cost = 5
+defense = 5
+outpost = true
+primary = [{ trade = 2 }]
+ally = [{ trade = 1 }]
+ally2 = [{ combat = 4 }, { authority = 4 }]
+
+[[card]]
+id = "longHauler"
+name = "Long Hauler"
+set = "frontiers"
+faction = "trade_federation"
+kind = "ship"
+cost = 4
+primary = [{ trade = 3 }]
+ally = [{ trade = 2 }]
+scrap = [{ next_acquire = { filter = "base", dest = "top_deck" } }]
+
+[[card]]
+id = "mobileMarket"
+name = "Mobile Market"
+set = "frontiers"
+faction = "trade_federation"
+kind = "base"
+cost = 4
+defense = 4
+outpost = true
+primary = [{ trade = 2 }]
+scrap = [{ authority = 2 }, { draw = 1 }]
+returns_from_scrap = true
+
+[[card]]
+id = "orbitalShuttle"
+name = "Orbital Shuttle"
+set = "frontiers"
+faction = "trade_federation"
+kind = "ship"
+cost = 2
+primary = [{ trade = 3 }, { when = { cond = { own_bases_at_least = 2 }, then = [{ authority = 4 }, { draw = 1 }] } }]
+
+[[card]]
+id = "outlandStation"
+name = "Outland Station"
+set = "frontiers"
+faction = "trade_federation"
+kind = "base"
+cost = 3
+defense = 4
+primary = [{ choose = [[{ trade = 1 }], [{ authority = 3 }]] }]
+scrap = [{ draw = 1 }]
+
+[[card]]
+id = "patrolBoat"
+name = "Patrol Boat"
+set = "frontiers"
+faction = "trade_federation"
+kind = "ship"
+cost = 3
+primary = [{ combat = 4 }, { authority = 3 }]
+ally = [{ authority = 2 }]
+
+[[card]]
+id = "transitNexus"
+name = "Transit Nexus"
+set = "frontiers"
+faction = "trade_federation"
+kind = "base"
+cost = 8
+defense = 6
+primary = [{ combat = 3 }, { trade = 4 }, { authority = 5 }]

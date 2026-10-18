@@ -1,0 +1,11 @@
+target
+assets
+models
+runs
+checkpoints
+.venv
+**/__pycache__
+web/node_modules
+web/dist
+web/src/wasm
+starrealms.db*

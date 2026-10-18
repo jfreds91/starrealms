@@ -1,0 +1,24 @@
+# Card art and icons belong to Wise Wizard Games; fetched locally by tools/fetch_assets.py
+/assets/
+
+# Rust
+/target/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Node
+node_modules/
+/web/dist/
+/web/src/wasm/
+
+# Server data and served models
+/starrealms.db*
+/models/
+
+# Training artifacts
+/runs/
+/checkpoints/

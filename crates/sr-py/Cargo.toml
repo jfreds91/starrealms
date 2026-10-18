@@ -1,0 +1,17 @@
+[package]
+name = "sr-py"
+edition.workspace = true
+version.workspace = true
+description = "Python bindings: vectorized Star Realms environments"
+
+[lib]
+name = "_engine"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+sr-core.workspace = true
+sr-bots.workspace = true
+serde_json.workspace = true
+pyo3 = { version = "0.30", features = ["extension-module"] }
+numpy = "0.30"
+rayon = "1.12"

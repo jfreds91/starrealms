@@ -1,0 +1,4492 @@
+[
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Battle Blob",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Add 8 Combat Ally: Draw a card. Scrap: Add 4 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Battle Pod",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 4 Combat You may scrap a card in the trade row. Ally: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Blob Carrier",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Add 7 Combat Ally: Acquire any ship without paying its cost and put it on top of your deck. <i>\"Is that... a whale?\"<br><b>- HMS Defender</b>, final transmission.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Blob Destroyer",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 6 Combat Ally: Destroy target base and/or scrap a card in the trade row. <i>When this monstrous ship shows up on a colony's sensors, they know the end is near...</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Blob Fighter",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Add 3 Combat Ally: Draw a card. <i>Either kill it before it signals the hive or run. There are other choices, but none you'll live through.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Blob Wheel",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "Add 1 Combat Scrap: Add 3 Trade",
+    "Defense": "5"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Blob World",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "Add 5 Combat OR Draw a card for each Blob card that you've played this turn.",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Mothership",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Add 6 Combat Draw a card. Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Ram",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 5 Combat Ally: Add 2 Combat Scrap: Add 3 Trade",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "The Hive",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Add 3 Combat Ally: Draw a card",
+    "Defense": "5"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Trade Pod",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 3 Trade Ally: Add 2 Combat <i>The loading and offloading process is efficient, but disgusting.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Battle Mech",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Add 4 Combat You may scrap a card in your hand or discard pile. Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Battle Station",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "Scrap: Add 5 Combat",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Brain World",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "Scrap up to two cards from your hand and/or discard pile. Draw a card for each card scrapped this way. <i>The Machine Cult built these supercomputing space stations to run every aspect of their society. Now they worship them as gods.</i>",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Junkyard",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Scrap a card in your hand or discard pile. <i>The machine Cult's first commandment: \"Thou shalt not waste tech.\"</i>",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Machine Base",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Draw a card, then scrap a card from your hand. <i>This high-tech city is like a beehive: it looks chaotic but vital work is being done efficiently at a frenetic pace.</i>",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Mech World",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Mech World counts as an ally for all factions. <i>The man-made planet is a galactic center for open source tech.</i>",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Missile Bot",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 2 Combat You may scrap a card in your hand or discard pile. Ally: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Missile Mech",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Add 6 Combat You may destroy target base. Ally: Draw a card",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Patrol Mech",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 3 Trade OR Add 5 Combat Ally: You may scrap a card in your hand or discard pile. <i>With the Blobs an ever present danger, even the cult's cargo carrying mechs bristle with firepower.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Stealth Needle",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Copy another ship you've played this turn. Stealth Needle has that ship's faction in addition to Machine Cult. <i>The Needle's ability to mimic other ships represents the pinnacle of Cult technology.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Supply Bot",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 2 Trade You may scrap a card in your hand or discard pile. Ally: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Trade Bot",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Add 1 Trade You may scrap a card in your hand or discard pile. Ally: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Battlecruiser",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Add 5 Combat Draw a card. Ally: Target opponent discards a card. Scrap: Draw a card. You may destroy target base.",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Corvette",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 1 Combat Draw a card. Ally: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Dreadnaught",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Add 7 Combat Draw a card. Scrap: Add 5 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Fleet HQ",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "All of your ships get \"Add 1 Combat\" <i>When an imperial fleet goes into battle, it's usually coordinated from afar by one of these mobile command centers.</i>",
+    "Defense": "8"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Imperial Fighter",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Add 2 Combat Target opponent discards a card. Ally: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Imperial Frigate",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 4 Combat Target opponent discards a card. Ally: Add 2 Combat Scrap: Draw a card",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Recycling Station",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Add 1 Trade OR Discard up to two cards, then draw that many cards.",
+    "Defense": "4 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Royal Redoubt",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Add 3 Combat Ally: Target opponent discards a card.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Space Station",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Add 2 Combat Ally: Add 2 Combat Scrap: Add 4 Trade",
+    "Defense": "4 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Survey Ship",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 1 Trade Draw a card. Scrap: Target opponent discards a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "War World",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Add 3 Combat Ally: Add 4 Combat",
+    "Defense": "4 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Barter World",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Add 2 Authority OR Add 2 Trade Scrap: Add 5 Combat",
+    "Defense": "4"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Central Office",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Add 2 Trade You may put the next ship you acquire this turn on top of your deck. Ally: Draw a card.",
+    "Defense": "6"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Command Ship",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "Add 4 Authority Add 5 Combat Draw two cards. Ally: You may destroy target base.",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Cutter",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 4 Authority Add 2 Trade Ally: Add 4 Combat <i>\"Built for cargo, armed for conflict. Versatility for an unpredictable universe.\"<br><b>- Premier Aerospace Cargo Enterprises</b></i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Defense Center",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Add 3 Authority OR Add 2 Combat Ally: Add 2 Combat",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Embassy Yacht",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 3 Authority Add 2 Trade If you have two or more bases in play, draw two cards <i>War should always be a last resort, it's bad for the bottom line.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "3",
+    "Name": "Federation Shuttle",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Add 2 Trade Ally: Add 4 Authority <i>\"Fast? This baby doesn't just haul cargo. She hauls...\"</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Flagship",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Add 5 Combat Draw a card. Ally: Add 5 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Freighter",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 4 Trade Ally: You may put the next ship you acquire this turn on top of your deck. <i>This class of mammoth cargo ships is one of the keys to the federation's vast trade-based wealth.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Port of Call",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Add 3 Trade Scrap: Draw a card. You may destroy target base.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "1",
+    "Name": "Trade Escort",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Add 4 Authority Add 4 Combat Ally: Draw a card. <i>The heavily-armored Escort class was the Federation's first response to the Blob threat.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "2",
+    "Name": "Trading Post",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "Add 1 Authority OR Add 1 Trade Scrap: Add 3 Combat",
+    "Defense": "4 Outpost"
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "10",
+    "Name": "Explorer",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 2 Trade Scrap: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "16",
+    "Name": "Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Add 1 Trade",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "4",
+    "Name": "Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Add 1 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "12",
+    "Name": "1 Authority | 5 Authority",
+    "Faction": "",
+    "Type": "Score Card",
+    "Cost": "",
+    "Text": "1 Authority | 5 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Core Set",
+    "Qty": "6",
+    "Name": "10 Authority | 20 Authority",
+    "Faction": "",
+    "Type": "Score Card",
+    "Cost": "",
+    "Text": "10 Authority | 20 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 1 Promos",
+    "Qty": "2",
+    "Name": "Battle Barge",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 5 Combat Target opponent discards a card. If you have two or more bases in play, gain 3 Combat and you may return target base from play to its owner's hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 1 Promos",
+    "Qty": "2",
+    "Name": "Battle Screecher",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 5 Combat You may scrap up to five cards currently in the trade row. Ally: Add 2 Trade",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 1 Promos",
+    "Qty": "1",
+    "Name": "Breeding Site",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "If you played a base this turn (including this one), gain 5 Combat <i>Blob ships are born, not Built.</i>",
+    "Defense": "7"
+  },
+  {
+    "Set": "Year 1 Promos",
+    "Qty": "2",
+    "Name": "Fortress Oblivion",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "If you played a base this turn (including this one), you may scrap a card in your hand or discard pile. <i>Only the true believer may enter with hope of ever leaving.</i>",
+    "Defense": "4 Outpost"
+  },
+  {
+    "Set": "Year 1 Promos",
+    "Qty": "1",
+    "Name": "Megahauler",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Add 5 Authority Acquire any ship without paying its cost and put it on top of your deck. Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 1 Promos",
+    "Qty": "1",
+    "Name": "Starbase Omega",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "If you played a base this turn (including this one), draw a card. <i>A vast empire requires many way stations.</i>",
+    "Defense": "6"
+  },
+  {
+    "Set": "Year 1 Promos",
+    "Qty": "2",
+    "Name": "Starmarket",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "If you played a base this turn (including this one), gain 5 Authority OR 3 Trade <i>Anything can be acquired here... for a price.</i>",
+    "Defense": "6"
+  },
+  {
+    "Set": "Year 1 Promos",
+    "Qty": "1",
+    "Name": "The Ark",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Add 5 Combat Scrap up to two cards in your hand and/or discard pile. Draw a card for each card scrapped this way. Scrap: Destroy target base.",
+    "Defense": ""
+  },
+  {
+    "Set": "Promo Pack 1",
+    "Qty": "2",
+    "Name": "Battle Barge",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 5 Combat Target opponent discards a card. If you have two or more bases in play, gain 3 Combat and you may return target base from play to its owner's hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Promo Pack 1",
+    "Qty": "2",
+    "Name": "Battle Screecher",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 5 Combat You may scrap up to five cards currently in the trade row. Ally: Add 2 Trade",
+    "Defense": ""
+  },
+  {
+    "Set": "Promo Pack 1",
+    "Qty": "1",
+    "Name": "Breeding Site",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "If you played a base this turn (including this one), gain 5 Combat <i>Blob ships are born, not Built.</i>",
+    "Defense": "7"
+  },
+  {
+    "Set": "Promo Pack 1",
+    "Qty": "2",
+    "Name": "Fortress Oblivion",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "If you played a base this turn (including this one), you may scrap a card in your hand or discard pile. <i>Only the true believer may enter with hope of ever leaving.</i>",
+    "Defense": "4 Outpost"
+  },
+  {
+    "Set": "Promo Pack 1",
+    "Qty": "1",
+    "Name": "Megahauler",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Add 5 Authority Acquire any ship without paying its cost and put it on top of your deck. Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Promo Pack 1",
+    "Qty": "1",
+    "Name": "Mercenary Garrison",
+    "Faction": "Unaligned",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Star Empire: 2 Combat Machine Cult: Scrap a card from your hand or discard pile. Trade Federation: 3 Authority The Blobs: Scrap up to two cards currently in the trade row.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Promo Pack 1",
+    "Qty": "2",
+    "Name": "Security Craft",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 4 Combat and 3 Authority Ally: Add 3 Trade. <i>\"Set coordinates for the Tower.\"</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Promo Pack 1",
+    "Qty": "1",
+    "Name": "Starbase Omega",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "If you played a base this turn (including this one), draw a card. <i>A vast empire requires many way stations.</i>",
+    "Defense": "6"
+  },
+  {
+    "Set": "Promo Pack 1",
+    "Qty": "2",
+    "Name": "Starmarket",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "If you played a base this turn (including this one), gain 5 Authority OR 3 Trade <i>Anything can be acquired here... for a price.</i>",
+    "Defense": "6"
+  },
+  {
+    "Set": "Promo Pack 1",
+    "Qty": "1",
+    "Name": "The Ark",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Add 5 Combat Scrap up to two cards in your hand and/or discard pile. Draw a card for each card scrapped this way. Scrap: Destroy target base.",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "3",
+    "Name": "Merc Cruiser",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 5 Combat Choose a faction as you play Merc Cruiser. Merc Cruiser has that faction. <i>They have as much courage as you have coin.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Bold Raid",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Destroy target Base. Draw a card. <i>When playing with Gambit cards, choose a number of them to be dealt face down to each player. You may reveal any Gambits at the star of the game or during your main phase.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Energy Shield",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Whenever you (not your bases) are attacked, reduce the damage by 1. <i>When playing with Gambit cards, choose a number of them to be dealt face down to each player. You may reveal any Gambits at the star of the game or during your main phase.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Frontier Fleet",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Each turn gain 1 Combat <i>When playing with Gambit cards, choose a number of them to be dealt face down to each player. You may reveal any Gambits at the star of the game or during your main phase.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Political Maneuver",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Add 2 Trade <i>When playing with Gambit cards, choose a number of them to be dealt face down to each player. You may reveal any Gambits at the star of the game or during your main phase.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Rise to Power",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Add 8 Authority. Draw a card. <i>When playing with Gambit cards, choose a number of them to be dealt face down to each player. You may reveal any Gambits at the star of the game or during your main phase.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Salvage Operation",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Put target card from your discard pile on top of your deck. <i>When playing with Gambit cards, choose a number of them to be dealt face down to each player. You may reveal any Gambits at the star of the game or during your main phase.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Smuggling Run",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Acquire a card of cost four or less without paying its cost. <i>When playing with Gambit cards, choose a number of them to be dealt face down to each player. You may reveal any Gambits at the star of the game or during your main phase.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Surprise Assault",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Add 8 Combat <i>When playing with Gambit cards, choose a number of them to be dealt face down to each player. You may reveal any Gambits at the star of the game or during your main phase.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Unlikely Alliance",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Draw 2 cards. <i>When playing with Gambit cards, choose a number of them to be dealt face down to each player. You may reveal any Gambits at the star of the game or during your main phase.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Wild Gambit",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Pay X Trade: Shuffle the unclaimed Gambit cards and deal yourself X face down. Keep one and return the rest. <i>When playing with Gambit cards, choose a number of them to be dealt face down to each player. You may reveal any Gambits at the star of the game or during your main phase.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Nemesis Beast",
+    "Faction": "",
+    "Type": "Solo Challenge",
+    "Cost": "",
+    "Text": "Star Empire: You discard two cards. The Blobs: Nemesis Beast destroys target base. If you have none, it gains 3 Combat Machine Cult: Put a random card in your hand on top of your deck. Trade Federation: Nemesis Beast gains 5 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Nemesis Beast",
+    "Faction": "",
+    "Type": "Co-op Challenge",
+    "Cost": "",
+    "Text": "Star Empire: Each player discards two cards. The Blobs: For each player, Nemesis Beast destroys target base or gains 3 Combat Machine Cult: Each player puts a random card in your hand on top of your deck. Trade Federation: For each player, Nemesis Beast gains 5 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Pirates of the Dark Star",
+    "Faction": "",
+    "Type": "Solo Challenge",
+    "Cost": "",
+    "Text": "Star Empire: Pirates attack with Combat equal to 2x the cost. You discard two cards. Machine Cult: Scrap the trade row. Pirates attack with Combat equal to 2x the cost of new highest-cost card. The Blobs: Pirates attack with Combat equal to 3x the cost. Trade Federation: Pirates attack with Combat and gain Authority equal to 2x the cost.",
+    "Defense": ""
+  },
+  {
+    "Set": "Gambit",
+    "Qty": "1",
+    "Name": "Pirates of the Dark Star",
+    "Faction": "",
+    "Type": "Co-op Challenge",
+    "Cost": "",
+    "Text": "Star Empire: Pirates attack with Combat equal to 2x the cost. That player discards two cards. Machine Cult: Pirates attack with Combat equal to 2x the cost of highest cost card in trade row. The Blobs: Pirates attack with Combat equal to 3x the cost. Trade Federation: Pirates attack with Combat and gain Authority equal to 2x the cost.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Bases & Battleships",
+    "Qty": "1",
+    "Name": "Construction Hauler",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Add 3 Authority Add 2 Trade Draw a card. Ally: You may put the next base you acquire this turn directly into play.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Bases & Battleships",
+    "Qty": "2",
+    "Name": "Defense Bot",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 1 Combat You may scrap a card in your hand or discard pile. If you control two or more bases, gain 8 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Bases & Battleships",
+    "Qty": "2",
+    "Name": "Fighter Base",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "Ally: Target opponent discards a card.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Crisis: Bases & Battleships",
+    "Qty": "1",
+    "Name": "Imperial Trader",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Add 3 Trade Draw a card. Ally: Add 4 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Bases & Battleships",
+    "Qty": "1",
+    "Name": "Mega Mech",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Add 6 Combat You may return target base from play to its owner's hand Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Bases & Battleships",
+    "Qty": "1",
+    "Name": "Obliterator",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Add 7 Combat If your opponent has two or more bases in play, gain 6 Combat Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Bases & Battleships",
+    "Qty": "2",
+    "Name": "Trade Raft",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Add 1 Trade Ally: Draw a card. Scrap: Add 1 Trade",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Bases & Battleships",
+    "Qty": "2",
+    "Name": "Trade Wheel",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "Add 1 Trade Ally: Add 2 Combat",
+    "Defense": "5"
+  },
+  {
+    "Set": "Crisis: Events",
+    "Qty": "1",
+    "Name": "Black Hole",
+    "Faction": "Unaligned",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player may discard up to two cards. For each card less than two that a player discards, that player loses 4 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Events",
+    "Qty": "1",
+    "Name": "Bombardment",
+    "Faction": "Unaligned",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player either destroys a base they control or loses 6 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Events",
+    "Qty": "2",
+    "Name": "Comet",
+    "Faction": "Unaligned",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player may scrap up to two cards in their hand or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Events",
+    "Qty": "1",
+    "Name": "Galactic Summit",
+    "Faction": "Unaligned",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player gains 7 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Events",
+    "Qty": "2",
+    "Name": "Quasar",
+    "Faction": "Unaligned",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player draws two cards.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Events",
+    "Qty": "1",
+    "Name": "Supernova",
+    "Faction": "Unaligned",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player loses 5 Authority Scrap all cards in the trade row.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Events",
+    "Qty": "2",
+    "Name": "Trade Mission",
+    "Faction": "Unaligned",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "The player currently taking their turn gains 4 Trade and may put the next ship they acquire this turn on top of their deck. Each other player draws two cards.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Events",
+    "Qty": "2",
+    "Name": "Warp Jump",
+    "Faction": "Unaligned",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player draws three cards, then puts two of those cards back on top of their deck in any order.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Fleets and Fortresses",
+    "Qty": "1",
+    "Name": "Border Fort",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Add 1 Trade OR Add 2 Combat Ally: Scrap a card in your hand or discard pile.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Crisis: Fleets and Fortresses",
+    "Qty": "1",
+    "Name": "Capitol World",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "Add 6 Authority Draw a card.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Crisis: Fleets and Fortresses",
+    "Qty": "2",
+    "Name": "Cargo Launch",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Draw a card. Scrap: Add 1 Trade",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Fleets and Fortresses",
+    "Qty": "2",
+    "Name": "Customs Frigate",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "You may acquire a ship of cost four or less and put it on top of your deck. Ally: Add 4 Combat Scrap: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Fleets and Fortresses",
+    "Qty": "1",
+    "Name": "Death World",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Add 4 Combat You may scrap a Trade Federation, Machine Cult or Star Empire card from your hand or discard pile. If you do, draw a card.",
+    "Defense": "6"
+  },
+  {
+    "Set": "Crisis: Fleets and Fortresses",
+    "Qty": "2",
+    "Name": "Patrol Bot",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 2 Trade OR Add 4 Combat Ally: You may scrap a card in your hand or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Fleets and Fortresses",
+    "Qty": "2",
+    "Name": "Spike Pod",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Add 3 Combat You may scrap up to two cards currently in the Trade Row. Scrap: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Fleets and Fortresses",
+    "Qty": "1",
+    "Name": "Star Fortress",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Add 3 Combat Draw a card, then discard a card. Ally: Draw a card, then discard a card.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Crisis: Heroes",
+    "Qty": "1",
+    "Name": "Admiral Rasmusson",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "2",
+    "Text": "Scrap: Until end of turn, you may use all of your Star Empire abilities. Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Heroes",
+    "Qty": "1",
+    "Name": "Blob Overlord",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "2",
+    "Text": "Scrap: Add 4 Combat. Until end of turn, you may use all of your Blob Ally abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Heroes",
+    "Qty": "1",
+    "Name": "CEO Torres",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "2",
+    "Text": "Scrap: Add 7 Authority. Until end of turn, you may use all of your Trade Federation Ally abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Heroes",
+    "Qty": "2",
+    "Name": "Cunning Captain",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "1",
+    "Text": "Scrap: Until end of turn, you may use all of your Star Empire Ally abilities. Target player discards a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Heroes",
+    "Qty": "1",
+    "Name": "High Priest Lyle",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "2",
+    "Text": "Scrap: Until end of turn, you may use all of your Machine Cult Ally abilities. You may scrap a card from your hand or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Heroes",
+    "Qty": "2",
+    "Name": "Ram Pilot",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "1",
+    "Text": "Scrap: Add 2 Combat. Until end of turn, you may use all of your Blob Ally abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Heroes",
+    "Qty": "2",
+    "Name": "Special Ops Director",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "1",
+    "Text": "Scrap: Add 4 Authority. Until end of turn, you may use all of your Trade Federation Ally abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "Crisis: Heroes",
+    "Qty": "2",
+    "Name": "War Elder",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "1",
+    "Text": "Scrap: Until end of turn, you may use all of your Machine Cult Ally abilities. You may scrap a card from your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "1",
+    "Name": "Acceptable Losses",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Scrap up to two cards in your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "2",
+    "Name": "Asteroid Mining",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Whenever you reveal this Gambit, gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "1",
+    "Name": "Black Market",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Add an additional space to the trade row above Black Market. Once per turn, the player who revealed Black Market may acquire a card from this space for one less than its trade cost. Otherwise, it functions as a normal trade row space for all players.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "2",
+    "Name": "Exploration",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Scrap a card from your hand or discard pile. If you do, you may put an explorer on top of your deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "1",
+    "Name": "Hidden Base",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Add 4 Authority. When you reveal this Gambit, put a Secret Outpost card into play and choose a faction. This turn, Secret Outpost has that faction.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "1",
+    "Name": "Secret Outpost",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "When this base is destroyed, remove it from the game. Note: Both sides of this card are the same.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "2",
+    "Name": "Rapid Deployment",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Add 1 Trade. You may put the next ship you acquire this turn on top of your deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "1",
+    "Name": "Triumphant Return",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "1",
+    "Name": "Two Pronged Attack",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "When you reveal this Gambit, gain 2 Combat. Scrap: Add 3 Combat. Draw a Card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "1",
+    "Name": "Veteran Pilots",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Whenever you play a Viper, gain an additional 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "1",
+    "Name": "Wild Gambit",
+    "Faction": "Unaligned",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Pay X Trade: Shuffle the unclaimed Gambit cards and deal yourself X face down. Keep one and return the rest.",
+    "Defense": ""
+  },
+  {
+    "Set": "Cosmic Gambit",
+    "Qty": "1",
+    "Name": "Rules: Cosmic Gambit",
+    "Faction": "",
+    "Type": "Rules Card",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "2",
+    "Name": "Bioformer ",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Add 3 Combat Scrap: Add 3 Trade",
+    "Defense": "4"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Cargo Pod ",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 3 Trade Ally: Add 3 Combat Scrap: Add 3 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Leviathan ",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "Add 9 Combat. Draw a card. You may destroy target base. Ally: Acquire a card of cost three or less for free and put it into your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Moonwurm ",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Add 8 Combat Draw a card. Ally: Acquire a cost two or less for free and put it into your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Parasite ",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Add 6 Combat or Acquire a card of cost six or less for free. Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Plasma Vent ",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Add 4 Combat When you acquire this card, if you've played a Blob card this turn, you may put this card directly into your hand. Scrap: Destroy target base.",
+    "Defense": "5"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Predator ",
+    "Faction": "Blob ",
+    "Type": "Ship ",
+    "Cost": "2",
+    "Text": "Add 4 Combat Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "2",
+    "Name": "Ravager",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 6 Combat You may scrap up to two cards that are currently in the trade row.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Stellar Reef",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "2",
+    "Text": "Add 1 Trade Scrap: Add 3 Combat",
+    "Defense": "3"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Swarmer ",
+    "Faction": "Blob ",
+    "Type": "Ship ",
+    "Cost": "1 ",
+    "Text": "Add 3 Combat You may scrap a card in the trade row. Ally: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Battle Bot ",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Add 2 Combat You may scrap a card in your hand. Ally: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Convoy Bot ",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 4 Combat You may scrap a card in your hand or discard pile. Ally: Add 2 combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Frontier Station ",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Add 2 Trade or 3 Combat",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Mech Cruiser ",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Add 6 Combat You may scrap a card in your hand or discard pile. Ally: Destroy target base.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "2",
+    "Name": "Mining Mech ",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 3 Trade You may scrap a card in your hand or discard pile. Ally: Add 3 combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Repair Bot ",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 2 Trade You may scrap a card in your discard pile. Scrap: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Stealth Tower ",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Until your turn ends, Stealth Tower becomes a copy of any base in play. Stealth Tower has that base's faction in addition to Machine Cult.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "The Incinerator ",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "Scrap up to two cards in your hand and/or discard pile. Ally: Gain 2 Combat for each card scrapped from your hand and/or discard pile this turn.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "The Oracle ",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Scrap a card in your hand. Ally: Add 3 combat",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "The Wrecker ",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Add 6 Combat You may scrap up to two cards in your hand and/or discard pile. Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Warning Beacon ",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "2",
+    "Text": "Add 2 Combat When you acquire this card, if you've played a Machine Cult card this turn, you may put this card directly into your hand.",
+    "Defense": "2 Outpost"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Aging Battleship ",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Add 5 Combat Ally: Draw a card. Scrap: Add 2 Combat; Draw 2 cards.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "2",
+    "Name": "Command Center ",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Add 2 Trade Whenever you play a Star Empire ship, gain 2 Combat.",
+    "Defense": "4 Outpost"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Emperor's Dreadnaught ",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "Add 8 Combat Draw a card. Target opponent discards a card. When you acquire this card, if you've played a Star Empire card this turn, you may put this card directly into your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "2",
+    "Name": "Falcon",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 2 Combat Draw a card. Scrap: Target opponent discards a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "2",
+    "Name": "Gunship ",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 5 Combat Target opponent discards a card. Scrap: Add 4 Trade",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Heavy Cruiser ",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Add 4 Combat Draw a card. Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Imperial Palace ",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Draw a card. Target opponent discards a card. Ally: Add 4 Combat",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Lancer ",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 4 Combat If an opponent contols a base, gain an additional 2 Combat. Ally: Target opponent discards a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Orbital Platform ",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "Discard a card. If you do, draw a card. Ally: Add 3 Combat",
+    "Defense": "4"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Star Barge ",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Add 2 Trade Ally: Add 2 Combat; Target opponent discards a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Supply Depot ",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Discard up to 2 cards. Gain 2 Trade or 2 Combat for each card discarded this way. Ally: Draw a card.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "2",
+    "Name": "Central Station ",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Add 2 Trade If you have three or more bases in play (including this one) gain 4 Authority and draw a card.",
+    "Defense": "5"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Colony Seed Ship ",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Add 3 Trade and 3 Combat and 3 Authority When you acquire this card, if you've played a Trade Federation card this turn, you may put this card directly into your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Factory World ",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "Add 3 Trade Put the next ship or base you acquire this turn into your hand.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Federation Shipyard ",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Add 2 Trade Ally: Put the next ship or base you acquire this turn on top of your deck.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "2",
+    "Name": "Frontier Ferry ",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 3 Trade and Add 4 Authority Scrap: Destroy Target Base.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Loyal Colony ",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Add 3 Combat and 3 Trade and 3 Authority",
+    "Defense": "6"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Patrol Cutter",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 2 Trade. Gain 3 Combat. <hr> Trade Federation Ally: Gain 4 Authority. <hr> <i>Cutters are the life line of Federation colonies.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "1",
+    "Name": "Peacekeeper ",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Add 6 Combat and 6 Authority Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Solar Skiff ",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Add 2 Trade Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "2",
+    "Name": "Storage Silo ",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "2",
+    "Text": "Add 2 Authority Ally: Add 2 Trade",
+    "Defense": "3"
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "3",
+    "Name": "Trade Hauler ",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 3 Trade Ally: Add 3 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "16",
+    "Name": "Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Add 1 Trade",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "4",
+    "Name": "Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Add 1 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "10",
+    "Name": "Explorer",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Add 2 Trade Scrap: Add 2 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "6",
+    "Name": "10 Authority | 20 Authority",
+    "Faction": "",
+    "Type": "Score Card",
+    "Cost": "",
+    "Text": "10 Authority | 20 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Colony Wars",
+    "Qty": "12",
+    "Name": "1 Authority | 5 Authority",
+    "Faction": "",
+    "Type": "Score Card",
+    "Cost": "",
+    "Text": "1 Authority | 5 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Assault",
+    "Qty": "2",
+    "Name": "Alliance Transport",
+    "Faction": "Star Empire/Trade Federation",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 2 Trade. <hr> Star Empire Ally: Target opponent discards a card. <hr> Trade Federation Ally: Gain 4 Authority.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Assault",
+    "Qty": "2",
+    "Name": "Blob Bot",
+    "Faction": "Blob/Machine Cult",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 5 Combat. <hr> Blob Ally: Gain 2 Trade. <hr> Machine Cult Ally: Scrap a card in your hand or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Assault",
+    "Qty": "2",
+    "Name": "Coalition Messenger",
+    "Faction": "Machine Cult/Trade Federation",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 2 Trade. <hr> Machine Cult or Trade Federation Ally: Choose a card of cost five or less in your discard pile and put it on top of your deck. <hr> <i>High tech and high finance are potent allies.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Assault",
+    "Qty": "1",
+    "Name": "Embassy Base",
+    "Faction": "Star Empire/Trade Federation",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "Draw two cards, then discard a card. <hr> <i>Keep your friends close, and your enemies closer.</i>",
+    "Defense": "6"
+  },
+  {
+    "Set": "United: Assault",
+    "Qty": "1",
+    "Name": "Exchange Point",
+    "Faction": "Blob/Machine Cult",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Gain 2 Combat. <hr> Blob or Machine Cult Ally: Scrap a card in your hand, your discard pile or the trade row.",
+    "Defense": "7"
+  },
+  {
+    "Set": "United: Assault",
+    "Qty": "1",
+    "Name": "Lookout Post",
+    "Faction": "Machine Cult/Trade Federation",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Draw a card. <hr> <i>Information is power.</i>",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "United: Assault",
+    "Qty": "2",
+    "Name": "Trade Star",
+    "Faction": "Blob/Star Empire",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Gain 2 Trade. <hr> Scrap: Gain 2 Combat. <hr> <i>Greed is the universal language.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Assault",
+    "Qty": "1",
+    "Name": "Union Stronghold",
+    "Faction": "Blob/Star Empire",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Gain 3 Combat. <hr> Blob Ally: Scrap a card in the trade row. <hr> Star Empire Ally: Target opponent discards a card.",
+    "Defense": "5"
+  },
+  {
+    "Set": "United: Assault",
+    "Qty": "1",
+    "Name": "Rules: United Assault",
+    "Faction": "",
+    "Type": "Rules Card",
+    "Cost": "",
+    "Text": "Alliance = Star Empire + Trade Federation Coalition = Trade Federation + Machine Cult Unity = Machine Cult + Blob Union = Blob + Star Empire The multicolor symbols above each count as two existing Star Realms factions. For example, if you have an Alliance card in play, you may activate any Star Empire or Trade Federation ally abilities. Alternatively, if you have a Star Empire or Trade Federation card in play, you may activate any Alliance ally abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Command",
+    "Qty": "2",
+    "Name": "Alliance Frigate",
+    "Faction": "Star Empire/Trade Federation",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 4 Combat. <hr> Star Empire Ally: Gain 3 Combat. <hr> Trade Federation Ally: Gain 5 Authority.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Command",
+    "Qty": "1",
+    "Name": "Alliance Landing",
+    "Faction": "Star Empire/Trade Federation",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Gain 2 Trade. <hr> Star Empire or Trade Federation Ally: Gain 2 Combat.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "United: Command",
+    "Qty": "2",
+    "Name": "Assault Pod",
+    "Faction": "Blob/Star Empire",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 3 Combat. <hr> Blob or Star Empire Ally: Draw a card. <hr> <i>Your greatest enemy can be your most powerful ally.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Command",
+    "Qty": "1",
+    "Name": "Coalition Fortress",
+    "Faction": "Trade Federation/Machine Cult",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Gain 2 Trade. <hr> Machine Cult or Trade Federation Ally: Gain 2 Combat. or Gain 3 Authority.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "United: Command",
+    "Qty": "2",
+    "Name": "Coalition Freighter",
+    "Faction": "Trade Federation/Machine Cult",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Gain 3 Trade. <hr> Trade Federation Ally: Put the next ship you acquire this turn on top of your deck. <hr> Machine Cult Ally: Scrap a card in your hand or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Command",
+    "Qty": "1",
+    "Name": "Union Cluster",
+    "Faction": "Blob/Star Empire",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "Gain 4 Combat. <hr> Blob or Star Empire Ally: Draw a card.",
+    "Defense": "8"
+  },
+  {
+    "Set": "United: Command",
+    "Qty": "2",
+    "Name": "Unity Fighter",
+    "Faction": "Blob/Machine Cult",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Gain 3 Combat. You may scrap a card in the trade row. <hr> Scrap: You may scrap a card in your hand or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Command",
+    "Qty": "1",
+    "Name": "Unity Station",
+    "Faction": "Blob/Machine Cult",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Scrap a card in your hand or discard pile. You may scrap a card in the trade row. <hr> Blob or Machine Cult Ally: Gain 4 Combat.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "United: Command",
+    "Qty": "1",
+    "Name": "Rules: United Command",
+    "Faction": "",
+    "Type": "Rules Card",
+    "Cost": "",
+    "Text": "Alliance = Star Empire + Trade Federation Coalition = Trade Federation + Machine Cult Unity = Machine Cult + Blob Union = Blob + Star Empire The multicolor symbols above each count as two existing Star Realms factions. For example, if you have an Alliance card in play, you may activate any Star Empire or Trade Federation ally abilities. Alternatively, if you have a Star Empire or Trade Federation card in play, you may activate any Alliance ally abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Heroes",
+    "Qty": "1",
+    "Name": "CEO Shaner",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "5",
+    "Text": "Until end of turn, you may use all of your Trade Federation Ally abilities. You may acquire a ship or base of cost 3 or less for free and put it on top of your deck. Scrap: Until end of turn, you may use all of your Trade Federation Ally abilities. Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Heroes",
+    "Qty": "2",
+    "Name": "Chairman Haygan",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "3",
+    "Text": "Until end of turn, you may use all of your Trade Federation Ally abilities. Add 4 Authority Scrap: Until end of turn, you may use all of your Trade Federation Ally abilities. Add 4 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Heroes",
+    "Qty": "2",
+    "Name": "Chancellor Hartman",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "4",
+    "Text": "Until end of turn, you may use all of your Machine Cult Ally abilities. You may scrap a card in your hand or discard pile. Scrap: Until end of turn, you may use all of your Machine Cult Ally abilities. You may scrap a card in your hand or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Heroes",
+    "Qty": "2",
+    "Name": "Commander Klik",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "4",
+    "Text": "Until end of turn, you may use all of your Star Empire Ally abilities. You may discard a card. If you do, draw a card. Scrap: Until end of turn, you may use all of your Star Empire Ally abilities. You may discard a card. If you do, draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Heroes",
+    "Qty": "1",
+    "Name": "Commodore Zhang",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "5",
+    "Text": "Until end of turn, you may use all of your Star Empire Ally abilities. Add 4 Combat Target opponent discards a card. Scrap: Until end of turn, you may use all of your Star Empire Ally abilities. Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Heroes",
+    "Qty": "1",
+    "Name": "Confessor Morris",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "5",
+    "Text": "Until end of turn, you may use all of your Machine Cult Ally abilities. You may scrap up to two cards in your hand and/or discard pile. Scrap: Until end of turn, you may use all of your Machine Cult Ally abilities. Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Heroes",
+    "Qty": "1",
+    "Name": "Hive Lord",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "5",
+    "Text": "Until end of turn, you may use all of your Blob Ally abilities. Add 5 Combat Scrap any number of cards currently in the trade row. Scrap: Until end of turn, you may use all of your Blob Ally abilities. Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Heroes",
+    "Qty": "2",
+    "Name": "Screecher",
+    "Faction": "Unaligned",
+    "Type": "Hero",
+    "Cost": "3",
+    "Text": "Until end of turn, you may use all of your Blob Ally abilities. Add 2 Combat You may scrap a card in the trade row. Scrap: Until end of turn, you may use all of your Blob Ally abilities. Add 2 Combat You may scrap a card in the trade row.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Heroes",
+    "Qty": "1",
+    "Name": "Rules: United Heroes",
+    "Faction": "",
+    "Type": "Rules Card",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Ally",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Use Ally abilities from two different factions in the same turn. Reward: Acquire a ship or base of cost four or less for free and put it on top of your deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Armada",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Play seven or more ships in the same turn. Reward: Draw a card. Acquire an explorer for free and put it in your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Colonize",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Have two or more bases of the same faction in play. Reward: Draw two cards.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Convert",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Play a Machine Cult ship while you have a Machine Cult base in play. Reward: Reveal the top three cards of your deck. Put one in your hand, one in you discard pile, and one on top of your deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Defend",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Have two or more outposts in play. Reward: Draw a card. Return target base to it's controller's hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Diversify",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: In a single turn, gain: 4 Trade and 5 Combat and 3 Authority. Reward: Add 4 Trade or 5 Combat or 6 Authority.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Dominate",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Play a Star Empire ship while you have a Star Empire base in play. Reward: Add 3 Combat. Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Exterminate",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Play a Blob ship while you have a Blob base in play. Reward: Add 3 Combat. Scrap any number of cards currently in the trade row.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Influence",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Have at least three ships and/or bases of the same faction in play. Reward: Acquire two explorers for free and put them both into your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Monopolize",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Play a Trade Federation ship while you have a Trade Federation base in play. Reward: Add 10 Authority.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Rule",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Have bases from two or more factions in play. Reward: Acquire a card of cost three or less for free and put it in your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Unite",
+    "Faction": "Unaligned",
+    "Type": "Mission",
+    "Cost": "",
+    "Text": "Objective: Play three ships from different factions in the same turn. Reward: Add 5 Authority. Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "United: Missions",
+    "Qty": "1",
+    "Name": "Rules: United Missions",
+    "Faction": "",
+    "Type": "Rules Card",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Border Skirmish",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "At the start of the game, each player loses 20 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Buyer’s Market",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "At the end of each player’s turn, place one counter (using dice, coins, etc.) on the most expensive card or cards in the trade row. Cards cost 1 Trade less for each counter on them.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Commitment to the Cause",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Scouts and Explorers produce an additional 1 Trade. Vipers produce an additional 1 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Early Recruitment",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Before the game begins, the player going first chooses one of the four factions. They then select from the trade deck a card of that faction that costs 1 Trade, and add it to their personal deck. The player going second repeats this process, choosing two of the remaining factions. Finally, the player going first repeats the process for the remaining faction.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Emergency Repairs",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Once per turn, a player may spend 1 Trade to shuffle their discard pile into their personal deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Entrenched Loyalties",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "At the start of the game, assign each player a faction at random. Cards of that faction cost that player 1 Trade less to acquire. (The same faction may be assigned to multiple players.)",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Flare Mining",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Once per turn, a player may spend 1 Trade to draw a card, then discard a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Fleeting Opportunities",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "At the start of each player’s turn, scrap the card in the trade row furthest from the trade deck, slide all the other cards over one space, then add the top card of the trade deck to the trade row.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Frantic Preparations",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Before the game begins, each player removes one Viper and one Scout from their personal decks.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Frontier Expedition",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Before the game begins, each player replaces two of the Scouts in their personal deck with Explorers.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Maximum Warp",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "At the start of each player’s turn, that player draws a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Picking Sides",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Before the game begins, the player going first chooses one of the four factions. They then select from the trade deck a card of that faction that costs 3 Trade, and add it to their personal deck. The player going second repeats this process, choosing two of the remaining factions. Finally, the player going first repeats the process for the remaining faction.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Prolonged Conflict",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "At the start of the game, each player gains 30 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Rapid Construction",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "The first card a player acquires each turn is placed on top of their deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Ready Reserves",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Cards in a player’s hand are not discarded at the end of their turn. For each card a player keeps, they draw one fewer card at the end of their turn.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Recruiting Drive",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Whenever a player acquires a ship, they put it on top of their deck. Bases cost 1 Trade less to acquire.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Rushed Defenses",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Bases go directly into play when acquired, and are scrapped when destroyed.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Ruthless Efficiency",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Once per turn, a player may spend 1 Trade to scrap a card in their hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Total War",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Once per turn, a player may spend 1 Trade to gain 3 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Warpgate Nexus",
+    "Faction": "Unaligned",
+    "Type": "Scenario",
+    "Cost": "",
+    "Text": "Play with two additional cards in the trade row.",
+    "Defense": ""
+  },
+  {
+    "Set": "Scenarios",
+    "Qty": "1",
+    "Name": "Rules: Scenarios",
+    "Faction": "",
+    "Type": "Rules Card",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Blob Alpha",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Gain 10 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Blob Miner",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 3 Trade. You may scrap a card in the trade row. <hr> Scrap: Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Burrower",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 5 Combat. <hr> Blob Ally: Draw a card. <hr> Scrap: Acquire a card of cost four or less for free.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Crusher",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 6 Combat. <hr> Blob Ally: Gain 2 Trade. <hr> <i>It doesn’t need cannons or missiles to wreak destruction.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Hive Queen",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Gain 7 Combat. Draw a card. <hr> Blob Ally: Gain 3 Combat. <hr> Two Blob Allies: Gain 3 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Infested Moon",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Gain 4 Combat. <hr> Blob Ally: Draw a card. <hr> Two Blob Allies: Draw a card.",
+    "Defense": "5"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Moonwurm Hatchling",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Gain 3 Trade. or destroy target base. <hr> Blob Ally: Gain 3 Combat. <hr> Two Blob Allies: Gain 3 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Nesting Ground",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Gain 2 Trade. <hr> Blob Ally: Gain 4 Combat.",
+    "Defense": "5"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Pulverizer",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Scrap a card in the trade row, and gain Combat equal to its cost. <hr> Blob Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Spike Cluster",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "2",
+    "Text": "Gain 2 Combat. <hr> Blob Ally: Gain 1 Trade.",
+    "Defense": "3"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Stinger",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Gain 3 Combat. <hr> Blob Ally: Gain 3 Combat. <hr> Scrap: Gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Swarm Cluster",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "Gain 5 Combat. <hr> Blob Ally: Gain 3 Combat. <hr> Two Blob Allies: Gain 3 Combat.",
+    "Defense": "8"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Builder Bot",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Gain 1 Trade. You may scrap a card in your discard pile. <hr> Machine Cult Ally: Gain 1 Trade. <hr> Scrap: Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Conversion Yard",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "You may scrap a card in your hand. If you do, gain Gain 4 Combat. <hr> <i>An abattoir for old ships in the quest for perfection.</i>",
+    "Defense": "4 Outpost"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Defense System",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Gain 2 Combat. <hr> Machine Cult Ally: Gain 2 Combat.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Destroyer Bot",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 5 Combat. You may scrap a card in your discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Enforcer Mech",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Gain 5 Combat. You may scrap a card in your hand or discard pile. <hr> Machine Cult Ally: Destroy target base. <hr> Scrap: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Integration Port",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "Gain 1 Trade.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Nanobot Swarm",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "Gain 5 Combat. Draw two cards. You may scrap up to two cards in your hand and/or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Neural Nexus",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Scrap a card in your hand or discard pile and gain Combat equal to its cost. <hr> Machine Cult Ally: Draw a card.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Plasma Bot",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 3 Combat. You may scrap a card in your hand. <hr> Machine Cult Ally: Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Reclamation Station",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Scrap a card in your discard pile. <hr> Scrap: Gain 3 Combat for each of your cards that you scrapped this turn (including this one).",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Repair Mech",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Gain 3 Trade. or Put a base from your discard pile on top of your deck. <hr> Machine Cult Ally: You may scrap a card in your hand or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Captured Outpost",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "Draw a card, then discard a card. <hr> <i>The Federation may forgive, but they will not forget.</i>",
+    "Defense": "3 Outpost"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Cargo Craft",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 2 Trade. Target opponent discards a card. <hr> Star Empire Ally: Gain 4 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Farm Ship",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Gain 3 Trade. Draw a card, then discard a card. <hr> Scrap: Gain 4 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Frontier Hawk",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Gain 3 Combat. Draw a card, then discard a card. <hr> <i>These stealthy fighters are often the leading edge of an Imperial armada.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Hammerhead",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Gain 3 Combat. Draw a card. Target opponent discards a card. <hr> Star Empire Ally: Draw a card, then discard a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Imperial Flagship",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "Gain 7 Combat. Draw two cards. <hr> Star Empire Ally: Target player discards a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Jamming Terminal",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Gain 2 Combat. Target opponent discards a card. <hr> <i>“Lose comms, lose the battle.”</i>",
+    "Defense": "6"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Light Cruiser",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 4 Combat. Target opponent discards a card. <hr> Star Empire Ally: Gain 2 Combat. <hr> Two Star Empire Allies: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Orbital Gun Platform",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Gain 3 Combat. <hr> Scrap: Gain 3 Trade.",
+    "Defense": "4 Outpost"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Siege Fortress",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Gain 5 Combat. <hr> Star Empire Ally: Gain 4 Combat.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Warpgate Cruiser",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Discard any number of cards and gain 2 Combat for each. Draw a card. <hr> Star Empire Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Federation Battleship",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Gain 5 Combat. Gain 5 Authority. Draw a card. <hr> Trade Federation Ally: Destroy target base. <hr> Scrap: Gain 10 Authority.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Federation Cruiser",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Gain 5 Combat. Gain 4 Authority. <hr> Trade Federation Ally: Gain 2 Combat. Gain 2 Authority. <hr> <i>The Federation prefer to make deals, but they can also make war.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Frontier Runner",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Gain 2 Trade. Gain 2 Authority. <hr> <i>Frontier settlements rely heavily on Runners for exchanging vital supplies.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Gateship",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Acquire a ship or base of cost six or less for free, and put it on top of your deck. <hr> Trade Federation Ally: Gain 5 Authority. <hr> <i>While less precise than most warpgates, sometimes ‘close’ is close enough.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Ion Station",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Gain 2 Trade. <hr> Trade Federation Ally: Gain 1 Trade. <hr> Two Trade Federation Allies: Gain 4 Combat. Gain 4 Authority.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Long Hauler",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Gain 3 Trade. <hr> Trade Federation Ally: Gain 2 Trade. <hr> Scrap: Put the next base you acquire this turn on top of your deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Mobile Market",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Gain 2 Trade. <hr> Scrap: Gain [smallauthority2] and draw a card. At end of turn, move Mobile Market from the scrap heap to your discard pile.",
+    "Defense": "4 Outpost"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Orbital Shuttle",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 3 Trade. If you have two or more bases in play, gain 4 Authority and draw a card. <hr> <i>Extra stops means extra profit.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "3",
+    "Name": "Outland Station",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "3",
+    "Text": "Gain 1 Trade. <i>or</i> Gain 3 Authority. <hr> Scrap: Draw a card.",
+    "Defense": "4"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "2",
+    "Name": "Patrol Boat",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 4 Combat. Gain 3 Authority. <hr> Trade Federation Ally: Gain 2 Authority. <hr> <i>The sound of their engines brings hope to many.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Transit Nexus",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "Gain 3 Combat. Gain 4 Trade. Gain 5 Authority.",
+    "Defense": "6"
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "10",
+    "Name": "Explorer",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 2 Trade. <hr> Scrap: Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "32",
+    "Name": "Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "8",
+    "Name": "Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Scorecard Ones",
+    "Faction": "Blue",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Scorecard Ones",
+    "Faction": "Green",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Scorecard Ones",
+    "Faction": "Red",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Scorecard Ones",
+    "Faction": "Yellow",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Scorecard Tens",
+    "Faction": "Blue",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Scorecard Tens",
+    "Faction": "Green",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Scorecard Tens",
+    "Faction": "Red",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers",
+    "Qty": "1",
+    "Name": "Scorecard Tens",
+    "Faction": "Yellow",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 2 Promos",
+    "Qty": "1",
+    "Name": "Bounty Hunter",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Gain 7 Combat. <hr> Trade Federation Ally: Gain 5 Authority. <hr> <i>“No disintegration, we need them alive.”- CEO Shaner</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 2 Promos",
+    "Qty": "1",
+    "Name": "Cargo Mech",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Gain 4 Trade. You may scrap a card in your hand or discard pile. <hr> Machine Cult Ally: Destroy target base.",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 2 Promos",
+    "Qty": "2",
+    "Name": "Federal Transport",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 1 Trade. Gain 5 Authority. <hr> Trade Federation Ally: Gain 2 Trade. <hr> <i>“Moving the galaxy, one shipment at a time.” - Federal Transportation Services</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 2 Promos",
+    "Qty": "2",
+    "Name": "Imperial Smuggler",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 3 Combat. Draw a card, then discard a card. <hr> Scrap: Gain 2 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 2 Promos",
+    "Qty": "1",
+    "Name": "Knightstar",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Gain 6 Combat. If an opponent has a base in play, gain an additional 3 Combat <hr> Star Empire Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 2 Promos",
+    "Qty": "2",
+    "Name": "Probe Bot",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 1 Trade. You may scrap a card in your hand or discard pile. <hr> Machine Cult Ally: Draw a card. <hr> Scrap: Gain 3 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 2 Promos",
+    "Qty": "1",
+    "Name": "Stellar Ray",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "5",
+    "Text": "Gain 3 Trade. Draw a card. <hr> Scrap: Gain 6 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Year 2 Promos",
+    "Qty": "2",
+    "Name": "War Kite",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 5 Combat. <hr> Scrap: Destroy target base. <hr> <i>It’s hard to fully appreciate their grace and beauty when they’re raining death around you.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Thank You Backers|Kickstarter Promo Pack",
+    "Faction": "",
+    "Type": "|Rules Card",
+    "Cost": "",
+    "Text": "Thank you backers for an incredible Kickstarter campaign! As a thank you for your patience and support, we have added a few extra promo cards (2 Powerful Backing and 1 Patience Rewarded)! Thank you again, and I hope you have as much fun playing these Star Realms sets as we had making them! Rob Dougherty - CEO, White Wizard Games | <b>Docking</b> If a ship returns to your hand with docking, it does so AFTER you draw your hand, so you will end your turn with an extra card in hand. <b>Midgate Station</b> If you discard 0 cards with its primary ability, you choose to gain 1 Trade or Combat. <b>“Scrap this card” ally abilities</b> Like any ally abilities, these trigger when you have another card of their faction in play, but you choose if and when to use this ability once it has been triggered. So, if you don’t want to scrap the card, just don’t use the ally ability. <b>Powerful Backing</b> The player currently taking their turn counts as having two extra cards of each faction in play that turn for triggering their ally and double ally abilities. <b>Patience Rewarded</b> Like with all cards where each player makes a choice, start with the player currently taking their turn and proceed clockwise.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Assimilator",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Gain 5 Trade. <i>or</i> Gain 8 Combat. You may scrap a card in your hand or discard pile. <hr> Machine Cult Ally: Scrap this card from play. Move a card from an opponent’s discard pile to yours.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Assur 4",
+    "Faction": "Trade Federation",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Gain 5 Authority. <hr> Trade Federation Ally: Gain 2 Trade. <hr> Two Trade Federation Allies: Draw a card.",
+    "Defense": "5"
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "3",
+    "Name": "Blockade Runner",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Discard up to two cards, then draw that many cards. <hr> Star Empire Ally: Scrap this card from play. Draw a card. Target opponent discards a card. <hr> <i>“Buy fast, fly fast, lie fast.” - Smuggler’s motto.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "3",
+    "Name": "Cargo Rocket",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Gain 3 Authority. Gain 2 Combat. Gain 1 Trade. <hr> Trade Federation Ally: Scrap this card from play. Put the next ship you acquire this turn on top of your deck. <hr> <i>“Blast off!”</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Converter",
+    "Faction": "Machine Cult",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Whenever you scrap a card from your hand or discard pile, gain 2 Combat <hr> Machine Cult Ally: Scrap a card from your hand. <hr> Two Machine Cult Allies: Scrap a card from your discard pile.",
+    "Defense": "6 Outpost"
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Demolisher",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Gain 6 Combat. Draw a card. <hr> Star Empire Ally: Scrap this card from play. Draw two cards. Target opponent discards two cards.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "2",
+    "Name": "Freight Raft",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 2 Trade. Gain 4 Authority. <b>Trade Federation Docking:</b> During the discard phase, if you have a Trade Federation base in play, set this card aside. At the end of the draw phase, return it to your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "2",
+    "Name": "Imperial Defender",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 1 Combat. Draw a card. <b>Star Empire Docking:</b> During the discard phase, if you have a Star Empire base in play, set this card aside. At the end of the draw phase, return it to your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Midgate Station",
+    "Faction": "Star Empire",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Discard any number of cards. Gain Trade or Combat equal to the number of cards discarded plus 1. <hr> Star Empire Ally: Target opponent discards a card. <hr> Two Star Empire Allies: Draw a card.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "3",
+    "Name": "Plague Pod",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Gain 2 Trade. <hr> Blob Ally: Scrap this card from play. Gain 6 Combat <hr> <i>Beware Blobs bearing gifts.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "3",
+    "Name": "Recycle Bot",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Gain 1 Trade. You may scrap a card in your hand. <hr> Machine Cult Ally: Scrap this card from play. Scrap a card in your hand or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "2",
+    "Name": "Sentinel",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 5 Combat. <b>Blob Docking:</b> During the discard phase, if you have a Blob base in play, set this card aside. At the end of the draw phase, return it to your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Spawning Wurm",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Gain 8 Combat. You may destroy target base. <hr> Blob Ally: Scrap this card from play. Gain 8 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Swarming Point",
+    "Faction": "Blob",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Gain 3 Combat. <hr> Blob Ally: Gain 3 Combat. <hr> Two Blob Allies: Gain 3 Combat.",
+    "Defense": "5"
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "2",
+    "Name": "Temple Guardian",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 2 Trade. <i>or</i> Gain 4 Combat. <b>Machine Cult Docking:</b> During the discard phase, if you have a Machine Cult base in play, set this card aside. At the end of the draw phase, return it to your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "The Colossus",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "9",
+    "Text": "Gain 10 Combat. Choose a faction as you play The Colossus. The Colossus has that faction. Draw a card for each card of that faction you have in play (including The Colossus).",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Trade Envoy",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "7",
+    "Text": "Gain 3 Trade. Gain 5 Authority. Draw a card. <hr> Trade Federation Ally: Scrap this card from play. Put the next ship or base you acquire this turn into your hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Mobilization",
+    "Faction": "",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player may look at the top four cards of their deck, put any number of those cards into their discard pile, then put the remaining cards back on top of their deck in any order. <hr> <i>When an event enters the trade row, do what it says immediately, then scrap it.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Patience Rewarded",
+    "Faction": "",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player may scrap a card in the trade row, then set it aside. For the rest of the game, players may acquire the card they set aside as if it were in the trade row. <hr> <i>When an event enters the trade row, do what it says immediately, then scrap it.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "2",
+    "Name": "Powerful Backing",
+    "Faction": "",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "The player currently taking their turn gains 1 Trade two Machine Cult allies two Star Empire allies two Trade Federation allies two Blob allies Each other player gains 5 Authority",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "2",
+    "Name": "Recon Mission",
+    "Faction": "",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player may acquire an Explorer for free and put it into their hand. <hr> <i>When an event enters the trade row, do what it says immediately, then scrap it.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Superflare",
+    "Faction": "",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player shuffles their discard pile into their deck, then draws a card. <hr> <i>When an event enters the trade row, do what it says immediately, then scrap it.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "2",
+    "Name": "Supply Run",
+    "Faction": "",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player may either acquire an Explorer for free and put it on top of their deck or put a card from their discard pile on top of their deck. <hr> <i>When an event enters the trade row, do what it says immediately, then scrap it.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "2",
+    "Name": "Tactical Maneuver",
+    "Faction": "",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "The player currently taking their turn chooses to gain either 2 Trade or 4 Combat. Each other player chooses to either gain 6 Authority or draw a card. <hr> <i>When an event enters the trade row, do what it says immediately, then scrap it.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Frontiers Kickstarter Promos",
+    "Qty": "1",
+    "Name": "Wormhole",
+    "Faction": "",
+    "Type": "Event",
+    "Cost": "",
+    "Text": "Each player may either put a card from their discard pile into their hand or draw a card. <hr> <i>When an event enters the trade row, do what it says immediately, then scrap it.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Mech Battleship",
+    "Faction": "Machine Cult / Star Empire",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "You may scrap up to two cards from your hand and/or discard pile. Draw cards equal to the number of cards scrapped this way, then discard an equal number of cards. <hr> Machine Cult or Star Empire Ally: Gain 6 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Imperial Talon",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Star Empire Ally: Gain 2 Combat. <hr> <i>\"She's quick and has powerful guns, but her armor is... well... don't get hit.\" - Imperial Flight Instructor</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Imperial Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat. <hr> Star Empire Ally: You may discard a card. If you do, draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Ranger",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <i>or</i> Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Salvage Drone",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. Or scrap a card in your hand or discard pile. <hr> <i>Robotic missionaries executing the doctrine of retrieval.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "4",
+    "Name": "Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Scout Bot",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <hr> Machine Cult Ally: Choose a card of cost 2 or less in your discard pile. Put it on top of your deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Stellar Falcon",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Star Empire Ally: Target opponent discards a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Welder Drone",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Trade. <i>or</i> Gain 2 Combat. <hr> <i>With typical cult efficiency, these drones are equally suited for construction or demolition.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Le's Foray | Rules (Part 1 of 3)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Until end of turn, you may use all of your Star Empire ally abilities. Until end of turn, you may use all of your Machine Cult ally abilities. You may scrap a card in your hand or discard pile. If you do, draw a card. | When playing with the Allignment Command Deck, you are Divine Admiral Le, legendary commander of the Alignment. While you will be able to acquire and play cards of any faction, your starting deck and gambits work particularly well with Star Empire and Machine Cult cards. This Command Deck may be played one-on-one against any other Command Deck, or, you can use it to take on two players playing standard starting decks! <u>2 vs 1</u> When playing against two players, those players use standard starting decks (eight Scout and two Viper cards). They play as a Hydra team with a total of 75 Authority . Hydra teams share a turn, may share trade and combat, but have separate decks and ally triggers (see Star Realms Rulebook, Formats section). <u>Setup</u> At the start of the game, place your Divine Admiral Le card, along with your Alignment Ingenuity and Le’s Foray gambit cards, face up in front of you. Note: Your Divine Admiral Le card is for reference, and does not count as a Star Empire or Machine Cult card in play for triggering Ally Abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Alignment Ingenuity | Rules (Part 2 of 3)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Whenever you use a Scrap ability of a ship or base, you may draw a card, then discard a card. | <u>Setup (Cont.)</u> You have a hand size of six cards and start with 64 Authority. You may track your Authority with the included scorecards. - Rotate and/or flip this card to represent a change in the tens digit. - Slide and/or flip this card to represent a change in the ones digit. Add the two numbers in the circle to get your Authority score. This shows a score of 68. Shuffle the Mech Battleship card into the Trade Deck before laying out the starting Trade Row. This would be a great card for you to buy, but watch out, your opponents are allowed to acquire it as well! Shuffle the other 12 cards (Imperial Talon, Imperial Viper, Ranger, Salvage Drone, [4] Scout, Scout Bot, Stellar Falcon, Viper, and Welder Drone) to create your Personal Deck. When playing first you get a three card starting hand, and when going second you get a six card starting hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Divine Admiral Le | Rules (Part 3 of 3)",
+    "Faction": "",
+    "Type": "Legendary Commander",
+    "Cost": "",
+    "Text": "You have a hand size of six cards and start with 64 Authority. | <u>Alignment Faction Symbol</u> This faction symbol represents both Star Empire and Machine Cult . Mech Battleship counts as a card of both factions, and will trigger the Ally Abilities of either. Its own Ally Ability can be triggered by either a Star Empire or Machine Cult card. <u>Alignment Ingenuity</u> This gambit remains face up in front of you all game. When you use the Scrap ability of a ship or base, first resolve the ability’s effect. Afterwards, you may draw a card, then discard a card. <u>Le’s Foray</u> This gambit remains face up in front of you until you use it. You may do this by scrapping it at any time during your Main Phase. When you use it, you count as having an additional Star Empire and Machine Cult card in play that turn for triggering Ally Abilities. Learn more about playing with Command Decks at: <u>StarRealms.com/CommandDecks</u>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Scorecard Ones 09",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alignment",
+    "Qty": "1",
+    "Name": "Scorecard Tens 30",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Super Freighter",
+    "Faction": "Star Empire / Trade Federation",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "Gain 4 Trade. Draw two cards. <hr> Star Empire or Trade Federation Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Scorecard Tens 30",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Cargo Boat",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Trade. <hr> Trade Federation Ally: Gain 2 Authority. <hr> <i>Timely deliveries bring predictable profits.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Diplomatic Shuttle",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <i>or</i> Gain 5 Authority. <hr> <i>Words cost less than warships.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Federation Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <hr> Trade Federation Ally: The next Trade Federation card you acquire this turn costs 1 Trade less.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Imperial Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat. <hr> Star Empire Ally: You may discard a card. If you do, draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Ranger",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <i>or</i> Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "4",
+    "Name": "Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Stellar Falcon",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Star Empire Ally: Target opponent discards a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Tribute Transport",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Trade. Or draw a card, then discard a card. <hr> <i>The cost of imperial favor.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Nandi’s Onslaught | Rules (Part 1 of 3)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Until end of turn, you may use all of your Star Empire ally abilities. Until end of turn, you may use all of your Trade Federation ally abilities. Draw two cards, then you and each opponent discard a card. | When playing with the Alliance Command Deck, you are Fleet Director Nandi, legendary commander of the Alliance. While you will be able to acquire and play cards of any faction, your starting deck and gambits work particularly well with Star Empire and Trade Federation cards. This Command Deck may be played one-on-one against any other Command Deck, or, you can use it to take on two players playing standard starting decks! <u>2 vs 1</u> When playing against two players, those players use standard starting decks (eight Scout and two Viper cards). They play as a Hydra team with a total of 75 Authority. Hydra teams share a turn, may share trade and combat, but have separate decks and ally triggers (see Star Realms Rulebook, Formats section). <u>Setup</u> At the start of the game, place your Fleet Director Nandi card, along with your Alliance Procurement and Nandi’s Onslaught gambit cards, face up in front of you. Note: Your Fleet Director Nandi card is for reference, and does not count as a Star Empire or Trade Federation card in play for triggering Ally Abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Alliance Procurement | Rules (Part 2 of 3)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Once each turn, you may gain 2 Trade or put the next ship or base you acquire on top of your deck. | <u>Setup (Cont.)</u> You have a hand size of five cards and start with 68 Authority. You may track your Authority with the included scorecards. - Rotate and/or flip this card to represent a change in the tens digit. - Slide and/or flip this card to represent a change in the ones digit. Add the two numbers in the circle to get your Authority score. This shows a score of 68. Shuffle the Super Freighter card into the Trade Deck before laying out the starting Trade Row. This would be a great card for you to buy, but watch out, your opponents are allowed to acquire it as well! Shuffle the other 12 cards (Cargo Boat, Diplomatic Shuttle, Federation Scout, Imperial Viper, Ranger, [4] Scout, Stellar Falcon, Tribute Transport and Viper) to create your Personal Deck. When playing first you get a three card starting hand, and when going second you get a five card starting hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Fleet Director Nandi | Rules (Part 3 of 3)",
+    "Faction": "",
+    "Type": "Legendary Commander",
+    "Cost": "",
+    "Text": "You have a hand size of five cards and start with 68 Authority. | <u>Alliance Faction Symbol</u> This faction symbol represents both Star Empire and Trade Federation . Super Freighter counts as a card of both factions, and will trigger the Ally Abilities of either. Its own Ally Ability can be triggered by either a Star Empire or Trade Federation card. <u>Alliance Procurement</u> This gambit remains face up in front of you all game. It may be used once on each of your turns, at any time during your Main Phase. When you use it, decide whether to gain 2 Trade or put the next ship or base you acquire on top of your deck. <u>Nandi’s Onslaught</u> This gambit remains face up in front of you until you use it. You may do this by scrapping it at any time during your Main Phase. When you use it, you count as having an additional Star Empire and Trade Federation card in play that turn for triggering Ally Abilities. Learn more about playing with Command Decks at: <u>StarRealms.com/CommandDecks</u>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Alliance",
+    "Qty": "1",
+    "Name": "Scorecard Ones 09",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Mech Command Ship",
+    "Faction": "Machine Cult / Trade Federation",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "You may scrap up to two cards from your hand and/or discard pile. Gain 3 Authority for each card scrapped this way. <hr> Machine Cult or Trade Federation Ally: Draw a card. You may destroy target base.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Cargo Boat",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Trade. <hr> Trade Federation Ally: Gain 2 Authority. <hr> <i>Timely deliveries bring predictable profits.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Federation Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <hr> Trade Federation Ally: The next Trade Federation card you acquire this turn costs 1 Trade less.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Frontier Tug",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Trade. <hr> Trade Federation Ally: Shuffle the next base you acquire this turn into your deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Laser Drone",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Machine Cult Ally: Gain 1 Combat. <hr> Two Machine Cult Allies: Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Ranger",
+    "Faction": "",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <i>or</i> Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Salvage Drone",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. Or scrap a card in your hand or discard pile. <hr> <i>Robotic missionaries executing the doctrine of retrieval.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "4",
+    "Name": "Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Viper Bot",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Machine Cult Ally: If you’ve scrapped a card from your hand or discard pile this turn, gain 3 Combat",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Coalition Efficiency | Rules (Part 1 of 2)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Once per turn, if you would scrap a card in your hand or discard pile, you may choose to gain 5 Authority instead. | When playing with the Coalition Command Deck, you are High Director Valken, legendary commander of the Coalition. While you will be able to acquire and play cards of any faction, your starting deck and gambits work particularly well with Trade Federation and Machine Cult cards. This Command Deck may be played one-on-one against any other Command Deck, or, you can use it to take on two players playing standard starting decks! <u>2 vs 1</u> When playing against two players, those players use standard starting decks (eight Scout and two Viper cards). They play as a Hydra team with a total of 75 Authority (see Star Realms Rulebook, Formats section). <u>Setup</u> At the start of the game, place your High Director Valken card, along with your Coalition Efficiency and Valken’s Enterprise gambit cards, face up in front of you. You have a hand size of six cards and start with 62 Authority. You may track your Authority with the included scorecards. Shuffle the Mech Command Ship card into the Trade Deck before laying out the starting Trade Row.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Valken’s Enterprise | Coalition Stronghold",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Flip this gambit over and put it into play as a base. | Gain 2 Combat. <i>or</i> Gain 2 Authority. If this base would leave play, scrap it instead.",
+    "Defense": "| 6 Outpost"
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "High Director Valken | Rules (Part 2 of 2)",
+    "Faction": "",
+    "Type": "Legendary Commander",
+    "Cost": "",
+    "Text": "You have a hand size of six cards and start with 62 Authority. | <u>Setup (Cont.)</u> Shuffle the other 12 cards (Cargo Boat, Federation Scout, Frontier Tug, Laser Drone, Ranger, Salvage Drone, [4] Scout, Viper, and Viper Bot) to create your Personal Deck. When playing first you get a three card starting hand, and when going second you get a six card hand. <u>Coalition Faction Symbol</u> This faction symbol represents both Trade Federation and Machine Cult . Mech Command Ship counts as a card of both factions, and will trigger the Ally Abilities of either. Its own Ally Ability can be triggered by either a Trade Federation or Machine Cult card. <u>Coalition Efficiency</u> This gambit remains face up in front of you all game. You may use it even if there isn’t a card in the area you would have scrapped from. <u>Valken’s Enterprise</u> This gambit remains face up in front of you until you use it. You may do this by scrapping it at any time during your Main Phase. When you use it, turn it over and put the Coalition Stronghold base in play. Learn more about playing with Command Decks at: <u>StarRealms.com/CommandDecks</u>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Scorecard Ones 09",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Coalition",
+    "Qty": "1",
+    "Name": "Scorecard Tens 30",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Super Carrier",
+    "Faction": "Blob / Trade Federation",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "You may acquire a ship for free and put it into your hand. <hr> Trade Federation or Blob Ally: Draw a card. <hr> <i>A hunger for acquisition makes the Blobs surprisingly fitting partners for the Federation.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Cluster Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <hr> Blob Ally: Gain 1 Combat. You may scrap a card in the trade row.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Diplomatic Shuttle",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <i>or</i> Gain 5 Authority. <hr> <i>Words cost less than warships.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Escort Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat. <hr> Trade Federation Ally: Gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Frontier Tug",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Trade. <hr> Trade Federation Ally: Shuffle the next base you acquire this turn into your deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Ranger",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <i>or</i> Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Ripper",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 3 Combat. <hr> <i>Few things are more terrifying than the sound they make tearing into your ship’s hull.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "4",
+    "Name": "Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Swarmling",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Blob Ally: Gain 1 Combat. You may scrap a card in the trade row. <hr> <i>Attacking a cluster provokes the swarm.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Newburg’s Game | Rules (Part 1 of 3)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Gain 3 Combat. Gain 4 Authority. Until end of turn, you may use all of your Blob ally abilities. Until end of turn, you may use all of your Trade Federation ally abilities. Draw a card. | When playing with the Pact Command Deck, you are Overlord Newburg, legendary commander of the Pact. While you will be able to acquire and play cards of any faction, your starting deck and gambits work particularly well with Blob and Trade Federation cards. This Command Deck may be played one-on-one against any other Command Deck, or, you can use it to take on two players playing standard starting decks! <u>2 vs 1</u> When playing against two players, those players use standard starting decks (eight Scout and two Viper cards). They play as a Hydra team with a total of 75 Authority. Hydra teams share a turn, may share trade and combat, but have separate decks and ally triggers (see Star Realms Rulebook, Formats section). <u>Setup</u> At the start of the game, place your Overlord Newburg card, along with your Pact Dominion and Newburg’s Game gambit cards, face up in front of you. Note: Your Overlord Newburg card is for reference, and does not count as a Blob or Trade Federation card in play for triggering Ally Abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Pact Dominion | Rules (Part 2 of 3)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Each turn, the first time you gain Authority also gain 3 Combat | <u>Setup (Cont.)</u> You have a hand size of six cards and start with 66 Authority. You may track your Authority with the included scorecards. - Rotate and/or flip this card to represent a change in the tens digit. - Slide and/or flip this card to represent a change in the ones digit. Add the two numbers in the circle to get your Authority score. This shows a score of 68. Shuffle the Super Carrier card into the Trade Deck before laying out the starting Trade Row. This would be a great card for you to buy, but watch out, your opponents are allowed to acquire it as well! Shuffle the other 12 cards (Cluster Scout, Diplomatic Shuttle, Escort Viper, Frontier Tug, Ranger, Ripper, [4] Scout, Swarmling and Viper) to create your Personal Deck. When playing first you get a three card starting hand, and when going second you get a six card starting hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Overlord Newburg | Rules (Part 3 of 3)",
+    "Faction": "",
+    "Type": "Legendary Commander",
+    "Cost": "",
+    "Text": "You have a hand size of six cards and start with 66 Authority. | <u>Alignment Faction Symbol</u> This faction symbol represents both Blob and Trade Federation . Super Carrier counts as a card of both factions, and will trigger the Ally Abilities of either. Its own Ally Ability can be triggered by either a Blob or Trade Federation card. <u>Pact Dominion</u> This gambit remains face up in front of you all game. It automatically gives you 3 Combat the first time you gain Authority during your Main Phase each turn. It only works during your Main Phase, so if you gain Authority at any other time (like from an event during an opponent’s turn) it won’t work. <u>Newburg’s Game</u> This gambit remains face up in front of you until you use it. You may do this by scrapping it at any time during your Main Phase. When you use it, you count as having an additional Blob and Trade Federation card in play that turn for triggering Ally Abilities. Learn more about playing with Command Decks at: <u>StarRealms.com/CommandDecks</u>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Scorecard Ones 09",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Pact",
+    "Qty": "1",
+    "Name": "Scorecard Tens 30",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Meganaut",
+    "Faction": "Blob / Star Empire",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "Gain 7 Combat. Draw a card. <hr> Blob or Star Empire Ally: Draw a card. <hr> Scrap: Gain 6 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Cluster Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Blob Ally: Gain 1 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Imperial Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <hr> Star Empire Ally: Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Imperial Talon",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Star Empire Ally: Gain 2 Combat. <hr> <i>\"She's quick and has powerful guns, but her armor is... well... don't get hit.\" - Imperial Flight Instructor</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Protopod",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Trade. <hr> Blob Ally: Gain 1 Combat. <hr> <i>Federation xenobiologists theorize that they are immature Trade Pods.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Ranger",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <i>or</i> Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Ripper",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 3 Combat. <hr> <i>Few things are more terrifying than the sound they make tearing into your ship’s hull.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "4",
+    "Name": "Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Tribute Transport",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Trade. Or draw a card, then discard a card. <hr> <i>The cost of imperial favor.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "McCready's Maneuver | Rules (Part 1 of 3)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Gain 5 Combat. Until end of turn, you may use all of your Blob ally abilities. Until end of turn, you may use all of your Star Empire ally abilities. Draw a card. | When playing with the Union Command Deck, you are Hive Admiral McCready, legendary commander of the Union. While you will be able to acquire and play cards of any faction, your starting deck and gambits work particularly well with Blob and Star Empire cards. This Command Deck may be played one-on-one against any other Command Deck, or, you can use it to take on two players playing standard starting decks! <u>2 vs 1</u> When playing against two players, those players use standard starting decks (eight Scout and two Viper cards). They play as a Hydra team with a total of 75 Authority . Hydra teams share a turn, may share trade and combat, but have separate decks and ally triggers (see Star Realms Rulebook, Formats section). <u>Setup</u> At the start of the game, place your Hive Admiral McCready card, along with your Union Blitz and McCready’s Maneuver gambit cards, face up in front of you. Note: Your Hive Admiral McCready card is for reference, and does not count as a Blob or Star Empire card in play for triggering Ally Abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Union Blitz | Rules (Part 2 of 3)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Blob Ally: Gain 1 Combat. <hr> Star Empire Ally: Gain 1 Combat. | <u>Setup (Cont.)</u> You have a hand size of six cards and start with 60 Authority . You may track your Authority with the included scorecards. - Rotate and/or flip this card to represent a change in the tens digit. - Slide and/or flip this card to represent a change in the ones digit. Add the two numbers in the circle to get your Authority score. This shows a score of 68. Shuffle the Meganaut card into the Trade Deck before laying out the starting Trade Row. This would be a great card for you to buy, but watch out, your opponents are allowed to acquire it as well! Shuffle the other 12 cards (Cluster Viper, Imperial Scout, Imperial Talon, Protopod, Ranger, Ripper, [4] Scout, Tribute Transport, and Viper) to create your Personal Deck. When playing first you get a three card starting hand, and when going second you get a six card starting hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Hive Admiral McCready | Rules (Part 3 of 3)",
+    "Faction": "",
+    "Type": "Legendary Commander",
+    "Cost": "",
+    "Text": "You have a hand size of six cards and start with 60 Authority. | <u>Union Faction Symbol</u> This faction symbol represents both Blob and Star Empire . Meganaut counts as a card of both factions, and will trigger the Ally Abilities of either. Its own Ally Ability can be triggered by either a Blob or Star Empire card. <u>Union Blitz</u> This gambit remains face up in front of you all game. Its Ally Abilities may be triggered and used every turn. You get 1 Combat for each Ally Ability, so if you are able to use both you will gain a total of 2 Combat from the gambit that turn. <u>McCready’s Maneuver</u> This gambit remains face up in front of you until you use it. You may do this by scrapping it at any time during your Main Phase. When you use it, you count as having an additional Blob and Star Empire card in play that turn for triggering Ally Abilities. Learn more about playing with Command Decks at: <u>StarRealms.com/CommandDecks</u>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Scorecard Ones 09",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Union",
+    "Qty": "1",
+    "Name": "Scorecard Tens 30",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Mech Wurm",
+    "Faction": "Blob / Machine Cult",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "You may scrap up to two cards from your hand and/or discard pile. Gain 4 Combat for each card scrapped in this way. <hr> Blob or Machine Cult Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Cluster Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Blob Ally: Gain 1 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Laser Drone",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Machine Cult Ally: Gain 1 Combat. <hr> Two Machine Cult Allies: Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Protopod",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Trade. <hr> Blob Ally: Gain 1 Combat. <hr> <i>Federation xenobiologists theorize that they are immature Trade Pods.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Ranger",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <i>or</i> Gain 2 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "4",
+    "Name": "Scout",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Scout Bot",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <hr> Machine Cult Ally: Choose a card of cost 2 or less in your discard pile. Put it on top of your deck.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Swarmling",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Combat. <hr> Blob Ally: Gain 1 Combat. You may scrap a card in the trade row. <hr> <i>Attacking a cluster provokes the swarm.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Viper",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Welder Drone",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 2 Trade. <i>or</i> Gain 2 Combat. <hr> <i>With typical cult efficiency, these drones are equally suited for construction or demolition.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Walsh's Stratagem | Rules (Part 1 of 3)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Gain 2 Trade. Until end of turn, you may use all of your Machine Cult ally abilities. Until end of turn, you may use all of your Blob ally abilities. Put the next base you acquire this turn directly into play. | When playing with the Unity Command Deck, you are Biolord Walsh, legendary commander of the Unity. While you will be able to acquire and play cards of any faction, your starting deck and gambits work particularly well with Machine Cult and Blob cards. This Command Deck may be played one-on-one against any other Command Deck, or, you can use it to take on two players playing standard starting decks! <u>2 vs 1</u> When playing against two players, those players use standard starting decks (eight Scout and two Viper cards). They play as a Hydra team with a total of 75 Authority. Hydra teams share a turn, may share trade and combat, but have separate decks and ally triggers (see Star Realms Rulebook, Formats section). <b>When playing 2 Vs 1 you may not use your Walsh’s Stratagem gambit on your first turn.</b> <u>Setup</u> At the start of the game, place your Biolord Walsh card, along with your Unity Warcraft and Walsh’s Stratagem gambit cards, face up in front of you. Note: Your Biolord Walsh card is for reference, and does not count as a Machine Cult or Blob card in play for triggering Ally Abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Unity Warcraft | Rules (Part 2 of 3)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Your bases get +1 defense Your opponent’s bases get -1 defense <i>(This affects both regular bases and Outposts.)</i> | <u>Setup (Cont.)</u> You have a hand size of six cards and start with 70 Authority. You may track your Authority with the included scorecards. - Rotate and/or flip this card to represent a change in the tens digit. - Slide and/or flip this card to represent a change in the ones digit. Add the two numbers in the circle to get your Authority score. This shows a score of 78. Shuffle the Mech Wurm card into the Trade Deck before laying out the starting Trade Row. This would be a great card for you to buy, but watch out, your opponents are allowed to acquire it as well! Shuffle the other 12 cards (Cluster Viper, Laser Drone, Protopod, Ranger, [4] Scout, Scout Bot, Swarmling, Viper, and Welder Drone) to create your Personal Deck. When playing first you get a three card starting hand, and when going second you get a six card starting hand.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Biolord Walsh | Rules (Part 3 of 3)",
+    "Faction": "",
+    "Type": "Legendary Commander",
+    "Cost": "",
+    "Text": "You have a hand size of six cards and start with 70 Authority. | <u>Unity Faction Symbol</u> This faction symbol represents both Machine Cult and Blob . Mech Wurm counts as a card of both factions, and will trigger the Ally Abilities of either. Its own Ally Ability can be triggered by either a Machine Cult or Blob card. <u>Unity Warcraft</u> This gambit remains face up in front of you all game. It continually gives all of your bases +1 Defense and all of your opponent’s bases -1 Defense. <u>Walsh’s Stratagem</u> This gambit remains face up in front of you until you use it. You may do this by scrapping it at any time during your Main Phase. When you use it, you count as having an additional Machine Cult and Blob card in play that turn for triggering Ally Abilities.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Scorecard Ones 09",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: The Unity",
+    "Qty": "1",
+    "Name": "Scorecard Tens 30",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "1",
+    "Name": "Lost Dreadnaught",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "8",
+    "Text": "Gain 7 Combat. Draw two cards. Lost Dreadnaught has all factions. <hr> <i>The Lost Fleet survived centuries of isolation by salvaging tech from long-dead alien civilizations.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "3",
+    "Name": "Assault Shard",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Combat. <hr> Splinter: Gain 4 Combat.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "2",
+    "Name": "Command Shard",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. You may treat this card as having any name when using a Splinter ability.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "3",
+    "Name": "Recon Shard",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <hr> Splinter: Gain 5 Authority.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "3",
+    "Name": "Salvage Shard",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <hr> Splinter: Scrap a card in your hand or discard pile.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "3",
+    "Name": "Transport Shard",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "",
+    "Text": "Gain 1 Trade. <hr> Splinter: Draw a card, then discard a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "1",
+    "Name": "Splinter Tech | Rules (Part 1 of 2)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Whenever you use a Splinter ability, choose a faction. You count as having a card of that faction in play this turn. | When playing with the Lost Fleet Command Deck, you are High Admiral Jochum, legendary commander of the Lost Fleet. This Command Deck may be played one-on-one against any other Command Deck, or, you can use it to take on two players playing standard starting decks! <u>2 vs 1</u> When playing against two players, those players use standard starting decks (eight Scout and two Viper cards). They play as a Hydra team with a total of 75 Authority (see Star Realms Rulebook, Formats section). <u>Setup</u> At the start of the game, place your High Admiral Jochum card, along with your Splinter Tech and Jochum’s Grand Design gambit cards, face up in front of you. You have a hand size of seven cards and start with 72 Authority. You may track your Authority with the included scorecards. Shuffle the Lost Dreadnaught card into the Trade Deck before laying out the starting Trade Row. This would be a great card for you to buy, but watch out, your opponents are allowed to acquire it as well!",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "1",
+    "Name": "Jochum's Grand Design | Rules (Part 2 of 2)",
+    "Faction": "",
+    "Type": "Gambit",
+    "Cost": "",
+    "Text": "Scrap: Until end of turn, you may use all of your Star Empire ally abilities. Until end of turn, you may use all of your Trade Federation ally abilities. Until end of turn, you may use all of your Machine Cult ally abilities. Until end of turn, you may use all of your Blob ally abilities. Put a card from your discard pile into your hand. | <u>Setup (Cont.)</u> Shuffle the other 14 cards ([3] Assault Shard, [2] Command Shard, [3] Recon Shard, [3] Salvage Shard, and [3] Transport Shard) to create your Personal Deck. When playing first you get a four card starting hand, and when going second you get a seven card starting hand. <u>Splinter Tech</u> This gambit remains face up in front of you all game. Resolve the Splinter Ability effect before you choose the faction. <u>Jochum’s Grand Design</u> This gambit remains face up in front of you until you use it. You may do this by scrapping it at any time during your Main Phase. When you use it, you count as having an additional Machine Cult , Star Empire , Blob , and Trade Federation card in play that turn for triggering Ally Abilities. Learn more about playing with Command Decks at: <u>StarRealms.com/CommandDecks</u>",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "1",
+    "Name": "High Admiral Jochum | Splinter Abilities",
+    "Faction": "",
+    "Type": "Legendary Commander",
+    "Cost": "",
+    "Text": "You have a hand size of seven cards and start with 72 Authority. | If one of your cards in play has a Splinter Ability, you may use that ability by putting that card and two other cards of the same name into the discard pile. <u>Note</u>: Though three cards are going into the discard pile, you only gain the effect of the Splinter Ability once.",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "1",
+    "Name": "Scorecard Ones 09",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Command Deck: Lost Fleet",
+    "Qty": "1",
+    "Name": "Scorecard Tens 30",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "",
+    "Defense": ""
+  },
+  {
+    "Set": "Stellar Allies",
+    "Qty": "2",
+    "Name": "Alignment Bot",
+    "Faction": "Machine Cult / Star Empire",
+    "Type": "Ship",
+    "Cost": "1",
+    "Text": "Gain 2 Trade. <hr> Scrap: Scrap a card from your discard pile <u>or</u> Gain 2 Combat and target opponent discards a card. <hr> <i>“Smuggling without the smugglers.”</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Stellar Allies",
+    "Qty": "1",
+    "Name": "The Citadel",
+    "Faction": "Machine Cult / Star Empire",
+    "Type": "Base",
+    "Cost": "7",
+    "Text": "Target opponent discards a card. You may scrap a card in your hand or discard pile. <hr> <i>The Emperor was quick to embrace cult doctrine to gain subjects on the frontier.</i>",
+    "Defense": "7 Outpost"
+  },
+  {
+    "Set": "Stellar Allies",
+    "Qty": "1",
+    "Name": "Missile Silo",
+    "Faction": "Machine Cult / Star Empire",
+    "Type": "Base",
+    "Cost": "6",
+    "Text": "Gain 3 Combat. <hr> Star Empire Ally: Target opponent discards a card. <hr> Machine Cult Ally: Destroy target base.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Stellar Allies",
+    "Qty": "2",
+    "Name": "Needle Lancer",
+    "Faction": "Machine Cult / Star Empire",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 5 Combat. <hr> Machine Cult or Star Empire Ally: Copy an ally ability that you’ve already used this turn. <hr> <i>The pinnacle of the fusion between imperial and cult tech.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Stellar Allies",
+    "Qty": "2",
+    "Name": "Pact Pod",
+    "Faction": "Blob / Trade Federation",
+    "Type": "Ship",
+    "Cost": "2",
+    "Text": "Gain 2 Trade. <hr> Blob Ally: Gain 5 Combat. <hr> Trade Federation Ally: Gain 1 Trade.",
+    "Defense": ""
+  },
+  {
+    "Set": "Stellar Allies",
+    "Qty": "2",
+    "Name": "Pact Warship",
+    "Faction": "Blob / Trade Federation",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Gain 5 Combat. <hr> Blob Ally: Destroy target base. <hr> Trade Federation Ally: Gain 5 Authority.",
+    "Defense": ""
+  },
+  {
+    "Set": "Stellar Allies",
+    "Qty": "1",
+    "Name": "Summit Site",
+    "Faction": "Blob / Trade Federation",
+    "Type": "Base",
+    "Cost": "8",
+    "Text": "Draw two cards. <hr> <i>“Many imperial agents have died attempting to find out what’s discussed here.”</i>",
+    "Defense": "6"
+  },
+  {
+    "Set": "Stellar Allies",
+    "Qty": "1",
+    "Name": "Trade Hive",
+    "Faction": "Blob / Trade Federation",
+    "Type": "Base",
+    "Cost": "5",
+    "Text": "Gain 2 Trade. <hr> Trade Federation or Blob Ally: Draw a card.",
+    "Defense": "4"
+  },
+  {
+    "Set": "Stellar Allies",
+    "Qty": "1",
+    "Name": "Rules: Faction Pairs | United Ad",
+    "Faction": "",
+    "Type": "",
+    "Cost": "",
+    "Text": "Alliance = Star Empire + Trade Federation Coalition = Trade Federation + Machine Cult Unity = Machine Cult + Blob Union = Blob + Star Empire Alignment = Star Empire + Machine Cult Pact = Blob + Trade Federation The multicolor symbols above each count as two existing Star Realms factions. For example, if you have an Alliance card in play, you may activate any Star Empire or Trade Federation ally abilities. Alternatively, if you have a Star Empire or Trade Federation card in play, you may activate any Alliance ally abilities. | For more multi-faction awesomeness, check out Star Realms United Assault and Command! Available NOW at <u>Shop.WhiteWizardGames.com</u>",
+    "Defense": ""
+  },
+  {
+    "Set": "Universal Storage Box",
+    "Qty": "2",
+    "Name": "Brooder",
+    "Faction": "Blob",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Gain 6 Combat. Put a random Pod Token into play. <hr> Blob Ally: Hatch a Pod Token.",
+    "Defense": ""
+  },
+  {
+    "Set": "Universal Storage Box",
+    "Qty": "2",
+    "Name": "Embassy Transport",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Gain 3 Trade. Gain 3 Authority. <hr> Scrap: Draw a card for each base you have in play. <hr> <i>Federation diplomats travel in style.</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Universal Storage Box",
+    "Qty": "2",
+    "Name": "Orbital Crane",
+    "Faction": "Star Empire",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Gain 2 Trade. You may return target base to its owner’s hand. <hr> Star Empire Ally: Draw a card.",
+    "Defense": ""
+  },
+  {
+    "Set": "Universal Storage Box",
+    "Qty": "2",
+    "Name": "Recovery Mech",
+    "Faction": "Machine Cult",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Gain 5 Combat. You may put a card from your discard pile on top of your deck. <hr> <i>“Recover, Recycle, Reprocess.” - Mantra of the Machine</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Universal Storage Box",
+    "Qty": "1",
+    "Name": "Mutant Drone | Pod Token",
+    "Faction": "Blob",
+    "Type": "Ship | Base",
+    "Cost": "",
+    "Text": "Acquire a card of cost two or less for free and put it into your hand. When this card leaves play, return it to the Pod Token pile. <hr> The Blob evolve rapidly when faced with a new threat. | When this card leaves play, return it to the Pod Token pile. <hr> Blob Ally: If this Pod Token didn’t come into play this turn, it hatches (flip it over).",
+    "Defense": "|2"
+  },
+  {
+    "Set": "Universal Storage Box",
+    "Qty": "3",
+    "Name": "Warrior Drone | Pod Token",
+    "Faction": "Blob",
+    "Type": "Ship | Base",
+    "Cost": "",
+    "Text": "Gain 3 Combat. When this card leaves play, return it to the Pod Token pile. <hr> <i>Born for battle.</i> | When this card leaves play, return it to the Pod Token pile. <hr> Blob Ally: If this Pod Token didn’t come into play this turn, it hatches (flip it over).",
+    "Defense": "|2"
+  },
+  {
+    "Set": "Universal Storage Box",
+    "Qty": "2",
+    "Name": "Worker Drone | Pod Token",
+    "Faction": "Blob",
+    "Type": "Ship | Base",
+    "Cost": "",
+    "Text": "Gain 2 Trade. When this card leaves play, return it to the Pod Token pile. <hr> <i>They work tirelessly until their death.</i> | When this card leaves play, return it to the Pod Token pile. <hr> Blob Ally: If this Pod Token didn’t come into play this turn, it hatches (flip it over).",
+    "Defense": "|2"
+  },
+  {
+    "Set": "Universal Storage Box",
+    "Qty": "1",
+    "Name": "Young Queen | Pod Token",
+    "Faction": "Blob",
+    "Type": "Ship | Base",
+    "Cost": "",
+    "Text": "Draw two cards. When this card leaves play, return it to the Pod Token pile. <hr> <i>The birth of a Queen signals the birth of a new cluster.</i> | When this card leaves play, return it to the Pod Token pile. <hr> Blob Ally: If this Pod Token didn’t come into play this turn, it hatches (flip it over).",
+    "Defense": "|2"
+  },
+  {
+    "Set": "Promo (Deck Box)",
+    "Qty": "1",
+    "Name": "Mercenary Garrison",
+    "Faction": "Unaligned",
+    "Type": "Base",
+    "Cost": "4",
+    "Text": "Star Empire: 2 Combat Machine Cult: Scrap a card from your hand or discard pile. Trade Federation: 3 Authority The Blobs: Scrap up to two cards currently in the trade row.",
+    "Defense": "5 Outpost"
+  },
+  {
+    "Set": "Promo (Dice Tower)",
+    "Qty": "1",
+    "Name": "Security Craft",
+    "Faction": "Trade Federation",
+    "Type": "Ship",
+    "Cost": "4",
+    "Text": "Add 4 Combat and 3 Authority Ally: Add 3 Trade. <i>\"Set coordinates for the Tower.\"</i>",
+    "Defense": ""
+  },
+  {
+    "Set": "Promo (Storage Box)",
+    "Qty": "1",
+    "Name": "Merc Battlecruiser",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "6",
+    "Text": "Add 6 Combat Draw a card. Choose a faction as you play Merc Battlecruiser. Merc Battlecruiser is that faction.",
+    "Defense": ""
+  },
+  {
+    "Set": "Promo (Base Set Kickstarter)",
+    "Qty": "1",
+    "Name": "Merc Cruiser",
+    "Faction": "Unaligned",
+    "Type": "Ship",
+    "Cost": "3",
+    "Text": "Add 5 Combat Choose a faction as you play Merc Cruiser. Merc Cruiser has that faction. <i>They have as much courage as you have coin.</i>",
+    "Defense": ""
+  }
+]

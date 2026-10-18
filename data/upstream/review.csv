@@ -1,0 +1,138 @@
+id,name,faction,kind,cost,defense,outpost,core,colony_wars,frontiers,text
+agingBattleship,Aging Battleship,star_empire,ship,5,,false,0,1,0,{Gain 5 Combat} || {Star Empire Ally}: Draw a card. || {Scrap}: {Gain 2 Combat} Draw 2 cards.
+barterWorld,Barter World,trade_federation,base,4,4,false,2,0,0,{Gain 2 Authority} OR {Gain 2 Trade} || {Scrap}: {Gain 5 Combat}
+battleBlob,Battle Blob,blob,ship,6,,false,1,0,0,{Gain 8 Combat} || {Blob Ally}: Draw a card. || {Scrap}: {Gain 4 Combat}
+battleBot,Battle Bot,machine_cult,ship,1,,false,0,3,0,{Gain 2 Combat} You may scrap a card in your hand. || {Machine Cult Ally}: {Gain 2 Combat}
+battleMech,Battle Mech,machine_cult,ship,5,,false,1,0,0,{Gain 4 Combat} You may scrap a card in your hand or discard pile. || {Machine Cult Ally}: Draw a card.
+battlePod,Battle Pod,blob,ship,2,,false,2,0,0,{Gain 4 Combat} You may scrap a card in the trade row. || {Blob Ally}: {Gain 2 Combat}
+battleStation,Battle Station,machine_cult,base,3,5,true,2,0,0,{Scrap}: {Gain 5 Combat}
+battlecruiser,Battlecruiser,star_empire,ship,6,,false,1,0,0,{Gain 5 Combat} Draw a card. || {Star Empire Ally}: Target opponent discards a card. || {Scrap}: Draw a card. You may destroy target base.
+bioformer,Bioformer,blob,base,4,4,false,0,2,0,{Gain 3 Combat} || {Scrap}: {Gain 3 Trade}
+blobAlpha,Blob Alpha,blob,ship,6,,false,0,0,1,{Gain 10 Combat}
+blobCarrier,Blob Carrier,blob,ship,6,,false,1,0,0,{Gain 7 Combat} || {Blob Ally}: Acquire any ship for free and put it on top of your deck.
+blobDestroyer,Blob Destroyer,blob,ship,4,,false,2,0,0,{Gain 6 Combat} || {Blob Ally}: You may destroy target base and/or scrap a card in the trade row.
+blobFighter,Blob Fighter,blob,ship,1,,false,3,0,0,{Gain 3 Combat} || {Blob Ally}: Draw a card.
+blobMiner,Blob Miner,blob,ship,2,,false,0,0,3,{Gain 3 Trade} You may scrap a card in the trade row. || {Scrap}: {Gain 2 Combat}
+blobWheel,Blob Wheel,blob,base,3,5,false,3,0,0,{Gain 1 Combat} || {Scrap}: {Gain 3 Trade}
+blobWorld,Blob World,blob,base,8,7,false,1,0,0,{Gain 5 Combat} OR Draw a card for each Blob card that you've played this turn.
+brainWorld,Brain World,machine_cult,base,8,6,true,1,0,0,Scrap up to two cards from your hand and/or discard pile. Draw a card for each card scrapped this way.
+builderBot,Builder Bot,machine_cult,ship,1,,false,0,0,3,{Gain 1 Trade} You may scrap a card in your discard pile. || {Machine Cult Ally}: {Gain 1 Trade} || {Scrap}: {Gain 2 Combat}
+burrower,Burrower,blob,ship,3,,false,0,0,2,{Gain 5 Combat} || {Blob Ally}: Draw a card. || {Scrap}: Acquire a card of cost four or less for free.
+capturedOutpost,Captured Outpost,star_empire,base,3,3,true,0,0,2,"Draw a card, then discard a card."
+cargoCraft,Cargo Craft,star_empire,ship,2,,false,0,0,3,{Gain 2 Trade} Target opponent discards a card. || {Star Empire Ally}: {Gain 4 Combat}
+cargoPod,Cargo Pod,blob,ship,3,,false,0,3,0,{Gain 3 Trade} || {Blob Ally}: {Gain 3 Combat} || {Scrap}: {Gain 3 Combat}
+centralOffice,Central Office,trade_federation,base,7,6,false,1,0,0,{Gain 2 Trade} You may put the next ship you acquire this turn on top of your deck. || {Trade Federation Ally}: Draw a card.
+centralStation,Central Station,trade_federation,base,4,5,false,0,2,0,"{Gain 2 Trade} If you have three or more bases in play (including this one), gain {4 Authority} and draw a card."
+colonySeedShip,Colony Seed Ship,trade_federation,ship,5,,false,0,1,0,"{Gain 3 Trade} {Gain 3 Combat} {Gain 3 Authority} When you acquire this card, if you've played a Trade Federation card this turn, you may put this card directly into your hand."
+commandCenter,Command Center,star_empire,base,4,4,true,0,2,0,"{Gain 2 Trade} Whenever you play a Star Empire ship, gain {2 Combat}"
+commandShip,Command Ship,trade_federation,ship,8,,false,1,0,0,{Gain 4 Authority} {Gain 5 Combat} Draw two cards. || {Trade Federation Ally}: Destroy target base.
+conversionYard,Conversion Yard,machine_cult,base,5,4,true,0,0,1,"You may scrap a card in your hand. If you do, gain {4 Combat}"
+convoyBot,Convoy Bot,machine_cult,ship,3,,false,0,3,0,{Gain 4 Combat} You may scrap a card in your hand or discard pile. || {Machine Cult Ally}: {Gain 2 combat}
+corvette,Corvette,star_empire,ship,2,,false,2,0,0,{Gain 1 Combat} Draw a card. || {Star Empire Ally}: {Gain 2 Combat}
+crusher,Crusher,blob,ship,3,,false,0,0,2,{Gain 6 Combat} || {Blob Ally}: {Gain 2 Trade}
+cutter,Cutter,trade_federation,ship,2,,false,3,0,0,{Gain 4 Authority} {Gain 2 Trade} || {Trade Federation Ally}: {Gain 4 Combat}
+defenseCenter,Defense Center,trade_federation,base,5,5,true,1,0,0,{Gain 3 Authority} OR {Gain 2 Combat} || {Trade Federation Ally}: {Gain 2 Combat}
+defenseSystem,Defense System,machine_cult,base,4,5,true,0,0,2,{Gain 2 Combat} || {Machine Cult Ally}: {Gain 2 Combat}
+destroyerBot,Destroyer Bot,machine_cult,ship,3,,false,0,0,3,{Gain 5 Combat} You may scrap a card in your discard pile.
+dreadnaught,Dreadnaught,star_empire,ship,7,,false,1,0,0,{Gain 7 Combat} Draw a card. || {Scrap}: {Gain 5 Combat}
+embassyYacht,Embassy Yacht,trade_federation,ship,3,,false,2,0,0,"{Gain 3 Authority} {Gain 2 Trade} If you have two or more bases in play, draw two cards."
+emperorSDreadnaught,Emperor's Dreadnaught,star_empire,ship,8,,false,0,1,0,"{Gain 8 Combat} Draw a card. Target opponent discards a card. When you acquire this card, if you've played a Star Empire card this turn, you may put this card directly into your hand."
+enforcerMech,Enforcer Mech,machine_cult,ship,5,,false,0,0,1,{Gain 5 Combat} You may scrap a card in your hand or discard pile. || {Machine Cult Ally}: Destroy target base. || {Scrap}: Draw a card.
+explorer,Explorer,unaligned,ship,2,,false,10,10,16,{Gain 2 Trade} || {Scrap}: {Gain 2 Combat}
+factoryWorld,Factory World,trade_federation,base,8,6,true,0,1,0,{Gain 3 Trade} Put the next ship or base you acquire this turn into your hand.
+falcon,Falcon,star_empire,ship,3,,false,0,2,0,{Gain 2 Combat} Draw a card. || {Scrap}: Target opponent discards a card.
+farmShip,Farm Ship,star_empire,ship,4,,false,0,0,2,"{Gain 3 Trade} Draw a card, then discard a card. || {Scrap}: {Gain 4 Combat}"
+federationBattleship,Federation Battleship,trade_federation,ship,7,,false,0,0,1,{Gain 5 Combat} {Gain 5 Authority} Draw a card. || {Trade Federation Ally}: Destroy target base. || {Scrap}: {Gain 10 Authority}
+federationCruiser,Federation Cruiser,trade_federation,ship,5,,false,0,0,1,{Gain 5 Combat} {Gain 4 Authority} || {Trade Federation Ally}: {Gain 2 Combat} {Gain 2 Authority}
+federationShipyard,Federation Shipyard,trade_federation,base,6,6,true,0,1,0,{Gain 2 Trade} || {Trade Federation Ally}: Put the next ship or base you acquire this turn on top of your deck.
+federationShuttle,Federation Shuttle,trade_federation,ship,1,,false,3,0,0,{Gain 2 Trade} {Trade Federation Ally}: {Gain 4 Authority}
+flagship,Flagship,trade_federation,ship,6,,false,1,0,0,{Gain 5 Combat} Draw a card. || {Trade Federation Ally}: {Gain 5 Authority}
+fleetHq,Fleet HQ,star_empire,base,8,8,false,1,0,0,"Whenever you play a ship, gain {1 Combat}"
+freighter,Freighter,trade_federation,ship,4,,false,2,0,0,{Gain 4 Trade} || {Trade Federation Ally}: You may put the next ship you acquire this turn on top of your deck.
+frontierFerry,Frontier Ferry,trade_federation,ship,4,,false,0,2,0,{Gain 3 Trade} {Gain 4 Authority} || {Scrap}: Destroy Target Base.
+frontierHawk,Frontier Hawk,star_empire,ship,1,,false,0,0,3,"{Gain 3 Combat} Draw a card, then discard a card."
+frontierRunner,Frontier Runner,trade_federation,ship,1,,false,0,0,3,{Gain 2 Trade} {Gain 2 Authority}
+frontierStation,Frontier Station,machine_cult,base,6,6,true,0,1,0,{Gain 2 Trade} OR {Gain 3 Combat}
+gateship,Gateship,trade_federation,ship,6,,false,0,0,1,"Acquire a ship or base of cost six or less for free, and put it on top of your deck. || {Trade Federation Ally}: {Gain 5 Authority}"
+gunship,Gunship,star_empire,ship,4,,false,0,2,0,{Gain 5 Combat} Target opponent discards a card. || {Scrap}: {Gain 4 Trade}
+hammerhead,Hammerhead,star_empire,ship,5,,false,0,0,1,"{Gain 3 Combat} Draw a card. Target opponent discards a card. || {Star Empire Ally}: Draw a card, then discard a card."
+heavyCruiser,Heavy Cruiser,star_empire,ship,5,,false,0,1,0,{Gain 4 Combat} Draw a card. || {Star Empire Ally}: Draw a card.
+hiveQueen,Hive Queen,blob,ship,7,,false,0,0,1,{Gain 7 Combat} Draw a card. || {Blob Ally}: {Gain 3 Combat} || {Double Blob Ally}: {Gain 3 Combat}
+imperialFighter,Imperial Fighter,star_empire,ship,1,,false,3,0,0,{Gain 2 Combat} Target opponent discards a card. || {Star Empire Ally}: {Gain 2 Combat}
+imperialFlagship,Imperial Flagship,star_empire,ship,8,,false,0,0,1,{Gain 7 Combat} Draw two cards. || {Star Empire Ally}: Target player discards a card.
+imperialFrigate,Imperial Frigate,star_empire,ship,3,,false,3,0,0,{Gain 4 Combat} Target opponent discards a card. || {Star Empire Ally}: {Gain 2 Combat} || {Scrap}: Draw a card.
+imperialPalace,Imperial Palace,star_empire,base,7,6,true,0,1,0,Draw a card. Target opponent discards a card. || {Star Empire Ally}: {Gain 4 Combat}
+infestedMoon,Infested Moon,blob,base,6,5,false,0,0,1,{Gain 4 Combat} || {Blob Ally}: Draw a card. || {Double Blob Ally}: Draw a card.
+integrationPort,Integration Port,machine_cult,base,3,5,true,0,0,2,{Gain 1 Trade}
+ionStation,Ion Station,trade_federation,base,5,5,true,0,0,1,{Gain 2 Trade} || {Trade Federation Ally}: {Gain 1 Trade} || {Double Trade Federation Ally}: {Gain 4 Combat} {Gain 4 Authority}
+jammingTerminal,Jamming Terminal,star_empire,base,5,6,false,0,0,1,{Gain 2 Combat} Target opponent discards a card.
+junkyard,Junkyard,machine_cult,base,6,5,true,1,0,0,Scrap a card in your hand or discard pile.
+lancer,Lancer,star_empire,ship,2,,false,0,3,0,"{Gain 4 Combat} If an opponent controls a base, gain an additional {2 Combat} || {Star Empire Ally}: Target opponent discards a card."
+leviathan,Leviathan,blob,ship,8,,false,0,1,0,{Gain 9 Combat} Draw a card. You may destroy target base. || {Blob Ally}: Acquire a card of cost three or less for free and put it into your hand.
+lightCruiser,Light Cruiser,star_empire,ship,3,,false,0,0,3,{Gain 4 Combat} Target opponent discards a card. || {Star Empire Ally}: {Gain 2 Combat} || {Double Star Empire Ally}: Draw a card.
+longHauler,Long Hauler,trade_federation,ship,4,,false,0,0,2,{Gain 3 Trade} || {Trade Federation Ally}: {Gain 2 Trade} || {Scrap}: Put the next base you acquire this turn on top of your deck.
+loyalColony,Loyal Colony,trade_federation,base,7,6,false,0,1,0,{Gain 3 Trade} {Gain 3 Combat} {Gain 3 Authority}
+machineBase,Machine Base,machine_cult,base,7,6,true,1,0,0,"Draw a card, then scrap a card from your hand."
+mechCruiser,Mech Cruiser,machine_cult,ship,5,,false,0,1,0,{Gain 6 Combat} You may scrap a card in your hand or discard pile. || {Machine Cult Ally}: Destroy target base.
+mechWorld,Mech World,machine_cult,base,5,6,true,1,0,0,Mech World counts as an ally for all factions.
+miningMech,Mining Mech,machine_cult,ship,4,,false,0,2,0,{Gain 3 Trade} You may scrap a card in your hand or discard pile. || {Machine Cult Ally}: {Gain 3 combat}
+missileBot,Missile Bot,machine_cult,ship,2,,false,3,0,0,{Gain 2 Combat} You may scrap a card in your hand or discard pile. || {Machine Cult Ally}: {Gain 2 Combat}
+missileMech,Missile Mech,machine_cult,ship,6,,false,1,0,0,{Gain 6 Combat} You may destroy target base. || {Machine Cult Ally}: Draw a card.
+mobileMarket,Mobile Market,trade_federation,base,4,4,true,0,0,2,"{Gain 2 Trade} || {Scrap}: Gain {2 Authority} and draw a card. At end of turn, move Mobile Market from the scrap heap to your discard pile."
+moonwurm,Moonwurm,blob,ship,7,,false,0,1,0,{Gain 8 Combat} Draw a card. || {Blob Ally}: Acquire a card of cost two or less for free and put it into your hand.
+moonwurmHatchling,Moonwurm Hatchling,blob,ship,4,,false,0,0,2,{Gain 3 Trade} or destroy target base. || {Blob Ally}: {Gain 3 Combat} || {Double Blob Ally}: {Gain 3 Combat}
+mothership,Mothership,blob,ship,7,,false,1,0,0,{Gain 6 Combat} Draw a card. || {Blob Ally}: Draw a card.
+nanobotSwarm,Nanobot Swarm,machine_cult,ship,8,,false,0,0,1,{Gain 5 Combat} Draw two cards. You may scrap up to two cards in your hand and/or discard pile.
+nestingGround,Nesting Ground,blob,base,4,5,false,0,0,1,{Gain 2 Trade} || {Blob Ally}: {Gain 4 Combat}
+neuralNexus,Neural Nexus,machine_cult,base,7,6,true,0,0,1,Scrap a card in your hand or discard pile and gain {Combat} equal to its cost. || {Machine Cult Ally}: Draw a card.
+orbitalGunPlatform,Orbital Gun Platform,star_empire,base,4,4,true,0,0,2,{Gain 3 Combat} || {Scrap}: {Gain 3 Trade}
+orbitalPlatform,Orbital Platform,star_empire,base,3,4,false,0,3,0,"Discard a card. If you do, draw a card. || {Star Empire Ally}: {Gain 3 Combat}"
+orbitalShuttle,Orbital Shuttle,trade_federation,ship,2,,false,0,0,3,"{Gain 3 Trade} If you have two or more bases in play, gain {4 Authority} and draw a card."
+outlandStation,Outland Station,trade_federation,base,3,4,false,0,0,3,{Gain 1 Trade} OR {Gain 3 Authority} || {Scrap}: Draw a card.
+parasite,Parasite,blob,ship,5,,false,0,1,0,{Gain 6 Combat} OR Acquire a card of cost six or less for free. || {Blob Ally}: Draw a card.
+patrolBoat,Patrol Boat,trade_federation,ship,3,,false,0,0,2,{Gain 4 Combat} {Gain 3 Authority} || {Trade Federation Ally}: {Gain 2 Authority}
+patrolCutter,Patrol Cutter,trade_federation,ship,3,,false,0,3,0,{Gain 2 Trade} {Gain 3 Combat} || {Trade Federation Ally}: {Gain 4 Authority}
+patrolMech,Patrol Mech,machine_cult,ship,4,,false,2,0,0,{Gain 3 Trade} OR {Gain 5 Combat} || {Machine Cult Ally}: Scrap a card in your hand or discard pile.
+peacekeeper,Peacekeeper,trade_federation,ship,6,,false,0,1,0,{Gain 6 Combat} {Gain 6 Authority} || {Trade Federation Ally}: Draw a card.
+plasmaBot,Plasma Bot,machine_cult,ship,2,,false,0,0,3,{Gain 3 Combat} You may scrap a card in your hand. || {Machine Cult Ally}: {Gain 2 Combat}
+plasmaVent,Plasma Vent,blob,base,6,5,false,0,1,0,"{Gain 4 Combat} When you acquire this card, if you've played a Blob card this turn, you may put this card directly into your hand. || {Scrap}: Destroy target base."
+portOfCall,Port of Call,trade_federation,base,6,6,true,1,0,0,{Gain 3 Trade} || {Scrap}: Draw a card. You may destroy target base.
+predator,Predator,blob,ship,2,,false,0,3,0,{Gain 4 Combat} || {Blob Ally}: Draw a card.
+pulverizer,Pulverizer,blob,ship,5,,false,0,0,1,"Scrap a card in the trade row, and gain {Combat} equal to its cost. || {Blob Ally}: Draw a card."
+ram,Ram,blob,ship,3,,false,2,0,0,{Gain 5 Combat} || {Blob Ally}: {Gain 2 Combat} || {Scrap}: {Gain 3 Trade}
+ravager,Ravager,blob,ship,3,,false,0,2,0,{Gain 6 Combat} You may scrap up to two cards that are currently in the trade row.
+reclamationStation,Reclamation Station,machine_cult,base,6,6,true,0,0,1,Scrap a card in your discard pile. || {Scrap}: Gain {3 Combat} for each of your cards that you scrapped this turn (including this one).
+recyclingStation,Recycling Station,star_empire,base,4,4,true,2,0,0,"{Gain 1 Trade} OR discard up to two cards, then draw that many cards."
+repairBot,Repair Bot,machine_cult,ship,2,,false,0,3,0,{Gain 2 Trade} You may scrap a card in your discard pile. || {Scrap}: {Gain 2 Combat}
+repairMech,Repair Mech,machine_cult,ship,4,,false,0,0,2,{Gain 3 Trade} OR Put a base from your discard pile on top of your deck. || {Machine Cult Ally}: You may scrap a card in your hand or discard pile.
+royalRedoubt,Royal Redoubt,star_empire,base,6,6,true,1,0,0,{Gain 3 Combat} || {Star Empire Ally}: Target opponent discards a card.
+scout,Scout,unaligned,ship,0,,false,16,16,32,{Gain 1 Trade}
+siegeFortress,Siege Fortress,star_empire,base,7,5,true,0,0,1,{Gain 5 Combat} || {Star Empire Ally}: {Gain 4 Combat}
+solarSkiff,Solar Skiff,trade_federation,ship,1,,false,0,3,0,{Gain 2 Trade} || {Trade Federation Ally}: Draw a card.
+spaceStation,Space Station,star_empire,base,4,4,true,2,0,0,{Gain 2 Combat} || {Star Empire Ally}: {Gain 2 Combat} || {Scrap}: {Gain 4 Trade}
+spikeCluster,Spike Cluster,blob,base,2,3,false,0,0,2,{Gain 2 Combat} || {Blob Ally}: {Gain 1 Trade}
+starBarge,Star Barge,star_empire,ship,1,,false,0,3,0,{Gain 2 Trade} || {Star Empire Ally}: {Gain 2 Combat} Target opponent discards a card.
+stealthNeedle,Stealth Needle,machine_cult,ship,4,,false,1,0,0,Copy another ship you've played this turn. Stealth Needle has that ship's faction in addition to Machine Cult.
+stealthTower,Stealth Tower,machine_cult,base,5,5,true,0,1,0,"Until your turn ends, Stealth Tower becomes a copy of any base in play. Stealth Tower has that base's faction in addition to Machine Cult."
+stellarReef,Stellar Reef,blob,base,2,3,false,0,3,0,{Gain 1 Trade} || {Scrap}: {Gain 3 Combat}
+stinger,Stinger,blob,ship,1,,false,0,0,3,{Gain 3 Combat} || {Blob Ally}: {Gain 3 Combat} || {Scrap}: {Gain 1 Trade}
+storageSilo,Storage Silo,trade_federation,base,2,3,false,0,2,0,{Gain 2 Authority} || {Trade Federation Ally}: {Gain 2 Trade}
+supplyBot,Supply Bot,machine_cult,ship,3,,false,3,0,0,{Gain 2 Trade} You may scrap a card in your hand or discard pile. || {Machine Cult Ally}: {Gain 2 Combat}
+supplyDepot,Supply Depot,star_empire,base,6,5,true,0,1,0,Discard up to 2 cards. Gain {2 Trade} or {2 Combat} for each card discarded this way. || {Star Empire Ally}: Draw a card.
+surveyShip,Survey Ship,star_empire,ship,3,,false,3,0,0,{Gain 1 Trade} Draw a card. || {Scrap}: Target opponent discards a card.
+swarmCluster,Swarm Cluster,blob,base,8,8,false,0,0,1,{Gain 5 Combat} || {Blob Ally}: {Gain 3 Combat} || {Double Blob Ally}: {Gain 3 Combat}
+swarmer,Swarmer,blob,ship,1,,false,0,3,0,{Gain 3 Combat} You may scrap a card in the trade row. || {Blob Ally}: {Gain 2 Combat}
+theHive,The Hive,blob,base,5,5,false,1,0,0,{Gain 3 Combat} || {Blob Ally}: Draw a card.
+theIncinerator,The Incinerator,machine_cult,base,8,6,true,0,1,0,Scrap up to two cards in your hand and/or discard pile. || {Machine Cult Ally}: Gain {2 Combat} for each card scrapped from your hand and/or discard pile this turn.
+theOracle,The Oracle,machine_cult,base,4,5,true,0,1,0,Scrap a card in your hand. || {Machine Cult Ally}: {Gain 3 combat}
+theWrecker,The Wrecker,machine_cult,ship,7,,false,0,1,0,{Gain 6 Combat} You may scrap up to two cards in your hand and/or discard pile. || {Machine Cult Ally}: Draw a card.
+tradeBot,Trade Bot,machine_cult,ship,1,,false,3,0,0,{Gain 1 Trade} You may scrap a card in your hand or discard pile. || {Machine Cult Ally}: {Gain 2 Combat}
+tradeEscort,Trade Escort,trade_federation,ship,5,,false,1,0,0,{Gain 4 Authority} {Gain 4 Combat} || {Trade Federation Ally}: Draw a card.
+tradeHauler,Trade Hauler,trade_federation,ship,2,,false,0,3,0,{Gain 3 Trade} || {Trade Federation Ally}: {Gain 3 Authority}
+tradePod,Trade Pod,blob,ship,2,,false,3,0,0,{Gain 3 Trade} || {Blob Ally}: {Gain 2 Combat}
+tradingPost,Trading Post,trade_federation,base,3,4,true,2,0,0,{Gain 1 Authority} OR {Gain 1 Trade} || {Scrap}: {Gain 3 Combat}
+transitNexus,Transit Nexus,trade_federation,base,8,6,false,0,0,1,{Gain 3 Combat} {Gain 4 Trade} {Gain 5 Authority}
+viper,Viper,unaligned,ship,0,,false,4,4,8,{Gain 1 Combat}
+warWorld,War World,star_empire,base,5,4,true,1,0,0,{Gain 3 Combat} || {Star Empire Ally}: {Gain 4 Combat}
+warningBeacon,Warning Beacon,machine_cult,base,2,2,true,0,3,0,"{Gain 2 Combat} When you acquire this card, if you've played a Machine Cult card this turn, you may put this card directly into your hand."
+warpgateCruiser,Warpgate Cruiser,star_empire,ship,6,,false,0,0,1,Discard any number of cards and gain {2 Combat} for each. Draw a card. || {Star Empire Ally}: Draw a card.

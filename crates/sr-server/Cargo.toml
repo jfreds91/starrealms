@@ -1,0 +1,20 @@
+[package]
+name = "sr-server"
+edition.workspace = true
+version.workspace = true
+description = "Star Realms web server: invite links, live and correspondence games, bots, replays"
+
+[dependencies]
+sr-core.workspace = true
+sr-bots.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+axum = { version = "0.8.9", features = ["ws"] }
+tokio = { version = "1.53", features = ["rt-multi-thread", "macros", "time", "sync", "signal"] }
+tower-http = { version = "0.7", features = ["fs", "set-header", "trace"] }
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+rusqlite = { version = "0.40", features = ["bundled"] }
+getrandom = "0.4"
+clap = { version = "4.6", features = ["derive", "env"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

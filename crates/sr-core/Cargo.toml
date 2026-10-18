@@ -1,0 +1,14 @@
+[package]
+name = "sr-core"
+edition.workspace = true
+version.workspace = true
+description = "Star Realms rules engine: Core Set, Colony Wars, Frontiers"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+
+[build-dependencies]
+serde.workspace = true
+toml.workspace = true

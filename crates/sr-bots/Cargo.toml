@@ -1,0 +1,10 @@
+[package]
+name = "sr-bots"
+edition.workspace = true
+version.workspace = true
+description = "Scripted Star Realms agents"
+
+[dependencies]
+sr-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
