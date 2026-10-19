@@ -523,3 +523,48 @@ fn every_legal_action_has_a_description() {
         g.step(legal[rng.below(legal.len())]).unwrap();
     }
 }
+
+/// Two games that look identical to the player to move, but differ in everything that player
+/// cannot see, must determinize to the same game: a search on the result cannot peek.
+#[test]
+fn determinize_depends_only_on_visible_information() {
+    let mut rng = Rng::new(3);
+    let mut legal = Vec::new();
+    for game_seed in 0..20u64 {
+        let mut g = Game::new(&cfg(&["core", "colony_wars", "frontiers"]), game_seed).unwrap();
+        for _ in 0..(30 + game_seed * 7) {
+            g.legal_actions(&mut legal);
+            if legal.is_empty() {
+                break;
+            }
+            g.apply(legal[rng.below(legal.len())]);
+        }
+        if g.is_over() {
+            continue;
+        }
+        let me = g.active as usize;
+        let mut h = g.clone();
+        h.rng = Rng::new(999 + game_seed);
+        rng.shuffle(&mut h.trade_deck);
+        rng.shuffle(&mut h.players[me].deck);
+        let opp = &mut h.players[1 - me];
+        let mut pool: Vec<CardId> = opp.hand.drain(..).chain(opp.deck.drain(..)).collect();
+        rng.shuffle(&mut pool);
+        opp.deck = pool.split_off(g.players[1 - me].hand.len());
+        opp.hand = pool;
+        assert_eq!(g.observation(), h.observation(), "the two games must look the same");
+
+        let (mut a, mut b) = (g.determinize(me as u8, 42), h.determinize(me as u8, 42));
+        assert_eq!(a.players, b.players);
+        assert_eq!(a.trade_deck, b.trade_deck);
+        // and they stay identical through the rest of the game
+        let mut moves = Rng::new(game_seed);
+        while !a.is_over() {
+            a.legal_actions(&mut legal);
+            let m = legal[moves.below(legal.len())];
+            a.apply(m);
+            b.apply(m);
+            assert_eq!(a.observation(), b.observation());
+        }
+    }
+}

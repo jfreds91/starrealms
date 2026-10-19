@@ -6,11 +6,13 @@
 pub mod entity_net;
 mod heuristic;
 pub mod net;
+pub mod search;
 
 #[cfg(feature = "candle")]
 pub use entity_net::EntityNet;
 pub use heuristic::Heuristic;
 pub use net::{MlpNet, Net, NetAgent};
+pub use search::SearchAgent;
 use sr_core::{action, Game, Rng};
 
 pub trait Agent: Send + Sync {
@@ -83,18 +85,49 @@ pub fn by_name(name: &str) -> Option<Box<dyn Agent>> {
     }
 }
 
-/// Like `by_name`, plus `model:<path>` or `model:<path>@<temperature>` (`.srnn` or `.safetensors`).
-pub fn from_spec(spec: &str) -> Result<Box<dyn Agent>, String> {
+pub type AgentFactory = Box<dyn Fn() -> Box<dyn Agent> + Send + Sync>;
+
+fn load_net(path: &str) -> Result<std::sync::Arc<Net>, String> {
+    let bytes = std::fs::read(path).map_err(|e| format!("{path}: {e}"))?;
+    Ok(std::sync::Arc::new(Net::from_bytes(&bytes)?))
+}
+
+/// Constructor for agents of a spec, loading any weights once:
+/// - a bot name (`by_name`);
+/// - `model:<path>[@temperature]`: a network (`.srnn` or `.safetensors`), greedy by default;
+/// - `search:<path>[@width,samples[,prior_weight[,turns]]]`: a network with turn lookahead
+///   (`SearchAgent`, default 4,4,0,1).
+pub fn factory(spec: &str) -> Result<AgentFactory, String> {
+    let name = spec.to_string();
     if let Some(rest) = spec.strip_prefix("model:") {
         let (path, temp) = match rest.rsplit_once('@') {
             Some((p, t)) => (p, t.parse::<f32>().map_err(|e| format!("bad temperature: {e}"))?),
             None => (rest, 0.0),
         };
-        let bytes = std::fs::read(path).map_err(|e| format!("{path}: {e}"))?;
-        let net = Net::from_bytes(&bytes)?;
-        return Ok(Box::new(NetAgent::new(std::sync::Arc::new(net), spec, temp)));
+        let net = load_net(path)?;
+        return Ok(Box::new(move || Box::new(NetAgent::new(net.clone(), name.clone(), temp))));
     }
-    by_name(spec).ok_or_else(|| format!("unknown agent {spec:?}"))
+    if let Some(rest) = spec.strip_prefix("search:") {
+        let (path, opts) = rest.rsplit_once('@').unwrap_or((rest, "4,4"));
+        let opts: Vec<f32> = opts.split(',').map(|s| s.parse::<f32>().map_err(|e| format!("bad search option {s:?}: {e}"))).collect::<Result<_, _>>()?;
+        if !(2..=4).contains(&opts.len()) {
+            return Err("search options are @width,samples[,prior_weight[,turns]]".into());
+        }
+        let net = load_net(path)?;
+        return Ok(Box::new(move || {
+            let mut agent = SearchAgent::new(net.clone(), name.clone(), opts[0] as usize, opts[1] as usize);
+            agent.prior_weight = opts.get(2).copied().unwrap_or(0.0);
+            agent.turns = opts.get(3).map_or(1, |&t| t as usize);
+            Box::new(agent)
+        }));
+    }
+    by_name(spec).ok_or_else(|| format!("unknown agent {spec:?}"))?;
+    Ok(Box::new(move || by_name(&name).unwrap()))
+}
+
+/// One agent for a spec (see `factory`).
+pub fn from_spec(spec: &str) -> Result<Box<dyn Agent>, String> {
+    Ok(factory(spec)?())
 }
 
 /// Play one game between two agents. Returns the finished game.

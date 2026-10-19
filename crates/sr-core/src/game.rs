@@ -330,6 +330,34 @@ impl Game {
         self.outcome.is_some()
     }
 
+    /// A copy of the game that `seat` could be playing, given only what `seat` knows: its own
+    /// draw pile, the opponent's hand and draw pile (pooled, hand size kept), and the trade deck
+    /// are re-dealt at random from their contents, and the random stream behind future shuffles
+    /// is replaced. The result depends on the true game only through information visible to
+    /// `seat` (and `seed`), so a search may simulate it freely without peeking.
+    ///
+    /// Cards whose position `seat` actually knows (e.g. one it put on top of its deck) are
+    /// shuffled too; that loses a little information but never leaks any.
+    pub fn determinize(&self, seat: u8, seed: u64) -> Game {
+        let mut g = self.clone();
+        g.log.clear();
+        g.log_enabled = false;
+        g.rng = Rng::new(seed);
+        let (me, opp) = (seat as usize, 1 - seat as usize);
+        g.trade_deck.sort_unstable();
+        g.rng.shuffle(&mut g.trade_deck);
+        g.players[me].deck.sort_unstable();
+        g.rng.shuffle(&mut g.players[me].deck);
+        let p = &mut g.players[opp];
+        let n = p.hand.len();
+        let mut pool: Vec<CardId> = p.hand.drain(..).chain(p.deck.drain(..)).collect();
+        pool.sort_unstable();
+        g.rng.shuffle(&mut pool);
+        p.deck = pool.split_off(n);
+        p.hand = pool;
+        g
+    }
+
     /// Damage dealt to the opponent if the turn ended now.
     pub fn end_turn_damage(&self) -> i32 {
         if self.t.combat > 0 && !self.opp().has_outpost() {

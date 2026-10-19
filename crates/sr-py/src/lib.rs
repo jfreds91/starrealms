@@ -10,7 +10,7 @@ use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use rayon::prelude::*;
-use sr_bots::{by_name, Agent, Net, NetAgent};
+use sr_bots::{by_name, Agent, Net};
 use sr_core::{action, obs, Config, Game, Outcome, Replay, Rng, Session, N_ACTIONS, OBS_DIM};
 
 fn err(e: impl std::fmt::Display) -> PyErr {
@@ -22,21 +22,9 @@ fn mix(a: u64, b: u64) -> u64 {
     r.next_u64()
 }
 
-/// Agent constructor for a spec: a bot name, or `model:<path.srnn>[@temperature]`
-/// (weights loaded once and shared).
-fn agent_factory(spec: &str) -> PyResult<Box<dyn Fn() -> Box<dyn Agent>>> {
-    if let Some(rest) = spec.strip_prefix("model:") {
-        let (path, temp) = match rest.rsplit_once('@') {
-            Some((p, t)) => (p, t.parse::<f32>().map_err(err)?),
-            None => (rest, 0.0),
-        };
-        let net = std::sync::Arc::new(Net::from_bytes(&std::fs::read(path).map_err(err)?).map_err(err)?);
-        let name = spec.to_string();
-        return Ok(Box::new(move || Box::new(NetAgent::new(net.clone(), name.clone(), temp)) as Box<dyn Agent>));
-    }
-    by_name(spec).ok_or_else(|| err(format!("unknown opponent {spec:?}")))?;
-    let name = spec.to_string();
-    Ok(Box::new(move || by_name(&name).unwrap()))
+/// Agent constructor for a spec (see `sr_bots::factory`; weights loaded once and shared).
+fn agent_factory(spec: &str) -> PyResult<sr_bots::AgentFactory> {
+    sr_bots::factory(spec).map_err(err)
 }
 
 struct Slot {
@@ -367,21 +355,19 @@ impl PyGame {
     }
 }
 
-/// Play `games` games between two scripted bots (alternating seats).
+/// Play `games` games between two agents (specs as in `sr_bots::factory`; alternating seats).
 /// Returns (wins_a, wins_b, draws).
 #[pyfunction]
 #[pyo3(signature = (a, b, games=1000, sets=None, seed=0))]
 fn arena(py: Python<'_>, a: &str, b: &str, games: u64, sets: Option<Vec<String>>, seed: u64) -> PyResult<(u64, u64, u64)> {
     let cfg = Config { sets: sets.unwrap_or_else(|| vec!["core".into()]), ..Config::default() };
-    by_name(a).ok_or_else(|| err(format!("unknown bot {a:?}")))?;
-    by_name(b).ok_or_else(|| err(format!("unknown bot {b:?}")))?;
+    let (fa, fb) = (agent_factory(a)?, agent_factory(b)?);
     Ok(py.detach(|| {
         (0..games)
             .into_par_iter()
             .map(|i| {
                 let swap = i % 2 == 1;
-                let (x, y) = if swap { (b, a) } else { (a, b) };
-                let mut agents = [by_name(x).unwrap(), by_name(y).unwrap()];
+                let mut agents = if swap { [fb(), fa()] } else { [fa(), fb()] };
                 let g = sr_bots::play_game(&cfg, mix(seed, i), &mut agents);
                 match g.outcome {
                     Some(Outcome::Win(s)) if (s == 0) != swap => (1, 0, 0),
