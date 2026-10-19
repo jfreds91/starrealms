@@ -7,6 +7,7 @@ from ._engine import (
     N_CARDS,
     N_IDS,
     OBS_DIM,
+    SCALAR_NAMES,
     SKIP,
     Game,
     VecEnv,
@@ -14,7 +15,7 @@ from ._engine import (
     card_catalog,
     obs_layout,
 )
-from .env import LAYOUT, MultiEnv, StepResult, cards
+from .env import LAYOUT, SCALAR, MultiEnv, StepResult, cards
 
 __all__ = [
     "COUNT_ZONES",
@@ -24,6 +25,8 @@ __all__ = [
     "N_CARDS",
     "N_IDS",
     "OBS_DIM",
+    "SCALAR",
+    "SCALAR_NAMES",
     "SKIP",
     "Game",
     "MultiEnv",

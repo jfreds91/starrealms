@@ -54,7 +54,7 @@ impl Engine {
         Engine { s, bots: [None, None], rng, model: None }
     }
 
-    /// Load an exported `.srnn` network for the `"model"` bot spec.
+    /// Load an exported network (`.srnn` or entity `.safetensors`) for the `"model"` bot spec.
     pub fn load_model(&mut self, bytes: &[u8]) -> Result<(), JsError> {
         self.model = Some(Arc::new(Net::from_bytes(bytes).map_err(js)?));
         Ok(())

@@ -27,9 +27,9 @@ def main(argv=None) -> None:
     if args.opponent.endswith(".pt"):
         import torch
 
-        from .model import Policy
+        from .model import load
 
-        policy = Policy.load(args.opponent).eval()
+        policy = load(args.opponent).eval()
 
         def opp_act() -> int:
             o = torch.from_numpy(g.observe())[None]

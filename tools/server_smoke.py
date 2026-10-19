@@ -1,6 +1,6 @@
 """End-to-end check of a running sr-server over HTTP and WebSockets.
 
-    python tools/server_smoke.py [http://127.0.0.1:3030]
+    uv run tools/server_smoke.py [http://127.0.0.1:3030]
 
 Two players create and join a game via the invite flow and play it to the end
 with random legal moves. Checks hidden information, stale-action rejection,

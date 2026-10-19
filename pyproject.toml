@@ -1,0 +1,47 @@
+[build-system]
+requires = ["maturin>=1.5,<2"]
+build-backend = "maturin"
+
+[project]
+name = "starrealms"
+version = "0.1.0"
+description = "Star Realms rules engine (Rust) with vectorized environments for RL training"
+requires-python = ">=3.10"
+dependencies = ["numpy"]
+
+[project.optional-dependencies]
+train = ["torch>=2.13", "triton-rocm", "tensorboard", "wandb", "tyro"]
+
+[dependency-groups]
+dev = ["pytest", "requests", "websockets", "maturin>=1.5,<2"]
+
+[tool.maturin]
+manifest-path = "crates/sr-py/Cargo.toml"
+python-source = "python"
+module-name = "starrealms._engine"
+features = ["pyo3/extension-module"]
+
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+# Rebuild the extension when the engine changes, not just when this file does.
+cache-keys = [
+    { file = "pyproject.toml" },
+    { file = "Cargo.lock" },
+    { file = "crates/**/*.rs" },
+    { file = "crates/**/Cargo.toml" },
+    { file = "data/*.toml" },
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-rocm" }
+triton-rocm = { index = "pytorch-rocm" }
+
+[[tool.uv.index]]
+name = "pytorch-rocm"
+url = "https://download.pytorch.org/whl/rocm7.1"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["python/tests"]
+markers = ["slow: trains a policy for a few minutes; run with -m slow"]
+addopts = "-m 'not slow'"

@@ -1,5 +1,6 @@
-//! Native forward pass of the Python `starrealms.model.Policy`, for serving
-//! trained models without PyTorch (server, wasm).
+//! Native forward pass of the Python `starrealms.model.Policy` (`MlpNet`), for
+//! serving trained models without PyTorch (server, wasm), and `Net`, which also
+//! covers `EntityPolicy` models.
 //!
 //! File format (`.srnn`, written by `python -m starrealms.export`):
 //! `b"SRNN0001"`, u32 LE header length, JSON header, then little-endian f32
@@ -59,7 +60,7 @@ fn seg(name: &str) -> (usize, usize) {
     (off, off + len)
 }
 
-pub struct Net {
+pub struct MlpNet {
     embed: Vec<f32>,
     d: usize,
     trunk: Vec<Linear>,
@@ -67,8 +68,8 @@ pub struct Net {
     v: Linear,
 }
 
-impl Net {
-    pub fn from_bytes(bytes: &[u8]) -> Result<Net, String> {
+impl MlpNet {
+    pub fn from_bytes(bytes: &[u8]) -> Result<MlpNet, String> {
         if bytes.len() < 12 || &bytes[..8] != MAGIC {
             return Err("not an SRNN0001 file".into());
         }
@@ -105,7 +106,7 @@ impl Net {
             return Err("embedding shape mismatch".into());
         }
         let trunk = (0..header.layers).map(|i| linear(&format!("trunk.{}", 2 * i))).collect::<Result<Vec<_>, _>>()?;
-        let net = Net { embed, d: header.embed, trunk, pi: linear("pi")?, v: linear("v")? };
+        let net = MlpNet { embed, d: header.embed, trunk, pi: linear("pi")?, v: linear("v")? };
         let expect = net.input_dim();
         if net.trunk[0].n_in != expect || net.trunk.last().unwrap().n_out != header.hidden {
             return Err(format!("trunk input {} != expected {expect}", net.trunk[0].n_in));
@@ -165,6 +166,38 @@ impl Net {
         let mut v = Vec::new();
         self.v.forward(&h, &mut v);
         (logits, v[0])
+    }
+}
+
+/// Any exported policy network: an MLP (`.srnn`) or, with the `candle` feature, an entity
+/// transformer (`.safetensors`, see `crate::entity_net`).
+pub enum Net {
+    Mlp(MlpNet),
+    #[cfg(feature = "candle")]
+    Entity(crate::entity_net::EntityNet),
+}
+
+impl Net {
+    /// Detects the format from the file contents.
+    pub fn from_bytes(bytes: &[u8]) -> Result<Net, String> {
+        if bytes.starts_with(MAGIC) {
+            return MlpNet::from_bytes(bytes).map(Net::Mlp);
+        }
+        #[cfg(feature = "candle")]
+        {
+            crate::entity_net::EntityNet::from_bytes(bytes).map(Net::Entity)
+        }
+        #[cfg(not(feature = "candle"))]
+        Err("not an SRNN0001 file (entity models need the `candle` feature)".into())
+    }
+
+    /// Unmasked logits and value for an observation.
+    pub fn forward(&self, obs: &[f32]) -> (Vec<f32>, f32) {
+        match self {
+            Net::Mlp(n) => n.forward(obs),
+            #[cfg(feature = "candle")]
+            Net::Entity(n) => n.forward(obs),
+        }
     }
 }
 

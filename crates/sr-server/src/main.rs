@@ -40,7 +40,7 @@ struct Args {
     /// Card art fetched by tools/fetch_assets.py.
     #[arg(long, default_value = "assets", env = "SR_ASSETS")]
     assets: PathBuf,
-    /// Directory of exported `.srnn` models offered as opponents.
+    /// Directory of exported models (`.srnn`, `.safetensors`) offered as opponents.
     #[arg(long, default_value = "models", env = "SR_MODELS")]
     models: PathBuf,
     /// Pause between bot actions, so humans can follow the bot's turn.

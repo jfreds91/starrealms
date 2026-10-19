@@ -19,9 +19,11 @@ from functools import lru_cache
 
 import numpy as np
 
-from ._engine import VecEnv, card_catalog, obs_layout
+from ._engine import SCALAR_NAMES, VecEnv, card_catalog, obs_layout
 
 LAYOUT: dict[str, slice] = {name: slice(off, off + n) for name, off, n in obs_layout()}
+SCALAR: dict[str, int] = {name: LAYOUT["scalars"].start + i for i, name in enumerate(SCALAR_NAMES)}
+"""Observation column of each named scalar feature."""
 
 
 @lru_cache(maxsize=1)
@@ -47,23 +49,49 @@ class StepResult:
         return self.seat == self.learner_seat
 
 
+def parse_sets_mix(s: str) -> list[tuple[list[str], float]]:
+    """``"core:0.3,core+colony_wars+frontiers:0.7"`` -> [(["core"], 0.3), ([...], 0.7)]."""
+    out = []
+    for part in s.split(","):
+        sets, frac = part.rsplit(":", 1)
+        out.append(([x.strip() for x in sets.split("+")], float(frac)))
+    total = sum(f for _, f in out)
+    return [(sets, f / total) for sets, f in out]
+
+
+def sets_tag(sets) -> str:
+    return "+".join(sets)
+
+
 class MultiEnv:
     """Concatenation of several `VecEnv` groups that share one action batch.
 
     `groups` maps an opponent name to an env count, e.g.
     ``{"self": 192, "heuristic": 64}``. "self" means both seats are decided
-    from Python; anything else names a Rust bot.
+    from Python; anything else names a Rust bot. With `sets_mix` (see
+    `parse_sets_mix`) every group is split across those card-set selections in
+    proportion, instead of all playing `sets`; `labels` then name each part
+    ``<opponent>@<sets>``.
     """
 
-    def __init__(self, groups: dict[str, int], sets=("core",), seed: int = 0, max_turns: int = 200):
+    def __init__(self, groups: dict[str, int], sets=("core",), seed: int = 0, max_turns: int = 200,
+                 sets_mix: list[tuple[list[str], float]] | None = None):
         self.names: list[str] = []
+        self.labels: list[str] = []
         self.envs: list[VecEnv] = []
-        for k, (name, n) in enumerate(groups.items()):
-            if n <= 0:
-                continue
-            opp = None if name == "self" else name
-            self.envs.append(VecEnv(n, list(sets), seed * 7919 + k, opp, max_turns))
-            self.names.append(name)
+        mix = sets_mix or [(list(sets), 1.0)]
+        k = 0
+        for name, n in groups.items():
+            counts = [round(n * f) for _, f in mix]
+            counts[-1] = n - sum(counts[:-1])
+            for (s, _), m in zip(mix, counts):
+                if m <= 0:
+                    continue
+                opp = None if name == "self" else name
+                self.envs.append(VecEnv(m, list(s), seed * 7919 + k, opp, max_turns))
+                self.names.append(name)
+                self.labels.append(f"{name}@{sets_tag(s)}" if sets_mix else name)
+                k += 1
         self.sizes = [e.num_envs for e in self.envs]
         self.num_envs = sum(self.sizes)
         self.group = np.concatenate([np.full(n, i, np.int8) for i, n in enumerate(self.sizes)])

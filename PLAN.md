@@ -199,9 +199,13 @@ The heuristic bot is also the first opponent on the server, so friends have some
 - `arena(a, b, games)`: bot-versus-bot win counts in parallel.
 - `srnn_forward`: the Rust network forward pass, for parity tests against PyTorch.
 
-The default reward is terminal `+1 / -1`. Potential-based shaping (authority and deck quality) is opt-in through the trainer's `--shaping` coefficient.
+The default reward is terminal `+1 / -1`. Potential-based shaping on the authority difference is set by the trainer's `--shaping` coefficient (0 turns it off).
 
-`python/starrealms` holds the trainer (masked PPO, adapted from CleanRL's single-file `ppo.py`), a snapshot league, an evaluation harness against the scripted bots, terminal play, and `export.py`. Models are exported to `.srnn` (magic, JSON header, raw little-endian `f32` tensors), which `sr_bots::Net` evaluates in plain Rust. That keeps ONNX Runtime out of the server and the wasm build.
+`python/starrealms` holds the trainer (masked PPO, adapted from CleanRL's single-file `ppo.py`), an evaluation harness against the scripted bots, terminal play, and `export.py`. The Python side is a uv project (`pyproject.toml` at the root, maturin backend). The trainer is configured by a tyro dataclass and logs to TensorBoard, or Weights & Biases with `--track`.
+
+- **League** (`league.py`): frozen snapshots of the policy, opponents in `self` env groups, drawn by prioritized fictitious self-play (opponents the learner still loses to come up more often).
+- **Ratings**: Elo relative to the heuristic bot, refitted jointly (Bradley-Terry maximum likelihood, as BayesElo does) from every evaluation result: bot-versus-bot calibration games played in Rust, and each checkpoint's games against the eval bots and three league snapshots (anchor, newest, hardest). `best.pt` is the highest-rated checkpoint. Training games are not rated, since they come from a policy that keeps changing. An earlier version used openskill with frozen ratings; rating each checkpoint mostly against its predecessor made ratings drift down while win rates rose, which a test now guards against.
+- **Tests**: per-seat GAE against a slow reference implementation, league eviction and PFSP, and a slow test (`pytest -m slow`) that a short run learns to beat the random bot. Models are exported to `.srnn` (magic, JSON header, raw little-endian `f32` tensors), which `sr_bots::Net` evaluates in plain Rust. That keeps ONNX Runtime out of the server and the wasm build.
 
 ## 4. Assets and card data
 
@@ -279,10 +283,13 @@ Each milestone ends with something runnable.
 Status (October 2026):
 
 - 1–3 done. 137 cards across the three sets, per-card tests, invariants, golden replays. About 46k random-vs-random Core Set games/s on one core; `Heuristic` beats `Greedy` 97% of the time.
-- 4: trainer, league, and evaluation work end to end (a 0.4M-step GPU smoke run, exported and parity-checked). No checkpoint yet that clearly beats `Heuristic`; that needs a real run.
+- 4 done. Three 100M-step runs on the RX 9070 (bfloat16, about 25k–70k steps/s), each initialised from the previous one, all exported to `models/`. Win rates are from 2,000 fresh-seed games with 95% Wilson intervals:
+  - `phase_a` (Core Set, trained against the bots): 82% [80, 83] vs `Heuristic`, 99% vs `Greedy`.
+  - `phase_b` (Core Set, self-play with the league): 85% [84, 87] vs `Heuristic`, 58% [56, 60] head to head against `phase_a`.
+  - `phase_c` (all three sets, self-play with the league): on mixed sets, 86% [85, 88] vs `Heuristic` and 82% [80, 84] against `phase_b`. On the Core Set alone it slipped to 80% vs `Heuristic` and 42% against `phase_b`, so `phase_b` is the better Core Set opponent. Training on a mix that includes Core-only games would fix that.
 - 5 done: offline vs-bot, hot-seat with a hand-off screen, replay viewer.
 - 6: server, lobbies, invite links, spectators, persistence, reconnection, and replays work; `tools/server_smoke.py` covers them. A Dockerfile exists; not yet deployed.
-- 7: plumbing done. Waits on a strong checkpoint from milestone 4.
+- 7 done: the trained models are offered as server opponents.
 
 ## 7. Decisions already made
 

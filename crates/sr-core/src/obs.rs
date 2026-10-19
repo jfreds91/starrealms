@@ -19,6 +19,42 @@ use crate::cards::*;
 use crate::game::{Game, Pending};
 
 pub const N_SCALARS: usize = 32;
+/// Meaning of each entry of the `scalars` segment, in order. `pending_*` depend on the
+/// pending decision (picked/min/max for scrap and discard, remaining/amount for trade-or-combat).
+pub const SCALAR_NAMES: [&str; N_SCALARS] = [
+    "my_authority",
+    "opp_authority",
+    "trade",
+    "combat",
+    "turn",
+    "my_deck",
+    "my_discard",
+    "my_hand",
+    "opp_hand",
+    "opp_deck",
+    "opp_discard",
+    "explorers",
+    "trade_deck",
+    "opp_owed_discards",
+    "played_blob",
+    "played_machine_cult",
+    "played_star_empire",
+    "played_trade_federation",
+    "opp_has_outpost",
+    "my_bases",
+    "opp_bases",
+    "scrapped_own",
+    "scrapped_hand_or_discard",
+    "next_acquire",
+    "first_player",
+    "pending_a",
+    "pending_b",
+    "pending_c",
+    "end_turn_damage",
+    "authority_diff",
+    "unused_30",
+    "unused_31",
+];
 pub const N_PENDING: usize = crate::game::PendingKind::COUNT + 1;
 pub const COUNT_ZONES: [&str; 9] = [
     "my_hand",
@@ -57,6 +93,78 @@ pub const LAYOUT: [(&str, usize, usize); 7] = [
     ("row", OFF_ROW, ROW * ROW_FEATS),
     ("ids", OFF_IDS, N_IDS),
 ];
+
+/// Per-effect summary: trade, combat, authority, draw, opponent discards, choice, scrap from
+/// hand / discard / either / trade row, discard, destroy base, acquire, next acquire,
+/// scaling effects, copy or topdeck.
+const EFFECT_FEATS: usize = 16;
+const SETS: [&str; 4] = ["basic", "core", "colony_wars", "frontiers"];
+/// cost, defense, outpost, base, 5 factions, 4 sets, 4 flags, then `EFFECT_FEATS` for each of
+/// primary, ally, ally2 and scrap.
+pub const N_CARD_FEATS: usize = 4 + 5 + SETS.len() + 4 + 4 * EFFECT_FEATS;
+
+fn effect_feats(effects: &[Effect], w: f32, f: &mut [f32]) {
+    for e in effects {
+        match e {
+            Effect::Trade(n) => f[0] += w * *n as f32 / 5.0,
+            Effect::Combat(n) => f[1] += w * *n as f32 / 5.0,
+            Effect::Authority(n) => f[2] += w * *n as f32 / 5.0,
+            Effect::Draw(n) => f[3] += w * *n as f32 / 2.0,
+            Effect::OppDiscard(n) => f[4] += w * *n as f32,
+            Effect::Choose(opts) => {
+                f[5] += w;
+                for o in opts {
+                    effect_feats(o, w / opts.len() as f32, f);
+                }
+            }
+            Effect::Scrap(s) => {
+                let k = match s.from {
+                    Zone::Hand => 6,
+                    Zone::Discard => 7,
+                    Zone::HandOrDiscard => 8,
+                    Zone::TradeRow => 9,
+                };
+                f[k] += w * s.max as f32;
+            }
+            Effect::Discard(d) => f[10] += w * d.max.min(4) as f32,
+            Effect::DestroyBase => f[11] += w,
+            Effect::Acquire(_) => f[12] += w,
+            Effect::NextAcquire(_) => f[13] += w,
+            Effect::When(c) => effect_feats(&c.then, w * 0.5, f),
+            Effect::DrawPerPlayed(_) | Effect::CombatPerScrappedOwn(_) | Effect::CombatPerScrapped(_) => f[14] += w,
+            Effect::TopdeckBase | Effect::CopyShip | Effect::CopyBase => f[15] += w,
+        }
+    }
+}
+
+/// Static numeric description of every card, in id order, so a model can generalize across
+/// cards it has seen rarely.
+pub fn card_features() -> Vec<[f32; N_CARD_FEATS]> {
+    db().cards
+        .iter()
+        .map(|c| {
+            let mut f = [0.0; N_CARD_FEATS];
+            f[0] = c.cost as f32 / 8.0;
+            f[1] = c.defense as f32 / 8.0;
+            f[2] = c.outpost as u8 as f32;
+            f[3] = c.is_base() as u8 as f32;
+            f[4 + c.faction.index().unwrap_or(4)] = 1.0;
+            if let Some(s) = SETS.iter().position(|s| *s == c.set) {
+                f[9 + s] = 1.0;
+            }
+            let o = 9 + SETS.len();
+            f[o] = c.ally_all as u8 as f32;
+            f[o + 1] = c.on_ship_played.map_or(0.0, |t| t.combat as f32 / 5.0);
+            f[o + 2] = c.acquire_to_hand as u8 as f32;
+            f[o + 3] = c.returns_from_scrap as u8 as f32;
+            for (k, effects) in [&c.primary, &c.ally, &c.ally2, &c.scrap].into_iter().enumerate() {
+                let s = o + 4 + k * EFFECT_FEATS;
+                effect_feats(effects, 1.0, &mut f[s..s + EFFECT_FEATS]);
+            }
+            f
+        })
+        .collect()
+}
 
 impl Game {
     /// Write the observation for the player to move into `out` (length `OBS_DIM`).

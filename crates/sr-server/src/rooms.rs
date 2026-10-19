@@ -207,14 +207,14 @@ impl App {
         }
     }
 
-    /// Built-in bots plus every `<dir>/*.srnn` model.
+    /// Built-in bots plus every `<dir>/*.srnn` (MLP) and `<dir>/*.safetensors` (entity) model.
     pub fn load_opponents(models: &std::path::Path) -> BTreeMap<String, Opponent> {
         let mut out = BTreeMap::new();
         for (spec, name) in [("heuristic", "Heuristic bot"), ("greedy", "Greedy bot"), ("random", "Random bot")] {
             out.insert(spec.into(), Opponent { spec: spec.into(), name: name.into(), model: None });
         }
         let Ok(dir) = std::fs::read_dir(models) else { return out };
-        let mut files: Vec<_> = dir.flatten().map(|e| e.path()).filter(|p| p.extension().is_some_and(|x| x == "srnn")).collect();
+        let mut files: Vec<_> = dir.flatten().map(|e| e.path()).filter(|p| p.extension().is_some_and(|x| x == "srnn" || x == "safetensors")).collect();
         files.sort();
         for path in files {
             let stem = path.file_stem().unwrap().to_string_lossy().to_string();

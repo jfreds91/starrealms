@@ -1,45 +1,129 @@
 """Masked PPO with self-play and a snapshot league.
 
-    python -m starrealms.ppo --groups self:192,heuristic:64 --total-steps 20_000_000
+    python -m starrealms.ppo --groups self:192,heuristic:64 --total-steps 20e6
 
-Env groups
-----------
-* ``self``: both seats are decided here. Each env is assigned an opponent for
-  the seat it does not train: the current policy (then both seats produce
-  training data) with probability ``--p-self``, else a frozen snapshot from the
-  league.
-* bot names (``heuristic``, ``greedy``, ``random``): the opponent is played in
-  Rust; only learner decisions come back.
+Env groups: in ``self`` envs both seats are decided here. Each env is assigned
+an opponent for the seat it does not train: the current policy (then both seats
+produce training data) with probability ``--p-self``, else a frozen snapshot
+from the league, drawn by prioritized fictitious self-play. Bot names
+(``heuristic``, ``greedy``, ``random``) put the opponent inside Rust, so only
+learner decisions come back.
 
-Credit assignment
------------------
-Decisions of the two seats interleave inside one env, so GAE is computed per
-(env, seat) chain: a step's successor is the same seat's next decision. The
-terminal reward (+1/-1/0) lands on each seat's last decision of the game.
-Optional potential-based shaping uses the authority difference.
+Evaluation: every ``--eval-every`` updates the policy plays the eval bots and a
+few league snapshots; Elo ratings for every checkpoint and bot are refitted
+jointly from all those results (see ``league.Ratings``), relative to the
+heuristic bot. ``best.pt`` is the highest-rated checkpoint; ``ratings.json``
+holds the ladder.
+
+Credit assignment: decisions of the two seats interleave inside one env, so
+GAE is computed per (env, seat) chain, where a step's successor is the same
+seat's next decision. The terminal reward (+1/-1/0) lands on each seat's last
+decision of the game. Optional potential-based shaping uses the authority
+difference.
 """
 
 from __future__ import annotations
 
-import argparse
-import copy
-import csv
+import dataclasses
 import os
 import random
 import time
 from collections import defaultdict, deque
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import torch
+import tyro
 from torch import nn
+from torch.utils.tensorboard import SummaryWriter
 
 from . import N_ACTIONS, OBS_DIM
-from .env import LAYOUT, MultiEnv
+from .env import SCALAR, MultiEnv, parse_sets_mix, sets_tag
 from .evaluate import evaluate
-from .model import ModelConfig, Policy
+from .league import League, Ratings, snapshot_name
+from .model import EntityConfig, EntityPolicy, ModelConfig, Policy, load
 
-PHI_INDEX = LAYOUT["scalars"].start + 29  # (my authority - opp authority) / 50
+PHI_INDEX = SCALAR["authority_diff"]  # (my authority - opp authority) / 50
+BOTS = ("random", "greedy", "heuristic")
+
+
+@dataclass
+class Args:
+    run_name: str | None = None
+    """defaults to ppo_<sets>_<timestamp>"""
+    out: str = "runs"
+    """run directory parent (checkpoints and TensorBoard events)"""
+    track: bool = False
+    """also log to Weights & Biases"""
+    wandb_project: str = "starrealms"
+    wandb_entity: str | None = None
+
+    groups: str = "self:192,heuristic:64"
+    """env groups as name:count; 'self' is self-play, other names are Rust bots"""
+    sets: str = "core"
+    """comma separated: core,colony_wars,frontiers"""
+    sets_mix: str | None = None
+    """split every env group across card-set selections, e.g. 'core:0.3,core+colony_wars+frontiers:0.7';
+    overrides --sets, and evaluation then reports each selection"""
+    seed: int = 1
+    device: str = "cuda" if torch.cuda.is_available() else "cpu"
+    bf16: bool = torch.cuda.is_available()
+    """bfloat16 autocast for forward passes (about 2x throughput on the RX 9070)"""
+
+    total_steps: float = 20e6
+    """env decisions, all rows"""
+    num_steps: int = 128
+    """rollout length per env"""
+    lr: float = 2.5e-4
+    anneal_lr: bool = True
+    warmup_updates: int = 0
+    """linear learning-rate warmup"""
+    gamma: float = 0.995
+    gae_lambda: float = 0.95
+    epochs: int = 3
+    minibatch: int = 4096
+    clip: float = 0.2
+    ent_coef: float = 0.01
+    vf_coef: float = 0.5
+    max_grad_norm: float = 0.5
+    target_kl: float = 0.05
+    """stop the epoch loop once approx KL exceeds this (0 = never)"""
+    shaping: float = 0.3
+    """potential-based shaping coefficient (0 = off)"""
+
+    p_self: float = 0.5
+    """self-play envs: P(opponent = current policy)"""
+    snapshot_every: int = 25
+    """updates between league snapshots; a multiple of eval_every, since snapshots are rated checkpoints"""
+    league_size: int = 12
+    pfsp_power: float = 2.0
+    """league opponents are drawn with weight (1 - learner score) ** pfsp_power; 0 = uniform"""
+    eval_every: int = 25
+    """updates between evaluations; each one rates a checkpoint and may replace best.pt"""
+    eval_games: int = 500
+    eval_opponents: str = "heuristic,greedy"
+    """bot names or model:<path> (exported models, played in Rust); all enter the Elo fit"""
+
+    arch: Literal["mlp", "entity"] = "mlp"
+    """mlp: `Policy` (--hidden/--layers/--embed); entity: `EntityPolicy` (--d/--heads/--tf-layers/--ff)"""
+    hidden: int = 512
+    layers: int = 2
+    embed: int = 16
+    d: int = 128
+    heads: int = 4
+    tf_layers: int = 3
+    ff: int = 256
+    init: str | None = None
+    """checkpoint to start from (its architecture wins over --arch)"""
+
+
+def opp_name(spec: str) -> str:
+    """Rating/log name of an eval opponent: a bot name, or the file stem of `model:<path>[@t]`."""
+    if spec.startswith("model:"):
+        return Path(spec[len("model:") :].rsplit("@", 1)[0]).stem
+    return spec
 
 
 def parse_groups(s: str) -> dict[str, int]:
@@ -48,41 +132,6 @@ def parse_groups(s: str) -> dict[str, int]:
         name, n = part.split(":")
         out[name.strip()] = int(n)
     return out
-
-
-def args_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--run-name", default=None)
-    p.add_argument("--groups", default="self:192,heuristic:64")
-    p.add_argument("--sets", default="core", help="comma separated: core,colony_wars,frontiers")
-    p.add_argument("--seed", type=int, default=1)
-    p.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
-    p.add_argument("--total-steps", type=float, default=20e6, help="env decisions (all rows)")
-    p.add_argument("--num-steps", type=int, default=128, help="rollout length per env")
-    p.add_argument("--lr", type=float, default=2.5e-4)
-    p.add_argument("--anneal-lr", action=argparse.BooleanOptionalAction, default=True)
-    p.add_argument("--gamma", type=float, default=0.995)
-    p.add_argument("--gae-lambda", type=float, default=0.95)
-    p.add_argument("--epochs", type=int, default=3)
-    p.add_argument("--minibatch", type=int, default=4096)
-    p.add_argument("--clip", type=float, default=0.2)
-    p.add_argument("--ent-coef", type=float, default=0.01)
-    p.add_argument("--vf-coef", type=float, default=0.5)
-    p.add_argument("--max-grad-norm", type=float, default=0.5)
-    p.add_argument("--target-kl", type=float, default=0.05)
-    p.add_argument("--shaping", type=float, default=0.3, help="potential-based shaping coefficient (0 = off)")
-    p.add_argument("--p-self", type=float, default=0.5, help="self-play envs: P(opponent = current policy)")
-    p.add_argument("--snapshot-every", type=int, default=25, help="updates between league snapshots")
-    p.add_argument("--league-size", type=int, default=12)
-    p.add_argument("--eval-every", type=int, default=25)
-    p.add_argument("--eval-games", type=int, default=500)
-    p.add_argument("--eval-opponents", default="heuristic,greedy")
-    p.add_argument("--hidden", type=int, default=512)
-    p.add_argument("--layers", type=int, default=2)
-    p.add_argument("--embed", type=int, default=16)
-    p.add_argument("--init", default=None, help="checkpoint to start from")
-    p.add_argument("--out", default="runs")
-    return p
 
 
 def compute_gae(values, seats, dones, rewards, phi, v_last, seat_last, phi_last, gamma, lam, shaping):
@@ -121,35 +170,13 @@ def compute_gae(values, seats, dones, rewards, phi, v_last, seat_last, phi_last,
     return adv
 
 
-class League:
-    def __init__(self, size: int, device):
-        self.size = size
-        self.device = device
-        self.members: list[Policy] = []
-        self.tags: list[int] = []
-        self.games = defaultdict(int)
-        self.wins = defaultdict(float)
-
-    def add(self, policy: Policy, tag: int) -> None:
-        m = copy.deepcopy(policy).eval()
-        for p in m.parameters():
-            p.requires_grad_(False)
-        self.members.append(m)
-        self.tags.append(tag)
-        if len(self.members) > self.size:
-            # keep the first snapshot as an anchor, drop the oldest after it
-            del self.members[1], self.tags[1]
-
-    def sample(self, rng: np.random.Generator, p_self: float) -> int:
-        if not self.members or rng.random() < p_self:
-            return -1
-        return int(rng.integers(len(self.members)))
-
-
-def main(argv=None) -> None:
-    args = args_parser().parse_args(argv)
+def main(args: Args) -> Path:
+    if args.snapshot_every % args.eval_every:
+        raise ValueError("snapshot_every must be a multiple of eval_every")
     groups = parse_groups(args.groups)
     sets = [s.strip() for s in args.sets.split(",")]
+    mix = parse_sets_mix(args.sets_mix) if args.sets_mix else None
+    eval_sets = [s for s, _ in mix] if mix else [sets]
     run = args.run_name or f"ppo_{'-'.join(sets)}_{time.strftime('%Y%m%d_%H%M%S')}"
     out = Path(args.out) / run
     out.mkdir(parents=True, exist_ok=True)
@@ -159,17 +186,71 @@ def main(argv=None) -> None:
     rng = np.random.default_rng(args.seed)
     dev = torch.device(args.device)
 
-    env = MultiEnv(groups, sets=sets, seed=args.seed)
+    env = MultiEnv(groups, sets=sets, seed=args.seed, sets_mix=mix)
     N, T = env.num_envs, args.num_steps
     if args.init:
-        policy = Policy.load(args.init, dev)
+        policy = load(args.init, dev)
+    elif args.arch == "entity":
+        policy = EntityPolicy(EntityConfig(d=args.d, layers=args.tf_layers, heads=args.heads, ff=args.ff)).to(dev)
     else:
         policy = Policy(ModelConfig(embed=args.embed, hidden=args.hidden, layers=args.layers)).to(dev)
     opt = torch.optim.Adam(policy.parameters(), lr=args.lr, eps=1e-5)
-    league = League(args.league_size, dev)
-    league.add(policy, 0)
+    def amp():
+        return torch.autocast(dev.type, torch.bfloat16, enabled=args.bf16)
+
     n_params = sum(p.numel() for p in policy.parameters())
-    print(f"run {run}: {N} envs {groups}, sets {sets}, device {dev}, {n_params/1e6:.2f}M params")
+    print(f"run {run}: {N} envs {dict(zip(env.labels, env.sizes))}, device {dev}, "
+          f"{policy.ARCH} {n_params/1e6:.2f}M params")
+
+    league = League(args.league_size, args.pfsp_power)
+    ratings = Ratings()
+    for s in eval_sets:
+        ratings.calibrate_bots(list(BOTS), s)
+    eval_opponents = [o for o in args.eval_opponents.split(",") if o]
+
+    def tagged(key: str, s: list[str]) -> str:
+        return f"{key}@{sets_tag(s)}" if mix else key
+
+    def rate_checkpoint(update: int) -> dict[str, float]:
+        """Evaluate the current policy against the eval bots and a few league snapshots, and
+        record the results for `u<update>`."""
+        name = snapshot_name(update)
+        stats = {}
+        policy.eval()
+        with amp():
+            for s in eval_sets:
+                for opp in eval_opponents:
+                    r = evaluate(policy, opp, args.eval_games, s, dev, greedy=True, seed=update)
+                    ratings.games(name, opp_name(opp), r.wins, r.draws, r.losses)
+                    stats[tagged(f"eval/{opp_name(opp)}", s)] = r.winrate
+                    stats[tagged(f"eval_lower95/{opp_name(opp)}", s)] = r.interval()[0]
+                league_scores = []
+                for tag in league.eval_members():
+                    r = evaluate(policy, league.members[tag], args.eval_games, s, dev, greedy=True, seed=update)
+                    ratings.games(name, snapshot_name(tag), r.wins, r.draws, r.losses)
+                    league_scores.append(r.winrate)
+                if league_scores:
+                    stats[tagged("eval/league", s)] = float(np.mean(league_scores))
+        ratings.ensure(name)
+        stats["rating/learner"] = ratings.rating(name)
+        for b in BOTS:
+            stats[f"rating/{b}"] = ratings.rating(b)
+        ratings.save(out / "ratings.json")
+        return stats
+
+    first = rate_checkpoint(0)
+    print(f"initial policy: rating {first['rating/learner']:.1f}; bots "
+          + " ".join(f"{b}={ratings.rating(b):.1f}" for b in BOTS))
+    league.add(policy, 0)
+
+    config = dataclasses.asdict(args)
+    if args.track:
+        import wandb
+
+        wandb.init(project=args.wandb_project, entity=args.wandb_entity, name=run, config=config,
+                   sync_tensorboard=True, save_code=True)
+    writer = SummaryWriter(str(out))
+    writer.add_text("args", "\n".join(f"- `{k}`: {v}" for k, v in config.items()))
 
     obs_buf = torch.zeros((T, N, OBS_DIM), device=dev)
     mask_buf = torch.zeros((T, N, N_ACTIONS), dtype=torch.bool, device=dev)
@@ -188,27 +269,27 @@ def main(argv=None) -> None:
     recent = defaultdict(lambda: deque(maxlen=500))
     lengths = deque(maxlen=500)
 
-    log_f = open(out / "log.csv", "w", newline="")
-    log_w = None
     res = env.reset()
     num_updates = int(args.total_steps // (N * T))
     steps = 0
     t_start = time.time()
-    best = -1.0
+    best: str | None = None  # name of the checkpoint saved as best.pt; its rating moves with each refit
     for update in range(1, num_updates + 1):
-        if args.anneal_lr:
-            opt.param_groups[0]["lr"] = args.lr * (1.0 - (update - 1) / num_updates)
+        lr = args.lr * (1.0 - (update - 1) / num_updates) if args.anneal_lr else args.lr
+        if update <= args.warmup_updates:
+            lr *= update / args.warmup_updates
+        opt.param_groups[0]["lr"] = lr
         t0 = time.time()
         policy.eval()
         for t in range(T):
             obs = torch.from_numpy(res.obs).to(dev, non_blocking=True)
             mask = torch.from_numpy(res.mask).to(dev, non_blocking=True)
-            a, logp, v = policy.act(obs, mask)
-            opp_rows = env.self_play & (res.seat != res.learner_seat) & (opp_of >= 0)
-            if opp_rows.any():
-                for k in np.unique(opp_of[opp_rows]):
-                    idx = torch.from_numpy(np.flatnonzero(opp_rows & (opp_of == k))).to(dev)
-                    a[idx] = league.members[k].act(obs[idx], mask[idx])[0]
+            with amp():
+                a, logp, v = policy.act(obs, mask)
+                opp_rows = env.self_play & (res.seat != res.learner_seat) & (opp_of >= 0)
+                if opp_rows.any():
+                    idx = torch.from_numpy(np.flatnonzero(opp_rows)).to(dev)
+                    a[idx] = league.act(obs[idx], mask[idx], opp_of[opp_rows])
             obs_buf[t] = obs
             mask_buf[t] = mask
             act_buf[t] = a
@@ -225,19 +306,18 @@ def main(argv=None) -> None:
                 w = 1.0 if res.winner[i] == ls else (0.5 if res.winner[i] == -1 else 0.0)
                 if env.self_play[i]:
                     k = opp_of[i]
-                    key = "self" if k < 0 else "league"
+                    key = env.labels[env.group[i]].replace("self", "self" if k < 0 else "league", 1)
                     if k >= 0:
-                        league.games[k] += 1
-                        league.wins[k] += w
+                        league.record(k, w)
                     opp_of[i] = league.sample(rng, args.p_self)
                 else:
-                    key = env.names[env.group[i]]
+                    key = env.labels[env.group[i]]
                 recent[key].append(w)
                 lengths.append(int(res.turns[i]))
         steps += N * T
         t_roll = time.time() - t0
 
-        with torch.no_grad():
+        with torch.no_grad(), amp():
             obs = torch.from_numpy(res.obs).to(dev)
             v_last = policy.value(obs).float().cpu().numpy()
         adv_np = compute_gae(
@@ -264,7 +344,9 @@ def main(argv=None) -> None:
             perm = torch.randperm(B, device=dev)
             for start in range(0, B, args.minibatch):
                 mb = perm[start : start + args.minibatch]
-                logits, newv = policy(b_obs[mb], b_mask[mb])
+                with amp():
+                    logits, newv = policy(b_obs[mb], b_mask[mb])
+                logits, newv = logits.float(), newv.float()
                 logp_all = torch.log_softmax(logits, -1)
                 newlogp = logp_all.gather(1, b_act[mb, None]).squeeze(1)
                 probs = logp_all.exp()
@@ -295,57 +377,61 @@ def main(argv=None) -> None:
         y_pred, y_true = b_val.cpu().numpy(), b_ret.cpu().numpy()
         var_y = np.var(y_true)
         explained = float("nan") if var_y == 0 else 1 - np.var(y_true - y_pred) / var_y
-        row = {
-            "update": update,
-            "steps": steps,
-            "time": round(time.time() - t_start, 1),
-            "sps": int(N * T / (t_roll + t_train)),
-            "roll_s": round(t_roll, 2),
-            "train_s": round(t_train, 2),
-            "batch": B,
-            "pg_loss": round(pg.item(), 4),
-            "v_loss": round(v_loss.item(), 4),
-            "entropy": round(ent.item(), 3),
-            "kl": round(approx_kl, 4),
-            "clipfrac": round(float(np.mean(clipfracs)), 3),
-            "explained_var": round(float(explained), 3),
-            "turns": round(float(np.mean(lengths)), 1) if lengths else 0,
+        sps = int(N * T / (t_roll + t_train))
+        scalars = {
+            "charts/learning_rate": opt.param_groups[0]["lr"],
+            "charts/sps": sps,
+            "charts/rollout_s": t_roll,
+            "charts/train_s": t_train,
+            "charts/batch": B,
+            "charts/game_turns": float(np.mean(lengths)) if lengths else 0.0,
+            "losses/policy": pg.item(),
+            "losses/value": v_loss.item(),
+            "losses/entropy": ent.item(),
+            "losses/approx_kl": approx_kl,
+            "losses/clipfrac": float(np.mean(clipfracs)),
+            "losses/explained_variance": float(explained),
         }
         for k, q in sorted(recent.items()):
-            row[f"wr_{k}"] = round(float(np.mean(q)), 3)
+            scalars[f"winrate/{k}"] = float(np.mean(q))
 
-        if update % args.snapshot_every == 0:
-            league.add(policy, update)
         if update % args.eval_every == 0 or update == num_updates:
-            policy.eval()
-            for opp in [o for o in args.eval_opponents.split(",") if o]:
-                wr = evaluate(policy, opp, args.eval_games, sets, dev, greedy=True, seed=update)
-                row[f"eval_{opp}"] = round(wr, 3)
-            policy.save(out / "latest.pt", update=update, steps=steps, args=vars(args))
-            score = row.get("eval_heuristic", -1)
-            if score >= best:
-                best = score
-                policy.save(out / "best.pt", update=update, steps=steps, args=vars(args))
-            policy.save(out / f"update_{update:05d}.pt", update=update, steps=steps)
+            scalars.update(rate_checkpoint(update))
+            rating = scalars["rating/learner"]
+            policy.save(out / "latest.pt", update=update, steps=steps, rating=rating, args=config)
+            if best is None or rating >= ratings.rating(best):
+                best = snapshot_name(update)
+                policy.save(out / "best.pt", update=update, steps=steps, rating=rating, args=config)
+            policy.save(out / f"update_{update:05d}.pt", update=update, steps=steps, rating=rating)
+            if update % args.snapshot_every == 0:
+                evicted = league.add(policy, update)
+                if evicted is not None:
+                    for i in np.flatnonzero(opp_of == evicted):
+                        opp_of[i] = league.sample(rng, args.p_self)
+            scalars["league/size"] = len(league.members)
+            scalars["league/hardest_score"] = min(league.score.values())
 
-        if log_w is None:
-            keys = ["self", "league"] + [n for n in env.names if n != "self"]
-            fields = [k for k in row if not k.startswith(("wr_", "eval_"))]
-            fields += [f"wr_{k}" for k in keys] + [f"eval_{o}" for o in args.eval_opponents.split(",") if o]
-            log_w = csv.DictWriter(log_f, fieldnames=fields, restval="", extrasaction="ignore")
-            log_w.writeheader()
-        log_w.writerow(row)
-        log_f.flush()
-        wr = " ".join(f"{k}={v}" for k, v in row.items() if k.startswith(("wr_", "eval_")))
+        for k, v in scalars.items():
+            writer.add_scalar(k, v, steps)
+        def summary(prefix):
+            return " ".join(f"{k[len(prefix):]}={v:.3f}" for k, v in scalars.items() if k.startswith(prefix))
+
+        wr, ev = summary("winrate/"), summary("eval/")
+        if ev:
+            ev += f" elo={scalars['rating/learner']:.0f} best={best}@{ratings.rating(best):.0f}"
         print(
-            f"[{update}/{num_updates}] steps {steps/1e6:.2f}M sps {row['sps']} "
-            f"ent {row['entropy']} kl {row['kl']} ev {row['explained_var']} turns {row['turns']} {wr}",
+            f"[{update}/{num_updates}] steps {steps/1e6:.2f}M sps {sps} ent {ent.item():.3f} "
+            f"kl {approx_kl:.4f} ev {explained:.3f} turns {scalars['charts/game_turns']:.1f} | train {wr}"
+            + (f" | eval {ev}" if ev else ""),
             flush=True,
         )
-    log_f.close()
+    writer.close()
+    if args.track:
+        wandb.finish()
     print(f"done: {out}")
+    return out
 
 
 if __name__ == "__main__":
     os.environ.setdefault("PYTHONUNBUFFERED", "1")
-    main()
+    main(tyro.cli(Args, description=__doc__))

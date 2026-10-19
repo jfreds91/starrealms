@@ -2,11 +2,15 @@
 //! move: they never inspect the opponent's hand or any draw-pile order, and
 //! never simulate ahead on a cloned game (which would reveal the shuffle).
 
+#[cfg(feature = "candle")]
+pub mod entity_net;
 mod heuristic;
 pub mod net;
 
+#[cfg(feature = "candle")]
+pub use entity_net::EntityNet;
 pub use heuristic::Heuristic;
-pub use net::{Net, NetAgent};
+pub use net::{MlpNet, Net, NetAgent};
 use sr_core::{action, Game, Rng};
 
 pub trait Agent: Send + Sync {
@@ -79,7 +83,7 @@ pub fn by_name(name: &str) -> Option<Box<dyn Agent>> {
     }
 }
 
-/// Like `by_name`, plus `model:<path.srnn>` or `model:<path.srnn>@<temperature>`.
+/// Like `by_name`, plus `model:<path>` or `model:<path>@<temperature>` (`.srnn` or `.safetensors`).
 pub fn from_spec(spec: &str) -> Result<Box<dyn Agent>, String> {
     if let Some(rest) = spec.strip_prefix("model:") {
         let (path, temp) = match rest.rsplit_once('@') {

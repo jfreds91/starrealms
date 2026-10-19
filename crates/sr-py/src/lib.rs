@@ -5,7 +5,7 @@
 //! `opponent="heuristic"` (or "greedy"/"random") to have one seat played by a
 //! scripted bot inside Rust, so Python only sees the learner's decisions.
 
-use numpy::{PyArray1, PyArrayMethods, PyReadonlyArray1};
+use numpy::{PyArray1, PyArray2, PyArrayMethods, PyReadonlyArray1};
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
@@ -403,7 +403,46 @@ fn obs_layout() -> Vec<(&'static str, usize, usize)> {
     obs::LAYOUT.to_vec()
 }
 
-/// Rust forward pass of an exported `.srnn` model: (unmasked logits, value).
+/// (name, first id, count) of each action family, in id order.
+#[pyfunction]
+fn action_layout() -> Vec<(&'static str, u16, u16)> {
+    use action::*;
+    let starts = [
+        ("end", END),
+        ("skip", SKIP),
+        ("choose", CHOOSE),
+        ("play", PLAY),
+        ("primary", PRIMARY),
+        ("ally", ALLY),
+        ("ally2", ALLY2),
+        ("scrap", SCRAP),
+        ("buy", BUY),
+        ("buy_explorer", BUY_EXPLORER),
+        ("attack_player", ATTACK_PLAYER),
+        ("attack_base", ATTACK_BASE),
+        ("pick_hand", PICK_HAND),
+        ("pick_discard", PICK_DISCARD),
+        ("pick_row", PICK_ROW),
+        ("pick_explorer", PICK_EXPLORER),
+        ("pick_opp_base", PICK_OPP_BASE),
+        ("pick_own", PICK_OWN),
+    ];
+    let mut out = Vec::new();
+    for (i, &(name, s)) in starts.iter().enumerate() {
+        let e = starts.get(i + 1).map_or(N_ACTIONS as u16, |x| x.1);
+        out.push((name, s, e - s));
+    }
+    out
+}
+
+/// `[N_CARDS, N_CARD_FEATS]` static card features (see `sr_core::obs::card_features`).
+#[pyfunction]
+fn card_features<'py>(py: Python<'py>) -> PyResult<Bound<'py, PyArray2<f32>>> {
+    let rows: Vec<Vec<f32>> = obs::card_features().iter().map(|r| r.to_vec()).collect();
+    PyArray2::from_vec2(py, &rows).map_err(err)
+}
+
+/// Rust forward pass of an exported model (`.srnn` or entity `.safetensors`): (unmasked logits, value).
 #[pyfunction]
 fn srnn_forward<'py>(
     py: Python<'py>,
@@ -427,11 +466,14 @@ fn _engine(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(card_catalog, m)?)?;
     m.add_function(wrap_pyfunction!(obs_layout, m)?)?;
     m.add_function(wrap_pyfunction!(srnn_forward, m)?)?;
+    m.add_function(wrap_pyfunction!(action_layout, m)?)?;
+    m.add_function(wrap_pyfunction!(card_features, m)?)?;
     m.add("OBS_DIM", OBS_DIM)?;
     m.add("N_ACTIONS", N_ACTIONS)?;
     m.add("N_CARDS", sr_core::N_CARDS)?;
     m.add("N_IDS", obs::N_IDS)?;
     m.add("COUNT_ZONES", obs::COUNT_ZONES.to_vec())?;
+    m.add("SCALAR_NAMES", obs::SCALAR_NAMES.to_vec())?;
     m.add("END", action::END)?;
     m.add("SKIP", action::SKIP)?;
     Ok(())

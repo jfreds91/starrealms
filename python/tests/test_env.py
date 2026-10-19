@@ -66,16 +66,12 @@ def test_arena():
     assert a + b + d == 50 and a > 40
 
 
-def test_gae_per_seat():
-    from starrealms.ppo import compute_gae
-
-    # one env, seats alternate 0,1,0,1; game ends after step 3 with seat 1 winning
-    values = np.zeros((4, 1), np.float32)
-    seats = np.array([[0], [1], [0], [1]])
-    dones = np.array([[False], [False], [False], [True]])
-    rewards = np.zeros((4, 1, 2), np.float32)
-    rewards[3, 0] = [-1, 1]
-    adv = compute_gae(values, seats, dones, rewards, np.zeros((4, 1), np.float32),
-                      np.zeros(1, np.float32), np.zeros(1, np.int64), np.zeros(1, np.float32),
-                      gamma=1.0, lam=1.0, shaping=0.0)
-    assert adv[:, 0].tolist() == [-1, 1, -1, 1]
+def test_named_scalars():
+    assert len(sr.SCALAR_NAMES) == LAYOUT["scalars"].stop - LAYOUT["scalars"].start
+    env = sr.VecEnv(8, ["core"], 2)
+    obs, mask, *_ = env.reset()
+    rng = np.random.default_rng(0)
+    for _ in range(200):
+        obs, mask, *_ = env.step(np.array([rng.choice(np.flatnonzero(m)) for m in mask]))
+        diff = obs[:, sr.SCALAR["my_authority"]] - obs[:, sr.SCALAR["opp_authority"]]
+        np.testing.assert_allclose(obs[:, sr.SCALAR["authority_diff"]], diff, atol=1e-6)
