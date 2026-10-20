@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from functools import lru_cache
+from pathlib import Path
 
 import numpy as np
 
@@ -90,7 +91,8 @@ class MultiEnv:
                 opp = None if name == "self" else name
                 self.envs.append(VecEnv(m, list(s), seed * 7919 + k, opp, max_turns))
                 self.names.append(name)
-                self.labels.append(f"{name}@{sets_tag(s)}" if sets_mix else name)
+                label = Path(name.split(":", 1)[1]).stem if name.startswith("model:") else name
+                self.labels.append(f"{label}@{sets_tag(s)}" if sets_mix else label)
                 k += 1
         self.sizes = [e.num_envs for e in self.envs]
         self.num_envs = sum(self.sizes)

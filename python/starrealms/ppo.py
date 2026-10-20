@@ -61,7 +61,7 @@ class Args:
     wandb_entity: str | None = None
 
     groups: str = "self:192,heuristic:64"
-    """env groups as name:count; 'self' is self-play, other names are Rust bots"""
+    """env groups as name:count; 'self' is self-play, other names are Rust bots or model:<path>"""
     sets: str = "core"
     """comma separated: core,colony_wars,frontiers"""
     sets_mix: str | None = None
@@ -88,6 +88,8 @@ class Args:
     ent_coef: float = 0.01
     vf_coef: float = 0.5
     max_grad_norm: float = 0.5
+    weight_decay: float = 0.0
+    """decoupled (AdamW) weight decay; 0 is plain Adam"""
     target_kl: float = 0.05
     """stop the epoch loop once approx KL exceeds this (0 = never)"""
     shaping: float = 0.3
@@ -129,7 +131,7 @@ def opp_name(spec: str) -> str:
 def parse_groups(s: str) -> dict[str, int]:
     out = {}
     for part in s.split(","):
-        name, n = part.split(":")
+        name, n = part.rsplit(":", 1)
         out[name.strip()] = int(n)
     return out
 
@@ -194,7 +196,7 @@ def main(args: Args) -> Path:
         policy = EntityPolicy(EntityConfig(d=args.d, layers=args.tf_layers, heads=args.heads, ff=args.ff)).to(dev)
     else:
         policy = Policy(ModelConfig(embed=args.embed, hidden=args.hidden, layers=args.layers)).to(dev)
-    opt = torch.optim.Adam(policy.parameters(), lr=args.lr, eps=1e-5)
+    opt = torch.optim.AdamW(policy.parameters(), lr=args.lr, eps=1e-5, weight_decay=args.weight_decay)
     def amp():
         return torch.autocast(dev.type, torch.bfloat16, enabled=args.bf16)
 
@@ -338,12 +340,13 @@ def main(args: Args) -> Path:
 
         policy.train()
         t1 = time.time()
-        clipfracs, approx_kl = [], 0.0
+        clipfracs, approx_kl, skipped = [], 0.0, 0
         stop = False
         for epoch in range(args.epochs):
             perm = torch.randperm(B, device=dev)
-            for start in range(0, B, args.minibatch):
-                mb = perm[start : start + args.minibatch]
+            # equal chunks of at least `minibatch` rows; a leftover single row would make the
+            # advantage std NaN
+            for mb in torch.tensor_split(perm, max(1, B // args.minibatch)):
                 with amp():
                     logits, newv = policy(b_obs[mb], b_mask[mb])
                 logits, newv = logits.float(), newv.float()
@@ -351,7 +354,8 @@ def main(args: Args) -> Path:
                 newlogp = logp_all.gather(1, b_act[mb, None]).squeeze(1)
                 probs = logp_all.exp()
                 entropy = -(probs * logp_all.clamp(min=-1e4)).sum(-1)
-                logratio = newlogp - b_logp[mb]
+                # unbounded, a near-impossible sampled action can overflow the ratio to inf
+                logratio = (newlogp - b_logp[mb]).clamp(-20.0, 20.0)
                 ratio = logratio.exp()
                 with torch.no_grad():
                     approx_kl = ((ratio - 1) - logratio).mean().item()
@@ -364,8 +368,18 @@ def main(args: Args) -> Path:
                 ent = entropy.mean()
                 loss = pg - args.ent_coef * ent + args.vf_coef * v_loss
                 opt.zero_grad(set_to_none=True)
-                loss.backward()
-                nn.utils.clip_grad_norm_(policy.parameters(), args.max_grad_norm)
+                if torch.isfinite(loss):
+                    loss.backward()
+                    gnorm = nn.utils.clip_grad_norm_(policy.parameters(), args.max_grad_norm)
+                if not torch.isfinite(loss) or not torch.isfinite(gnorm):
+                    skipped += 1
+                    dump = out / "nonfinite.pt"
+                    if not dump.exists():
+                        torch.save({"obs": b_obs[mb].cpu(), "mask": b_mask[mb].cpu(), "act": b_act[mb].cpu(),
+                                    "logp": b_logp[mb].cpu(), "adv": b_adv[mb].cpu(), "ret": b_ret[mb].cpu(),
+                                    "val": b_val[mb].cpu(), "update": update, "loss": loss.item(),
+                                    "state": policy.state_dict()}, dump)
+                    continue
                 opt.step()
                 if args.target_kl and approx_kl > args.target_kl:
                     stop = True
@@ -391,6 +405,7 @@ def main(args: Args) -> Path:
             "losses/approx_kl": approx_kl,
             "losses/clipfrac": float(np.mean(clipfracs)),
             "losses/explained_variance": float(explained),
+            "losses/skipped_minibatches": skipped,
         }
         for k, q in sorted(recent.items()):
             scalars[f"winrate/{k}"] = float(np.mean(q))
@@ -421,7 +436,9 @@ def main(args: Args) -> Path:
             ev += f" elo={scalars['rating/learner']:.0f} best={best}@{ratings.rating(best):.0f}"
         print(
             f"[{update}/{num_updates}] steps {steps/1e6:.2f}M sps {sps} ent {ent.item():.3f} "
-            f"kl {approx_kl:.4f} ev {explained:.3f} turns {scalars['charts/game_turns']:.1f} | train {wr}"
+            f"kl {approx_kl:.4f} ev {explained:.3f} turns {scalars['charts/game_turns']:.1f}"
+            + (f" skipped {skipped}" if skipped else "")
+            + f" | train {wr}"
             + (f" | eval {ev}" if ev else ""),
             flush=True,
         )
