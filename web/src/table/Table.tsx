@@ -13,9 +13,11 @@ export interface TableProps {
   interactive: boolean;
   onAct(id: number): void;
   onPlayAll(): void;
+  /** Take back the action that opened the current choice, when the server allows it. */
+  onUndo?: () => void;
+  /** The viewer's chance to win (0..1), when the server runs a meter model. */
+  meter?: number | null;
   spectator?: boolean;
-  /** Both seats are people at this screen: name the viewing seat instead of saying "You". */
-  hotseat?: boolean;
   /** Shown under the turn indicator (connection state, invite link, errors). */
   notice?: React.ReactNode;
   /** Buttons for the menu bar (resign, leave). */
@@ -32,6 +34,34 @@ function sameTarget(a: Target, b: Target): boolean {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
+/** Cards that just left the trade row (or the Explorer pile) on someone else's move. */
+type Taken = { slots: Map<number, CardId>; explorer: boolean; key: number };
+
+const TAKEN_MS = 600;
+
+/** While it isn't the viewer's move, keeps a card taken from the trade row on screen briefly so it can be seen leaving. */
+function useTaken(v: View, watching: boolean): Taken | null {
+  const [taken, setTaken] = useState<Taken | null>(null);
+  const prev = useRef(v);
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    const before = prev.current;
+    prev.current = v;
+    if (!watching || before === v) return;
+    const slots = new Map<number, CardId>();
+    before.trade_row.forEach((c, k) => {
+      if (c != null && c !== v.trade_row[k]) slots.set(k, c);
+    });
+    const explorer = v.explorers < before.explorers;
+    if (!slots.size && !explorer) return;
+    setTaken({ slots, explorer, key: Date.now() });
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setTaken(null), TAKEN_MS);
+  }, [v, watching]);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+  return taken;
+}
+
 export function Table(p: TableProps) {
   const { view: v } = p;
   const cat = useCatalog();
@@ -42,10 +72,18 @@ export function Table(p: TableProps) {
   const at = (t: Target) => actions.filter((a) => sameTarget(a.target, t));
   const me = v.seat, them = 1 - v.seat;
   const myTurn = v.active === me && !over && !p.spectator;
+  const taken = useTaken(v, v.active !== me || !!p.spectator);
   const act = (id: number) => {
     setPile(null);
     p.onAct(id);
   };
+  const undo = p.interactive && !over && v.prompt ? p.onUndo : undefined;
+  useEffect(() => {
+    if (!undo) return;
+    const k = (e: KeyboardEvent) => e.key === "Escape" && !pile && undo();
+    window.addEventListener("keydown", k);
+    return () => window.removeEventListener("keydown", k);
+  }, [undo, pile]);
 
   // Opponent bases are addressed by base index, not by in-play position.
   const oppSlots = useMemo(() => {
@@ -60,20 +98,20 @@ export function Table(p: TableProps) {
   const attackFace = actions.find((a) => a.target.zone === "opponent");
 
   const outcomeText =
-    winner == null ? null : winner === -1 ? "Draw" : !p.spectator && !p.hotseat && winner === me ? "You win!" : `${p.names[winner]} wins`;
-  const ownName = p.spectator || p.hotseat ? p.names[me] : "You";
+    winner == null ? null : winner === -1 ? "Draw" : !p.spectator && winner === me ? "You win!" : `${p.names[winner]} wins`;
+  const ownName = p.spectator ? p.names[me] : "You";
+
+  const choosing = myTurn && !!v.prompt;
 
   return (
     <div className="table-layout">
-      <main className="board">
+      <main className={`board ${choosing ? "choosing" : ""}`}>
         <section className="zone opp-zone">
           <PlayerPanel
             name={p.names[them]}
             seat={v.opponent}
             online={p.online?.[them]}
             active={v.active === them && !over}
-            attack={attackFace}
-            onAct={act}
             onPile={setPile}
           />
           <div className="in-play opp-play">
@@ -94,30 +132,36 @@ export function Table(p: TableProps) {
         </section>
 
         <section className="zone row-zone">
+          <Scoreboard
+            view={v}
+            names={[p.names[me], p.names[them]]}
+            ownName={ownName}
+            over={over}
+            meter={p.meter ?? null}
+            attack={attackFace}
+            onAct={act}
+          />
           <div className="pile-stack">
             <Card
-              className="pile"
+              key={taken?.explorer ? taken.key : "explorer"}
+              className={`pile ${taken?.explorer ? "taken" : ""}`}
               id={cat.explorer}
               actions={at({ zone: "explorer" })}
               onAct={act}
               dim={v.explorers === 0}
-              badge={<span className="count-badge">{v.explorers}</span>}
-              note={`${v.explorers} Explorers left`}
             />
-            <div className="pile-label">Explorers</div>
+            <div className="pile-label">Explorer</div>
           </div>
           <div className="trade-row">
-            {v.trade_row.map((c, k) =>
-              c == null ? (
+            {v.trade_row.map((c, k) => {
+              const gone = taken?.slots.get(k);
+              if (gone != null) return <Card key={`taken-${taken!.key}-${k}`} id={gone} className="taken" />;
+              return c == null ? (
                 <div key={k} className="card-wrap"><div className="card empty-slot" /></div>
               ) : (
-                <Card key={k} id={c} actions={at({ zone: "row", slot: k })} onAct={act} />
-              ),
-            )}
-          </div>
-          <div className="pile-stack">
-            <CardBack label={v.trade_deck} className="pile" />
-            <div className="pile-label">Trade deck</div>
+                <Card key={`${k}-${c}`} id={c} className="row-card" actions={at({ zone: "row", slot: k })} onAct={act} />
+              );
+            })}
           </div>
           <button className="pile-stack pile-button" onClick={() => setPile({ title: "Scrap heap", cards: v.scrap_heap })}>
             {v.scrap_heap.length ? (
@@ -147,16 +191,12 @@ export function Table(p: TableProps) {
           </div>
 
           <div className="controls">
-            <div className="pools">
-              <Pool icon={<TradeIcon size={22} />} value={v.active === me ? v.trade : 0} label="Trade" />
-              <Pool icon={<CombatIcon size={22} />} value={v.active === me ? v.combat : 0} label="Combat" />
-            </div>
             <div className="turn-info">
               {outcomeText ? (
                 <span className="turn-pill over">{outcomeText}</span>
               ) : (
                 <span className={`turn-pill ${myTurn ? "mine" : ""}`}>
-                  {p.spectator ? `${p.names[v.active]}'s turn` : myTurn ? (p.hotseat ? `${ownName}'s turn` : "Your turn") : `${p.names[them]}'s turn`}
+                  {p.spectator ? `${p.names[v.active]}'s turn` : myTurn ? "Your turn" : `${p.names[them]}'s turn`}
                 </span>
               )}
               <span className="turn-number">Turn {Math.ceil(v.turn / 2)}</span>
@@ -177,13 +217,18 @@ export function Table(p: TableProps) {
                         ))}
                       </div>
                     )}
-                    {promptButtons.length > 0 && (
+                    {(promptButtons.length > 0 || undo) && (
                       <div className="prompt-buttons">
                         {promptButtons.map((a) => (
-                          <button key={a.id} className={a.group === "skip" ? "btn ghost" : "btn primary"} onClick={() => act(a.id)}>
-                            {a.label}
+                          <button key={a.id} className={a.group === "skip" ? "btn" : "btn primary"} onClick={() => act(a.id)}>
+                            {a.group === "skip" && a.label === "Skip" ? "Choose none" : a.label}
                           </button>
                         ))}
+                        {undo && (
+                          <button className="btn ghost" onClick={undo} title="Take back the card or ability that asked for this choice (Esc)">
+                            Cancel
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>
@@ -213,9 +258,7 @@ export function Table(p: TableProps) {
               seat={v.you}
               online={p.spectator ? p.online?.[me] : undefined}
               active={v.active === me && !over}
-              onAct={act}
               onPile={(pl) => setPile(pl.title === "Discard pile" && discardPicks.length ? { ...pl, picks: discardPicks } : pl)}
-              own
             />
             <div className="hand">
               {v.you.hand
@@ -229,7 +272,7 @@ export function Table(p: TableProps) {
 
       <aside className="side">
         <div className="side-menu">{p.menu}</div>
-        <Log entries={v.log} names={p.names} viewer={p.spectator || p.hotseat ? null : me} />
+        <Log entries={v.log} names={p.names} viewer={p.spectator ? null : me} />
       </aside>
 
       {outcomeText && (
@@ -252,37 +295,27 @@ function PlayerPanel(props: {
   seat: SeatView;
   online?: boolean;
   active: boolean;
-  attack?: ActionView;
-  own?: boolean;
-  onAct(id: number): void;
   onPile(p: Pile): void;
 }) {
   const s = props.seat;
   const top = s.discard[s.discard.length - 1];
+  const handHidden = s.hand == null;
+  const deckTitle = handHidden ? `${props.name}: deck and hand (unordered)` : `${props.name}: deck (unordered)`;
   return (
-    <div className={`player-panel ${props.active ? "active" : ""} ${props.own ? "own" : ""}`}>
+    <div className={`player-panel ${props.active ? "active" : ""}`}>
       <div className="player-name">
         {props.online !== undefined && <span className={`dot ${props.online ? "on" : ""}`} title={props.online ? "Connected" : "Away"} />}
         {props.name}
       </div>
-      <button
-        className={`authority ${props.attack ? "attackable" : ""}`}
-        disabled={!props.attack}
-        title={props.attack?.label}
-        onClick={() => props.attack && props.onAct(props.attack.id)}
-      >
-        <AuthorityIcon size={26} />
-        <AnimatedNumber value={s.authority} />
-      </button>
       <div className="player-stats">
-        {!props.own && (
+        {handHidden && (
           <span title="Cards in hand"><HandIcon /> {s.hand_count}</span>
         )}
         <button
           className="stat-button"
-          title={s.deck_contents ? "Cards left in your deck (order unknown)" : "Cards in deck"}
+          title={handHidden ? "Deck: click to see what's in the deck and hand together" : "Deck: click to see what's left in it"}
           disabled={!s.deck_contents}
-          onClick={() => s.deck_contents && props.onPile({ title: "Your deck (unordered)", cards: s.deck_contents })}
+          onClick={() => s.deck_contents && props.onPile({ title: deckTitle, cards: s.deck_contents })}
         >
           <DeckIcon /> {s.deck_count}
         </button>
@@ -296,6 +329,68 @@ function PlayerPanel(props: {
           Discards {s.owed_discards} next turn
         </div>
       )}
+    </div>
+  );
+}
+
+/** Both authorities, the win-chance meter, and the trade and combat of whoever is moving. */
+function Scoreboard(props: {
+  view: View;
+  /** [viewer, opponent] */
+  names: [string, string];
+  ownName: string;
+  over: boolean;
+  meter: number | null;
+  attack?: ActionView;
+  onAct(id: number): void;
+}) {
+  const v = props.view;
+  const me = v.seat, them = 1 - v.seat;
+  const pools = (seat: number) =>
+    v.active === seat && !props.over ? (
+      <div className="pools">
+        <Pool icon={<TradeIcon size={20} />} value={v.trade} label="Trade" />
+        <Pool icon={<CombatIcon size={20} />} value={v.combat} label="Combat" />
+      </div>
+    ) : null;
+  return (
+    <div className="scoreboard">
+      <div className={`score-row theirs ${v.active === them && !props.over ? "active" : ""}`}>
+        <div className="score-name">{props.names[1]}</div>
+        <button
+          className={`authority ${props.attack ? "attackable" : ""}`}
+          disabled={!props.attack}
+          title={props.attack?.label ?? "Authority"}
+          onClick={() => props.attack && props.onAct(props.attack.id)}
+        >
+          <AuthorityIcon size={24} />
+          <AnimatedNumber value={v.opponent.authority} />
+        </button>
+        {pools(them)}
+      </div>
+      {props.meter != null && <WinMeter you={props.meter} />}
+      <div className={`score-row mine ${v.active === me && !props.over ? "active" : ""}`}>
+        <div className="score-name">{props.ownName}</div>
+        <div className="authority" title="Authority">
+          <AuthorityIcon size={24} />
+          <AnimatedNumber value={v.you.authority} />
+        </div>
+        {pools(me)}
+      </div>
+    </div>
+  );
+}
+
+/** Split bar: the viewer's chance to win (left, green) against the opponent's (right, red). */
+function WinMeter({ you }: { you: number }) {
+  const pct = Math.round(you * 100);
+  return (
+    <div className="win-meter" title="Chance to win, estimated by the strongest model's value head">
+      <span className="win-pct mine">{pct}%</span>
+      <div className="win-bar">
+        <div className="win-fill" style={{ width: `${you * 100}%` }} />
+      </div>
+      <span className="win-pct theirs">{100 - pct}%</span>
     </div>
   );
 }

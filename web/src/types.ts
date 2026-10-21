@@ -37,6 +37,7 @@ export interface SeatView {
   hand: CardId[] | null;
   hand_count: number;
   deck_count: number;
+  /** Sorted draw pile; pooled with the hand when the hand is hidden. */
   deck_contents: CardId[] | null;
   discard: CardId[];
   in_play: SlotView[];

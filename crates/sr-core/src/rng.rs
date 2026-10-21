@@ -1,7 +1,7 @@
 //! xoshiro256++ seeded through splitmix64. Self-contained so replays do not
 //! depend on the version of an external crate.
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Rng {
     s: [u64; 4],
 }

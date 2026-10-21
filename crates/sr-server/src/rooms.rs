@@ -4,8 +4,8 @@
 
 use crate::db::{Db, Player, Progress};
 use serde::{Deserialize, Serialize};
-use sr_bots::{by_name, Agent, Net, NetAgent};
-use sr_core::{view::View, Config, Outcome, Replay, Rng, Session};
+use sr_bots::{by_name, meter::win_chance, Agent, Net, NetAgent};
+use sr_core::{view::View, Config, Game, Outcome, Replay, Rng, Session};
 use std::collections::{BTreeMap, HashMap};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
@@ -40,7 +40,12 @@ pub struct App {
     pub opponents: BTreeMap<String, Opponent>,
     pub catalog: String,
     pub bot_delay: Duration,
+    /// Model whose value head drives the win-chance meter.
+    pub meter: Option<Arc<Net>>,
 }
+
+/// Determinizations averaged per meter reading on the opponent's move.
+const METER_SAMPLES: usize = 8;
 
 pub struct Room {
     pub id: String,
@@ -56,6 +61,10 @@ pub struct RoomState {
     pub resigned: Option<u8>,
     pub online: [u32; 2],
     bot_running: bool,
+    /// The game before the last player action, while that action can still be taken back.
+    prev: Option<Game>,
+    /// Meter reading per seat, keyed by action count.
+    meter: Mutex<[Option<(usize, f32)>; 2]>,
 }
 
 #[derive(Serialize)]
@@ -87,6 +96,10 @@ pub enum ServerMsg<'a> {
         /// Number of actions taken so far; echo it back with each action.
         n: usize,
         view: View,
+        /// The viewer's chance to win, per the meter model.
+        meter: Option<f32>,
+        /// The viewer can take back the action that opened the current choice.
+        can_undo: bool,
     },
     Error {
         message: String,
@@ -159,7 +172,20 @@ impl RoomState {
         }
     }
 
-    pub fn message(&self, id: &str, seat: Option<u8>) -> String {
+    /// The last action opened a choice and revealed nothing (no draw, no shuffle, no refill of
+    /// the trade row), so taking it back cannot leak hidden information.
+    fn can_undo(&self) -> bool {
+        let (Some(p), g) = (&self.prev, &self.session.game) else { return false };
+        g.pending.is_some()
+            && p.pending.is_none()
+            && p.active == g.active
+            && p.turn == g.turn
+            && p.rng == g.rng
+            && p.trade_deck.len() == g.trade_deck.len()
+            && p.players.iter().zip(&g.players).all(|(a, b)| a.deck.len() == b.deck.len())
+    }
+
+    pub fn message(&self, id: &str, seat: Option<u8>, meter: Option<f32>) -> String {
         let g = &self.session.game;
         let mut view = match seat {
             Some(s) => g.view(s, 200),
@@ -185,6 +211,8 @@ impl RoomState {
             seat,
             n: self.session.replay.actions.len(),
             view,
+            meter,
+            can_undo: seat == Some(g.active) && self.status() == "active" && self.can_undo(),
         })
         .unwrap()
     }
@@ -193,17 +221,25 @@ impl RoomState {
 pub enum Move {
     Action(u16),
     PlayAll,
+    Undo,
     Resign,
 }
 
 impl App {
-    pub fn new(db: Db, opponents: BTreeMap<String, Opponent>, bot_delay: Duration) -> App {
+    /// `meter` names one of the loaded models (e.g. `model:phase_f`).
+    pub fn new(db: Db, opponents: BTreeMap<String, Opponent>, bot_delay: Duration, meter: &str) -> App {
+        let meter_net = opponents.get(meter).and_then(|o| o.model.clone());
+        match &meter_net {
+            Some(_) => tracing::info!("win-chance meter uses {meter}"),
+            None => tracing::warn!("no model {meter:?} loaded; the win-chance meter is off"),
+        }
         App {
             db,
             rooms: Mutex::new(HashMap::new()),
             opponents,
             catalog: serde_json::to_string(&sr_core::view::catalog()).unwrap(),
             bot_delay,
+            meter: meter_net,
         }
     }
 
@@ -246,6 +282,8 @@ impl App {
                 resigned: row.resigned,
                 online: [0, 0],
                 bot_running: false,
+                prev: None,
+                meter: Mutex::new([None, None]),
             }),
             version: watch::Sender::new(0),
         });
@@ -257,8 +295,17 @@ impl App {
         let session = Session::new(cfg, random_seed())?;
         let id = random_id(10);
         let t = now();
-        let state =
-            RoomState { session, seats, created: t, updated: t, resigned: None, online: [0, 0], bot_running: false };
+        let state = RoomState {
+            session,
+            seats,
+            created: t,
+            updated: t,
+            resigned: None,
+            online: [0, 0],
+            bot_running: false,
+            prev: None,
+            meter: Mutex::new([None, None]),
+        };
         self.db.insert_game(&id, &state.session.replay, t, &state.progress()).map_err(|e| e.to_string())?;
         let room = Arc::new(Room { id: id.clone(), state: Mutex::new(state), version: watch::Sender::new(0) });
         self.rooms.lock().unwrap().insert(id, room.clone());
@@ -284,6 +331,25 @@ impl Room {
 
     pub fn with<T>(&self, f: impl FnOnce(&RoomState) -> T) -> T {
         f(&self.state.lock().unwrap())
+    }
+
+    /// `seat`'s chance to win now, from that seat's point of view. Runs the model off the room
+    /// lock; readings are cached per action count.
+    pub async fn meter(&self, app: &App, seat: Option<u8>) -> Option<f32> {
+        let (net, s) = (app.meter.clone()?, seat?);
+        let (n, game) = {
+            let st = self.state.lock().unwrap();
+            let n = st.session.replay.actions.len();
+            if let Some((at, p)) = st.meter.lock().unwrap()[s as usize] {
+                if at == n {
+                    return Some(p);
+                }
+            }
+            (n, st.session.game.clone())
+        };
+        let p = tokio::task::spawn_blocking(move || win_chance(&net, &game, s, METER_SAMPLES)).await.ok()?;
+        self.state.lock().unwrap().meter.lock().unwrap()[s as usize] = Some((n, p));
+        Some(p)
     }
 
     pub fn set_online(&self, seat: Option<u8>, delta: i32) {
@@ -338,11 +404,23 @@ impl Room {
                 return Err("the game moved on; try again".into());
             }
             match mv {
-                Move::Action(a) => st.session.step(a)?,
+                Move::Action(a) => {
+                    let before = st.session.game.clone();
+                    st.session.step(a)?;
+                    st.prev = Some(before);
+                }
                 Move::PlayAll => {
+                    st.prev = None;
                     while let Some(a) = st.session.game.next_simple_play() {
                         st.session.step(a)?;
                     }
+                }
+                Move::Undo => {
+                    if !st.can_undo() {
+                        return Err("that can no longer be undone".into());
+                    }
+                    st.session.game = st.prev.take().unwrap();
+                    st.session.replay.actions.pop();
                 }
                 Move::Resign => unreachable!(),
             }
@@ -383,6 +461,7 @@ impl Room {
                 let n = st.session.replay.actions.len() as u64;
                 let mut rng = Rng::new(st.session.replay.seed ^ n.wrapping_mul(0x9E37_79B9_7F4A_7C15));
                 let a = opp.agent().act(g, &legal, &mut rng);
+                st.prev = None;
                 if let Err(e) = st.session.step(a) {
                     tracing::error!("game {}: bot chose an illegal action: {e}", room.id);
                     st.bot_running = false;

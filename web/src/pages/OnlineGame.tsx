@@ -11,6 +11,9 @@ interface StateMsg {
   seat: number | null;
   n: number;
   view: View;
+  /** The viewer's chance to win, per the server's meter model. */
+  meter: number | null;
+  can_undo: boolean;
 }
 
 type Conn = "connecting" | "open" | "lost";
@@ -156,6 +159,8 @@ export function OnlineGame({ id, join }: { id: string; join: boolean }) {
       interactive={myTurn && !busy && conn === "open"}
       onAct={(action) => send({ type: "act", action, n: state.n })}
       onPlayAll={() => send({ type: "play_all", n: state.n })}
+      onUndo={state.can_undo ? () => send({ type: "undo", n: state.n }) : undefined}
+      meter={state.meter}
       notice={notice}
       menu={
         <>

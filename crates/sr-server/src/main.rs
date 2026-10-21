@@ -46,6 +46,9 @@ struct Args {
     /// Pause between bot actions, so humans can follow the bot's turn.
     #[arg(long, default_value_t = 450, env = "SR_BOT_DELAY_MS")]
     bot_delay_ms: u64,
+    /// Model (a file stem in the models directory) whose value head drives the win-chance meter.
+    #[arg(long, default_value = "phase_f", env = "SR_METER_MODEL")]
+    meter_model: String,
 }
 
 struct ApiError(StatusCode, String);
@@ -213,6 +216,7 @@ struct WsQuery {
 enum ClientMsg {
     Act { action: u16, n: Option<usize> },
     PlayAll { n: Option<usize> },
+    Undo { n: Option<usize> },
     Resign,
 }
 
@@ -244,7 +248,8 @@ async fn client(app: Arc<App>, room: Arc<Room>, me: Option<Player>, socket: WebS
                 room.set_online(now_seat, 1);
                 seat = now_seat;
             }
-            let msg = room.with(|st| st.message(&room.id, seat));
+            let meter = room.meter(&app, seat).await;
+            let msg = room.with(|st| st.message(&room.id, seat, meter));
             if tx.send(Message::Text(msg.into())).await.is_err() {
                 break;
             }
@@ -271,6 +276,7 @@ async fn client(app: Arc<App>, room: Arc<Room>, me: Option<Player>, socket: WebS
                         let (n, mv) = match m {
                             ClientMsg::Act { action, n } => (n, Move::Action(action)),
                             ClientMsg::PlayAll { n } => (n, Move::PlayAll),
+                            ClientMsg::Undo { n } => (n, Move::Undo),
                             ClientMsg::Resign => (None, Move::Resign),
                         };
                         room.play(&app, p, n, mv)
@@ -295,7 +301,8 @@ async fn main() {
     let args = Args::parse();
     let db = Db::open(&args.db).unwrap_or_else(|e| panic!("opening {}: {e}", args.db.display()));
     let opponents = App::load_opponents(&args.models);
-    let app = Arc::new(App::new(db, opponents, Duration::from_millis(args.bot_delay_ms)));
+    let meter = format!("model:{}", args.meter_model);
+    let app = Arc::new(App::new(db, opponents, Duration::from_millis(args.bot_delay_ms), &meter));
 
     if !args.assets.join("cards").is_dir() {
         tracing::warn!("{} has no card art; run tools/fetch_assets.py (the client falls back to text cards)", args.assets.display());
@@ -319,11 +326,19 @@ async fn main() {
         SetResponseHeaderLayer::overriding(header::CACHE_CONTROL, HeaderValue::from_static("public, max-age=604800")),
     );
 
-    let spa = ServeDir::new(&args.web).fallback(ServeFile::new(args.web.join("index.html")));
+    // Bundles under /static have content hashes in their names; the page that names them must be
+    // revalidated on every load, or browsers keep running an old client after an upgrade.
+    let bundles = Router::new().fallback_service(ServeDir::new(args.web.join("static"))).layer(
+        SetResponseHeaderLayer::overriding(header::CACHE_CONTROL, HeaderValue::from_static("public, max-age=31536000, immutable")),
+    );
+    let spa = Router::new()
+        .fallback_service(ServeDir::new(&args.web).fallback(ServeFile::new(args.web.join("index.html"))))
+        .layer(SetResponseHeaderLayer::overriding(header::CACHE_CONTROL, HeaderValue::from_static("no-cache")));
     let router = Router::new()
         .route("/healthz", get(|| async { "ok" }))
         .nest("/api", api)
         .nest_service("/assets", assets)
+        .nest_service("/static", bundles)
         .fallback_service(spa)
         .with_state(app);
 

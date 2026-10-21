@@ -5,6 +5,7 @@
 #[cfg(feature = "candle")]
 pub mod entity_net;
 mod heuristic;
+pub mod meter;
 pub mod net;
 pub mod search;
 

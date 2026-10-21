@@ -42,7 +42,7 @@ pub struct SearchAgent {
     legal: Vec<u16>,
 }
 
-fn phi_index() -> usize {
+pub(crate) fn phi_index() -> usize {
     OFF_SCALARS + SCALAR_NAMES.iter().position(|s| *s == "authority_diff").expect("authority_diff scalar")
 }
 

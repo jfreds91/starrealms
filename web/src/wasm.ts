@@ -1,4 +1,4 @@
-// Loaded lazily: only local games and the replay viewer need the engine.
+// Loaded lazily: only the replay viewer needs the engine.
 import init, * as engine from "./wasm/engine.js";
 import wasmUrl from "./wasm/engine_bg.wasm?url";
 

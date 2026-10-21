@@ -39,7 +39,6 @@ cargo run --release -p sr-server
 Open <http://127.0.0.1:3030>. Pick a name, then:
 
 - **Online game**: create a game against a bot or a person. For a person, send the invite link; whoever opens it takes the open seat, and anyone after that spectates. Games survive server restarts and browser reloads; your identity is a token stored in the browser.
-- **Local game**: runs entirely in the browser through WebAssembly, against a bot or hot-seat with a hand-off screen between turns.
 - **Replays**: every finished game can be stepped through from either seat.
 
 For client development, run `npm run dev` in `web/`; Vite proxies `/api` and `/assets` to the server on port 3030.

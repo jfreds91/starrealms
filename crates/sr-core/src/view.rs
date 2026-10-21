@@ -43,7 +43,8 @@ pub struct SeatView {
     pub hand: Option<Vec<CardId>>,
     pub hand_count: usize,
     pub deck_count: usize,
-    /// Sorted contents of the draw pile (known to its owner, not its order).
+    /// Sorted contents of the draw pile (known to its owner, not its order). For a seat whose
+    /// hand is hidden, the hand is pooled in: deck and hand together are public knowledge.
     pub deck_contents: Option<Vec<CardId>>,
     pub discard: Vec<CardId>,
     pub in_play: Vec<SlotView>,
@@ -53,6 +54,9 @@ pub struct SeatView {
 impl SeatView {
     fn new(p: &Player, own: bool) -> SeatView {
         let mut deck = p.deck.clone();
+        if !own {
+            deck.extend_from_slice(&p.hand);
+        }
         deck.sort_unstable();
         SeatView {
             authority: p.authority,
@@ -63,7 +67,7 @@ impl SeatView {
             }),
             hand_count: p.hand.len(),
             deck_count: p.deck.len(),
-            deck_contents: own.then_some(deck),
+            deck_contents: Some(deck),
             discard: p.discard.clone(),
             in_play: p.in_play.iter().map(SlotView::new).collect(),
             owed_discards: p.owed_discards,
@@ -166,7 +170,8 @@ impl Game {
         }
     }
 
-    /// Seat 0's view with nothing private to either seat: no hands, no deck contents, no actions.
+    /// Seat 0's view with nothing private to either seat: no hands, no actions, and deck
+    /// contents pooled with the hand.
     pub fn spectator_view(&self, log_tail: usize) -> View {
         let mut v = self.view(0, log_tail);
         v.you = SeatView::new(&self.players[0], false);
