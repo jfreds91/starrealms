@@ -9,7 +9,7 @@ services:
     build: .
     image: starrealms
     ports:
-      - "3030:3030"
+      - "127.0.0.1:3030:3030" # drop the address to accept connections from other machines
     volumes:
       - starrealms-data:/data
       - ./models:/models:ro
