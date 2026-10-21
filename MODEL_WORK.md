@@ -1,8 +1,8 @@
-# Star Realms bots: what we've trained, and where it stands
+# Star Realms bots: training journal
 
-A handoff for whoever continues the model work. It runs chronologically from the scripted bots to the current best network, `phase_f`, and ends with the open problems and the most promising next steps.
+A running log of the bots built and trained for this project, oldest first: hypotheses, tests, results, and what each one taught. Reference notes follow the entries: the recipe behind the current best model, how models are evaluated, lessons, known issues, and ideas not yet tried. New entries go at the end of the journal section.
 
-**Current state (Oct 20, 2026):** the strongest bot is `models/phase_f.safetensors`, a 4.4M-parameter entity transformer trained with PPO self-play. Against `phase_c`, the long-standing baseline MLP, it wins about **65% on the Core Set** and **60% on mixed sets** (Core + Colony Wars + Frontiers). The target was 70%; nothing tried so far gets there by training longer. The web server plays `phase_f` as an opponent and uses its value head for a win-chance meter.
+**Where things stand (Oct 20, 2026):** the strongest bot is `models/phase_f.safetensors`, a 4.4M-parameter entity transformer trained with PPO self-play. Against `phase_c`, the long-standing baseline MLP, it wins about **65% on the Core Set** and **60% on mixed sets** (Core + Colony Wars + Frontiers). The target was 70%; nothing tried so far gets there by training longer. The web server plays `phase_f` as an opponent and uses its value head for a win-chance meter.
 
 ## Terms
 
@@ -16,7 +16,7 @@ A handoff for whoever continues the model work. It runs chronologically from the
 
 ## The models
 
-All exported models live in `models/` (gitignored). `.srnn` files are MLPs, run in plain Rust; `.safetensors` files are entity transformers, run in Rust with candle. Training checkpoints are in `runs/<name>/` and logs in `logs/<name>.log`. Both are gitignored too, about 9 GB in total, so **do not delete them**.
+All exported models live in `models/` (gitignored). `.srnn` files are MLPs, run in plain Rust; `.safetensors` files are entity transformers, run in Rust with candle. Training checkpoints are in `runs/<name>/` and logs in `logs/<name>.log`. Both are gitignored too, about 9 GB in total, and are the only copies.
 
 | Model | What it is | Params | Key results |
 |---|---|---|---|
@@ -33,9 +33,9 @@ All exported models live in `models/` (gitignored). `.srnn` files are MLPs, run 
 
 `smoke.srnn` and `cap_m.safetensors` in `models/` are test artifacts, not milestones.
 
-## History
+## Journal
 
-### 0. Scripted bots (`crates/sr-bots`)
+### Oct 18: scripted bots (`crates/sr-bots`)
 
 - **random:** uniform over legal actions.
 - **greedy:** plays everything, uses every non-scrap ability, buys the most expensive card, attacks outposts and then the opponent. The sanity floor.
@@ -43,32 +43,32 @@ All exported models live in `models/` (gitignored). `.srnn` files are MLPs, run 
 
 All bots, and every network, see only what the player to move could know. No agent inspects the opponent's hand or any draw-pile order.
 
-### 1. Training setup
+### Oct 18: training setup
 
 - **Pipeline:** a CleanRL-style single-file masked PPO (`python/starrealms/ppo.py`) over a parallel Rust environment (`crates/sr-py`, built into Python by maturin via `uv sync`). Illegal actions are masked out of the policy.
 - **Hardware:** one AMD RX 9070 (16 GB) with ROCm 7.1.
 - **Hypothesis:** `torch.compile` and bfloat16 speed up training.
   - **Result:** bfloat16 autocast about doubled throughput with no quality loss, so it's the default (`--bf16`). `torch.compile` was 7× *slower* in the training loop on this GPU, so it was removed.
 
-### 2. Phase A: MLP against the bots, Core Set
+### Oct 18: Phase A, an MLP against the bots, Core Set
 
 - **Test:** about 100M steps against heuristic, greedy and random bots (`--groups heuristic:192,greedy:32,random:32 --sets core`).
 - **Problem found:** the original rating system (openskill) drifted. Ratings fell while win rates rose, so `best.pt` pointed at a weak early checkpoint.
   - **Fix:** ratings are now refitted jointly from all results each time (Bradley-Terry, as BayesElo does) in `league.Ratings`, with a regression test.
 - **Result:** `phase_a` beats the heuristic bot **82% [80, 83]**.
 
-### 3. Phase B: league self-play, Core Set
+### Oct 18-19: Phase B, league self-play, Core Set
 
 - **Hypothesis:** self-play against snapshots beats training only against bots.
 - **Result:** confirmed. `phase_b` beats `phase_a` **58%** and the heuristic **85%**.
 - **Side finding:** self-play ran at about 25k steps/s versus 60k for bot-only training. The cause was one small GPU forward pass per league opponent per step. Fixed by batching all league opponents into one forward pass.
 
-### 4. Phase C: self-play on mixed sets
+### Oct 19: Phase C, self-play on mixed sets
 
 - **Result:** on mixed sets, `phase_c` beats `phase_b` **82%** and the heuristic **86%**.
 - **Problem:** it got worse on Core-only games (42% vs `phase_b`), because it never saw them. Every later run uses the 30/70 Core/mixed split.
 
-### 5. Phase D: entity transformer with a pointer action head
+### Oct 19: Phase D, an entity transformer with a pointer action head
 
 - **Hypothesis:** the MLP's weakness isn't the 622-way action space but that an action id like "buy trade-row slot 3" means a different card every turn. An architecture that attends to the actual card an action targets should learn faster and generalize across cards.
 - **Design** (`tokens.py`, `model.EntityPolicy`; Rust port in `crates/sr-bots/src/entity_net.rs`):
@@ -82,14 +82,14 @@ All bots, and every network, see only what the player to move could know. No age
   - The transformer reached **57%** on Core and **55%** on mixed against `phase_c`, and beat the wide MLP 55-59%. This became `phase_d` (commit `92d7f3a`).
   - **Conclusion:** the gain comes from the architecture, not from parameter count.
 
-### 6. Longer training of the small transformer
+### Oct 19: longer training of the small transformer
 
 - **Hypothesis:** `phase_d` was still improving, so more training would push it higher.
 - **Test:** 67M more PPO steps (`runs/ppo_entity2`) with 448 envs (`--groups self:384,heuristic:64`).
 - **Result:** it plateaued at **55-60%** vs `phase_c`. The best checkpoint scored 59.1%; it became `entity2`.
-- **Later explanation:** this run was scheduled to anneal from 1e-4 over 400M steps but was stopped at 67M, while the learning rate was still about 0.85e-4. It never got a low-learning-rate stretch (see section 10).
+- **Later explanation:** this run was scheduled to anneal from 1e-4 over 400M steps but was stopped at 67M, while the learning rate was still about 0.85e-4. It never got a low-learning-rate stretch (see the Oct 20 hypothesis tests).
 
-### 7. Model-size test (distillation only)
+### Oct 19: model-size test (distillation only)
 
 - **Hypothesis:** 0.73M parameters is too small to hold more skill.
 - **Test:** distill `entity2` into three sizes on the same 10M states (`runs/cap_s`, `cap_m`, `cap_l`):
@@ -102,7 +102,7 @@ All bots, and every network, see only what the player to move could know. No age
 
 - **Result:** supported. A model the teacher's own size can't copy it closely, while the larger ones can and were still improving. Imitation alone doesn't beat the teacher, though: all three score about 50% against it. The large model has never been PPO-trained.
 
-### 8. Lookahead search without peeking (`crates/sr-bots/src/search.rs`, commit `38ed021`)
+### Oct 19: lookahead search without peeking (`crates/sr-bots/src/search.rs`, commit `38ed021`)
 
 - **Constraint:** the search must not see hidden information: deck order, the opponent's hand, or which card replaces one bought from the trade row.
 - **Method:**
@@ -117,7 +117,7 @@ All bots, and every network, see only what the player to move could know. No age
 - **Conclusion:** the value head discriminates between moves no better than the policy does, so shallow search adds little. Search has never been used in training.
 - **Usage:** spec `search:<model>@width,samples[,prior_weight[,turns]]` in the `versus` tool.
 
-### 9. PPO on the medium model (`phase_e`)
+### Oct 19-20: PPO on the medium model (`phase_e`)
 
 - **Test 1:** `runs/ppo_m`, starting from `cap_m` with the small model's learning rate of 1e-4.
   - **Result:** it got worse. Elo fell from 310 to 262, entropy rose from 0.39 to 0.53, and per-update KL was about 10× the small model's.
@@ -127,7 +127,7 @@ All bots, and every network, see only what the player to move could know. No age
   - Stopped at 169M of 250M planned steps, with the gain down to about one point per 50M steps.
   - The best checkpoint (`best_u02850.pt`) became `phase_e`: **62.4%** Core and **57.7%** mixed vs `phase_c`, and **52.9%** vs `entity2`.
 
-### 10. Hypothesis tests on the small model (`runs/h_*`)
+### Oct 20: hypothesis tests on the small model (`runs/h_*`)
 
 - **Setup:** four 30M-step runs, each continuing `entity2` with the learning rate decaying from 5e-5 to zero:
   - **Control** (`h_ctl3`): no other change.
@@ -144,10 +144,10 @@ All bots, and every network, see only what the player to move could know. No age
 | Diverse opponents | 54.0% | 49.6% [48.1, 51.2] |
 
 - **Conclusion:** none of the three changes did anything measurable. **All four**, control included, gained 4-5 points, so the gain came from **decaying the learning rate to zero**.
-- Diverse *transformer* opponents remain untested (see the known issues below).
+- Diverse *transformer* opponents remain untested (see the known issues in the notes).
 - **Bug found along the way:** occasionally the last minibatch held a single example. The standard deviation of one value is NaN, so advantage normalization wrote NaN into the weights; it struck at update 62 with one seed. Fixed in `788807d`: equal-size minibatches via `torch.tensor_split`, plus guards that skip any minibatch with a non-finite loss or gradient and save the first one to `runs/<run>/nonfinite.pt`.
 
-### 11. Learning-rate decay on the medium model (`phase_f`)
+### Oct 20: learning-rate decay on the medium model (`phase_f`)
 
 - **Test:** `runs/m_anneal`, continuing `phase_e` with the learning rate decaying from 1e-5 to zero over 30M steps.
 - **Result:**
@@ -159,7 +159,7 @@ All bots, and every network, see only what the player to move could know. No age
 
 - The final checkpoint was exported as `phase_f`. The gain is smaller than the small model's, as expected: the medium run was already at about 1e-5 when it stopped.
 
-## Recipe that produced `phase_f`
+## Notes: the recipe that produced `phase_f`
 
 From the repo root, after `uv sync --extra train`. Every option is listed by `uv run python -m starrealms.ppo --help`.
 
@@ -195,7 +195,7 @@ PPO details (defaults unless set above):
 - The league holds 12 snapshots, taken every 100 updates; evaluation also runs every 100 updates, with 400-500 games per opponent.
 - The medium model trains at about 5.5k decisions/s. About 63% of wall time is learning, 24% playing, and 13% evaluation pauses (measured at the old eval interval of 25).
 
-## How to evaluate
+## Notes: how models are evaluated
 
 Head-to-head in Rust, on all cores. This is the most reliable measure, and what every number above uses:
 
@@ -209,7 +209,7 @@ Arguments are `<a> <b> [games] [sets] [seed]`; it prints A's score with a 95% Wi
 
 `uv run python -m starrealms.evaluate <ckpt> --games 2000` also works from Python. `uv run pytest` checks that the Rust forward passes (MLP and candle) match PyTorch.
 
-## Lessons
+## Notes: lessons so far
 
 1. **Architecture mattered most.** Pointing actions at the card they target beat an MLP with eight times the parameters.
 2. **Bigger models need smaller learning rates.** 1e-4 made the 4.4M model worse; 3e-5 worked.
@@ -218,7 +218,7 @@ Arguments are `<a> <b> [games] [sets] [seed]`; it prints A's score with a 95% Wi
 5. **Distillation transfers skill to a new shape but doesn't add it.** Students land at about 50% against the teacher.
 6. **Small effects need controls.** The hypothesis runs only made sense against a control trained identically. Compare variants head-to-head at 4,000 games.
 
-## Known issues and gotchas
+## Notes: known issues
 
 - **Transformers are slow as opponents inside the Rust env.** candle's thread pool fights the environment's rayon workers, which makes transformer opponents (and search agents in Python's `arena`) about 150× slower than MLP opponents. `versus` works around it by setting `RAYON_NUM_THREADS=1`. Until this is fixed, the league can't include strong *fixed* transformer opponents such as `entity2` or `phase_e`.
 - **Bootstrapping for the waiting seat is crude.** At the end of a rollout window, the seat that isn't to move reuses its own last value prediction, so its final decision gets almost no policy signal (`compute_gae` in `ppo.py`). That's at most one or two decisions per seat per game per update.
@@ -227,7 +227,7 @@ Arguments are `<a> <b> [games] [sets] [seed]`; it prints A's score with a 95% Wi
 - **Memory:** three small-model runs fit on the GPU at once; medium runs should go one at a time. ROCm logs harmless "memory allocation failed ... OOM" warnings early in a run; `expandable_segments` reduces them.
 - **Disk:** checkpoints are large (`runs/` is 9 GB). The root partition is small; keep everything on `/home/bigdrive`.
 
-## Promising next steps
+## Notes: ideas not yet tried
 
 In rough order of expected payoff for effort:
 
@@ -237,7 +237,7 @@ In rough order of expected payoff for effort:
 4. **Training speed:** profile the learning phase (attention kernel choice on ROCm; whether `torch.compile` helps the transformer), and overlap rollout with learning (actor/learner) to hide most of the 24% spent playing.
 5. **Fix the waiting-seat bootstrap** by scoring the cut-off position from the other seat's side, negating the mover's value.
 
-## Where things are
+## Notes: where things are
 
 | Path | What |
 |---|---|
