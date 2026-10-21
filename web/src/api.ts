@@ -14,7 +14,7 @@ export function loadMe(): Me | null {
   return token && name ? { token, name } : null;
 }
 
-async function call<T>(method: string, path: string, body?: unknown): Promise<T> {
+async function call<T>(method: string, path: string, body?: unknown, retry = true): Promise<T> {
   const headers: Record<string, string> = {};
   const me = loadMe();
   if (me) headers.Authorization = `Bearer ${me.token}`;
@@ -24,27 +24,30 @@ async function call<T>(method: string, path: string, body?: unknown): Promise<T>
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),
   });
+  if (res.status === 401 && me && retry) {
+    // The server no longer knows this token (e.g. its database was reset): register again under the same name.
+    await register(me.name);
+    return call<T>(method, path, body, false);
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error ?? `${res.status} ${res.statusText}`);
   return data as T;
 }
 
-/** Create a player identity (or rename the current one). */
-export async function setName(name: string): Promise<Me> {
-  const me = loadMe();
-  if (me) {
-    try {
-      const r = await call<{ name: string }>("PUT", "/me", { name });
-      localStorage.setItem(NAME, r.name);
-      return { token: me.token, name: r.name };
-    } catch {
-      // Unknown token (e.g. the server database was reset): fall through and register again.
-    }
-  }
-  const r = await call<{ token: string; name: string }>("POST", "/players", { name });
+async function register(name: string): Promise<Me> {
+  const r = await call<{ token: string; name: string }>("POST", "/players", { name }, false);
   localStorage.setItem(TOKEN, r.token);
   localStorage.setItem(NAME, r.name);
   return { token: r.token, name: r.name };
+}
+
+/** Create a player identity (or rename the current one). */
+export async function setName(name: string): Promise<Me> {
+  const me = loadMe();
+  if (!me) return register(name);
+  const r = await call<{ name: string }>("PUT", "/me", { name });
+  localStorage.setItem(NAME, r.name);
+  return { ...loadMe()!, name: r.name };
 }
 
 export const api = {

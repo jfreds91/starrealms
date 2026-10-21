@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { api, loadMe, setName, type Me } from "../api";
 import { Link, navigate } from "../router";
 import { SET_NAMES, seatName, type GameSummary } from "../types";
-import { startLocal, savedLocal } from "./LocalGame";
 
 const ALL_SETS = ["core", "colony_wars", "frontiers"];
 
@@ -117,11 +116,8 @@ export function Home() {
   const [sets, setSets] = useState<string[]>(["core"]);
   const [opponent, setOpponent] = useState("human");
   const [seat, setSeat] = useState("random");
-  const [localSets, setLocalSets] = useState<string[]>(["core"]);
-  const [localBot, setLocalBot] = useState("heuristic");
   const [err, setErr] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
-  const resume = savedLocal();
 
   useEffect(() => {
     api.opponents().then(setOpponents, () => {});
@@ -180,33 +176,6 @@ export function Home() {
             </label>
             <button className="btn primary wide" onClick={create}>Create game</button>
             {err && <div className="error">{err}</div>}
-          </section>
-
-          <section className="panel">
-            <h2>On this device</h2>
-            <p className="muted">Runs entirely in your browser. Nothing is saved on the server.</p>
-            <div className="field"><span>Trade deck</span><SetPicker sets={localSets} onChange={setLocalSets} /></div>
-            <label className="field">
-              <span>Bot</span>
-              <select value={localBot} onChange={(e) => setLocalBot(e.target.value)}>
-                <option value="heuristic">Heuristic bot</option>
-                <option value="greedy">Greedy bot</option>
-                <option value="random">Random bot</option>
-              </select>
-            </label>
-            <div className="button-row">
-              <button className="btn primary" onClick={() => startLocal(localSets, ["", localBot], [me.name, "Bot"], true)}>
-                Play the bot
-              </button>
-              <button className="btn" onClick={() => startLocal(localSets, ["", ""], ["Player 1", "Player 2"], false)}>
-                Hot-seat (2 players)
-              </button>
-            </div>
-            {resume && (
-              <button className="btn ghost wide" onClick={() => navigate("/local")}>
-                Resume local game: {resume.names.join(" vs ")}
-              </button>
-            )}
           </section>
 
           <GameList />

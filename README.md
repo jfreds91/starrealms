@@ -9,7 +9,7 @@ See [PLAN.md](PLAN.md) for scope, design, and status.
 | `crates/sr-core` | Rules engine, card data (`data/cards.toml`), action and observation encoding, replays |
 | `crates/sr-bots` | Random, greedy, and heuristic bots; forward passes for exported networks (MLP `.srnn`, entity transformer `.safetensors` via candle) |
 | `crates/sr-py` | PyO3 bindings: parallel `VecEnv`, `Game`, `arena` |
-| `crates/sr-wasm` | The engine for the browser: hot-seat, offline bots, replay viewer |
+| `crates/sr-wasm` | The engine for the browser: replay viewer |
 | `crates/sr-server` | axum server: lobbies, invite links, WebSocket games, SQLite persistence, bot opponents |
 | `web/` | React + TypeScript client |
 | `python/starrealms` | Masked PPO trainer, distillation, evaluation, terminal play, model export |

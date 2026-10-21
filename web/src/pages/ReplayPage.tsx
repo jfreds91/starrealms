@@ -2,9 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import { Link } from "../router";
 import { Table } from "../table/Table";
-import { seatName, type Replay, type View } from "../types";
+import { seatName, type View } from "../types";
 import { loadEngine } from "../wasm";
-import { LOCAL_REPLAY_KEY } from "./LocalGame";
 
 type Viewer = InstanceType<Awaited<ReturnType<typeof loadEngine>>["ReplayViewer"]>;
 
@@ -16,7 +15,7 @@ interface Loaded {
 }
 
 /** Step through a finished game with both hands visible from either seat. */
-export function ReplayPage({ id }: { id: string | null }) {
+export function ReplayPage({ id }: { id: string }) {
   const [data, setData] = useState<Loaded | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [n, setN] = useState(0);
@@ -27,20 +26,11 @@ export function ReplayPage({ id }: { id: string | null }) {
     let alive = true;
     let viewer: Viewer | null = null;
     (async () => {
-      let replay: Replay, names: [string, string], resigned: number | null = null;
-      if (id) {
-        const r = await api.replay(id);
-        replay = r.replay;
-        names = [seatName(r.seats[0], "Player 1"), seatName(r.seats[1], "Player 2")];
-        resigned = r.resigned;
-      } else {
-        const s = JSON.parse(sessionStorage.getItem(LOCAL_REPLAY_KEY) ?? "null");
-        if (!s) throw new Error("no local replay");
-        replay = s.replay;
-        names = s.names;
-      }
+      const r = await api.replay(id);
+      const names: [string, string] = [seatName(r.seats[0], "Player 1"), seatName(r.seats[1], "Player 2")];
+      const resigned = r.resigned;
       const wasm = await loadEngine();
-      viewer = new wasm.ReplayViewer(JSON.stringify(replay));
+      viewer = new wasm.ReplayViewer(JSON.stringify(r.replay));
       if (!alive) return viewer.free();
       setData({ viewer, names, resigned, turns: Array.from(viewer.turn_starts()) });
       setN(viewer.len());

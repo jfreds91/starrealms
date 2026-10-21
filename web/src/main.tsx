@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { api } from "./api";
 import { CatalogContext, makeCatalog, type Catalog } from "./catalog";
 import { Home } from "./pages/Home";
-import { LocalGame } from "./pages/LocalGame";
 import { OnlineGame } from "./pages/OnlineGame";
 import { ReplayPage } from "./pages/ReplayPage";
 import { useRoute } from "./router";
@@ -24,9 +23,7 @@ function App() {
       <PreviewProvider>
         {route.page === "home" && <Home />}
         {route.page === "game" && <OnlineGame key={route.id} id={route.id} join={route.join} />}
-        {route.page === "local" && <LocalGame />}
         {route.page === "replay" && <ReplayPage key={route.id} id={route.id} />}
-        {route.page === "local-replay" && <ReplayPage id={null} />}
       </PreviewProvider>
     </CatalogContext.Provider>
   );

@@ -3,16 +3,12 @@ import { useEffect, useState } from "react";
 export type Route =
   | { page: "home" }
   | { page: "game"; id: string; join: boolean }
-  | { page: "replay"; id: string }
-  | { page: "local" }
-  | { page: "local-replay" };
+  | { page: "replay"; id: string };
 
 export function parse(path: string, search: string): Route {
   const parts = path.split("/").filter(Boolean);
   if (parts[0] === "g" && parts[1]) return { page: "game", id: parts[1], join: new URLSearchParams(search).has("join") };
-  if (parts[0] === "replay" && parts[1] === "local") return { page: "local-replay" };
   if (parts[0] === "replay" && parts[1]) return { page: "replay", id: parts[1] };
-  if (parts[0] === "local") return { page: "local" };
   return { page: "home" };
 }
 
