@@ -97,12 +97,12 @@ class Args:
 
     p_self: float = 0.5
     """self-play envs: P(opponent = current policy)"""
-    snapshot_every: int = 25
+    snapshot_every: int = 100
     """updates between league snapshots; a multiple of eval_every, since snapshots are rated checkpoints"""
     league_size: int = 12
     pfsp_power: float = 2.0
     """league opponents are drawn with weight (1 - learner score) ** pfsp_power; 0 = uniform"""
-    eval_every: int = 25
+    eval_every: int = 100
     """updates between evaluations; each one rates a checkpoint and may replace best.pt"""
     eval_games: int = 500
     eval_opponents: str = "heuristic,greedy"

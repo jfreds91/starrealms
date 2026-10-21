@@ -1,0 +1,19 @@
+# Game server, web client and every model in ./models as an opponent.
+#
+#   docker compose up -d --build
+#
+# The image contains card art downloaded at build time; keep it private.
+
+services:
+  starrealms:
+    build: .
+    image: starrealms
+    ports:
+      - "3030:3030"
+    volumes:
+      - starrealms-data:/data
+      - ./models:/models:ro
+    restart: unless-stopped
+
+volumes:
+  starrealms-data:

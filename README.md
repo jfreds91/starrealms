@@ -62,6 +62,12 @@ Every `*.srnn` and `*.safetensors` file in the models directory is offered as an
 ## Docker
 
 ```sh
+docker compose up -d --build
+```
+
+or by hand:
+
+```sh
 docker build -t starrealms .
 docker run -p 3030:3030 -v starrealms-data:/data -v "$PWD/models:/models:ro" starrealms
 ```
