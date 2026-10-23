@@ -101,6 +101,8 @@ struct VecEnv {
     cfg: Config,
     seed: u64,
     auto_forced: bool,
+    /// When set, `reset` and `step` also return privileged card ids for the mover.
+    privileged: bool,
 }
 
 type Batch<'py> = (Bound<'py, PyAny>, Bound<'py, PyAny>, Bound<'py, PyArray1<i8>>, Bound<'py, PyArray1<i8>>);
@@ -118,9 +120,10 @@ impl VecEnv {
 
 #[pymethods]
 impl VecEnv {
-    /// `opponent`: None for self-play, or "random" | "greedy" | "heuristic".
+    /// `opponent`: None for self-play, or "random" | "greedy" | "heuristic" | "model:<path>".
+    /// `privileged`: also return hidden card ids (opponent hand, upcoming draws) for the critic.
     #[new]
-    #[pyo3(signature = (n, sets=None, seed=0, opponent=None, max_turns=200, auto_forced=true))]
+    #[pyo3(signature = (n, sets=None, seed=0, opponent=None, max_turns=200, auto_forced=true, privileged=false))]
     fn new(
         n: usize,
         sets: Option<Vec<String>>,
@@ -128,6 +131,7 @@ impl VecEnv {
         opponent: Option<String>,
         max_turns: u16,
         auto_forced: bool,
+        privileged: bool,
     ) -> PyResult<VecEnv> {
         let cfg = Config { sets: sets.unwrap_or_else(|| vec!["core".into()]), max_turns, ..Config::default() };
         Game::new(&cfg, 0).map_err(err)?;
@@ -146,7 +150,7 @@ impl VecEnv {
             s.new_game(&cfg, seed);
             slots.push(s);
         }
-        Ok(VecEnv { slots, cfg, seed, auto_forced })
+        Ok(VecEnv { slots, cfg, seed, auto_forced, privileged })
     }
 
     #[getter]
@@ -154,29 +158,57 @@ impl VecEnv {
         self.slots.len()
     }
 
-    /// Returns (obs [n, OBS_DIM] f32, mask [n, N_ACTIONS] bool, seat [n] i8, learner_seat [n] i8).
-    fn reset<'py>(&mut self, py: Python<'py>) -> PyResult<Batch<'py>> {
-        let (cfg, seed, af) = (&self.cfg, self.seed, self.auto_forced);
+    fn write_privileged<'py>(&self, py: Python<'py>, ids: Vec<i16>) -> PyResult<Bound<'py, pyo3::types::PyAny>> {
+        let n = self.slots.len();
+        Ok(PyArray1::from_vec(py, ids).reshape([n, obs::PRIV_IDS])?.into_any())
+    }
+
+    /// Returns (obs [n, OBS_DIM] f32, mask [n, N_ACTIONS] bool, seat [n] i8, learner_seat [n] i8)
+    /// and, when `privileged`, card ids [n, PRIV_IDS] i16.
+    fn reset<'py>(&mut self, py: Python<'py>) -> PyResult<Bound<'py, pyo3::types::PyTuple>> {
+        let (cfg, seed, af, privileged) = (&self.cfg, self.seed, self.auto_forced, self.privileged);
         let n = self.slots.len();
         let mut obs = vec![0f32; n * OBS_DIM];
         let mut mask = vec![0u8; n * N_ACTIONS];
+        let mut priv_ids = vec![0i16; if privileged { n * obs::PRIV_IDS } else { 0 }];
         py.detach(|| {
-            self.slots.par_iter_mut().zip(obs.par_chunks_mut(OBS_DIM)).zip(mask.par_chunks_mut(N_ACTIONS)).for_each(
-                |((s, o), m)| {
-                    s.new_game(cfg, seed);
-                    let mut out = StepOut::default();
-                    s.advance(cfg, seed, af, &mut out);
-                    s.write(o, m);
-                },
-            )
+            if privileged {
+                self.slots
+                    .par_iter_mut()
+                    .zip(obs.par_chunks_mut(OBS_DIM))
+                    .zip(mask.par_chunks_mut(N_ACTIONS))
+                    .zip(priv_ids.par_chunks_mut(obs::PRIV_IDS))
+                    .for_each(|(((s, o), m), p)| {
+                        s.new_game(cfg, seed);
+                        let mut out = StepOut::default();
+                        s.advance(cfg, seed, af, &mut out);
+                        s.write(o, m);
+                        s.game.observe_privileged(p);
+                    });
+            } else {
+                self.slots.par_iter_mut().zip(obs.par_chunks_mut(OBS_DIM)).zip(mask.par_chunks_mut(N_ACTIONS)).for_each(
+                    |((s, o), m)| {
+                        s.new_game(cfg, seed);
+                        let mut out = StepOut::default();
+                        s.advance(cfg, seed, af, &mut out);
+                        s.write(o, m);
+                    },
+                );
+            }
         });
-        self.batch(py, obs, mask)
+        let (o, m, seat, learner) = self.batch(py, obs, mask)?;
+        let mut items = vec![o, m, seat.into_any(), learner.into_any()];
+        if privileged {
+            items.push(self.write_privileged(py, priv_ids)?);
+        }
+        pyo3::types::PyTuple::new(py, items)
     }
 
     /// Apply one action per env. Finished games restart automatically.
     ///
     /// Returns (obs, mask, seat, learner_seat, rewards [n, 2] f32, done [n] bool,
-    /// winner [n] i8 (-1 draw, -2 not done), turns [n] u16, done_learner [n] i8).
+    /// winner [n] i8 (-1 draw, -2 not done), turns [n] u16, done_learner [n] i8)
+    /// and, when `privileged`, card ids [n, PRIV_IDS] i16.
     /// `rewards[i, s]` is the terminal reward for seat `s` of the game that ended.
     #[allow(clippy::type_complexity)]
     fn step<'py>(
@@ -189,29 +221,46 @@ impl VecEnv {
         if acts.len() != n {
             return Err(err(format!("expected {n} actions, got {}", acts.len())));
         }
-        let (cfg, seed, af) = (&self.cfg, self.seed, self.auto_forced);
+        let (cfg, seed, af, privileged) = (&self.cfg, self.seed, self.auto_forced, self.privileged);
         let mut obs = vec![0f32; n * OBS_DIM];
         let mut mask = vec![0u8; n * N_ACTIONS];
+        let mut priv_ids = vec![0i16; if privileged { n * obs::PRIV_IDS } else { 0 }];
         let mut outs = vec![StepOut { winner: -2, ..Default::default() }; n];
         let bad: Option<String> = py.detach(|| {
-            self.slots
-                .par_iter_mut()
-                .zip(obs.par_chunks_mut(OBS_DIM))
-                .zip(mask.par_chunks_mut(N_ACTIONS))
-                .zip(outs.par_iter_mut())
-                .zip(acts.par_iter())
-                .map(|((((s, o), m), out), &a)| {
-                    let mut legal = Vec::with_capacity(64);
-                    s.game.legal_actions(&mut legal);
-                    if a < 0 || !legal.contains(&(a as u16)) {
-                        return Some(format!("env {}: illegal action {a}", s.index));
-                    }
-                    s.game.apply(a as u16);
-                    s.advance(cfg, seed, af, out);
-                    s.write(o, m);
-                    None
-                })
-                .reduce(|| None, |a, b| a.or(b))
+            let step_one = |s: &mut Slot, o: &mut [f32], m: &mut [u8], out: &mut StepOut, a: i64, p: Option<&mut [i16]>| {
+                let mut legal = Vec::with_capacity(64);
+                s.game.legal_actions(&mut legal);
+                if a < 0 || !legal.contains(&(a as u16)) {
+                    return Some(format!("env {}: illegal action {a}", s.index));
+                }
+                s.game.apply(a as u16);
+                s.advance(cfg, seed, af, out);
+                s.write(o, m);
+                if let Some(p) = p {
+                    s.game.observe_privileged(p);
+                }
+                None
+            };
+            if privileged {
+                self.slots
+                    .par_iter_mut()
+                    .zip(obs.par_chunks_mut(OBS_DIM))
+                    .zip(mask.par_chunks_mut(N_ACTIONS))
+                    .zip(priv_ids.par_chunks_mut(obs::PRIV_IDS))
+                    .zip(outs.par_iter_mut())
+                    .zip(acts.par_iter())
+                    .map(|(((((s, o), m), p), out), &a)| step_one(s, o, m, out, a, Some(p)))
+                    .reduce(|| None, |a, b| a.or(b))
+            } else {
+                self.slots
+                    .par_iter_mut()
+                    .zip(obs.par_chunks_mut(OBS_DIM))
+                    .zip(mask.par_chunks_mut(N_ACTIONS))
+                    .zip(outs.par_iter_mut())
+                    .zip(acts.par_iter())
+                    .map(|((((s, o), m), out), &a)| step_one(s, o, m, out, a, None))
+                    .reduce(|| None, |a, b| a.or(b))
+            }
         });
         if let Some(e) = bad {
             return Err(err(e));
@@ -222,20 +271,21 @@ impl VecEnv {
         let winner = PyArray1::from_vec(py, outs.iter().map(|x| x.winner).collect());
         let turns = PyArray1::from_vec(py, outs.iter().map(|x| x.turns).collect());
         let done_learner = PyArray1::from_vec(py, outs.iter().map(|x| x.learner_before as i8).collect());
-        pyo3::types::PyTuple::new(
-            py,
-            [
-                o,
-                m,
-                seat.into_any(),
-                learner.into_any(),
-                rewards.into_any(),
-                done.into_any(),
-                winner.into_any(),
-                turns.into_any(),
-                done_learner.into_any(),
-            ],
-        )
+        let mut items = vec![
+            o,
+            m,
+            seat.into_any(),
+            learner.into_any(),
+            rewards.into_any(),
+            done.into_any(),
+            winner.into_any(),
+            turns.into_any(),
+            done_learner.into_any(),
+        ];
+        if privileged {
+            items.push(self.write_privileged(py, priv_ids)?);
+        }
+        pyo3::types::PyTuple::new(py, items)
     }
 
     /// Named per-env quantities for the seat to move, for shaped rewards and dashboards.
@@ -343,6 +393,19 @@ impl PyGame {
         self.s.game.render(seat.unwrap_or(self.s.game.active))
     }
 
+    /// Hidden card ids for the player to move: see `priv_layout`.
+    fn privileged<'py>(&self, py: Python<'py>) -> Bound<'py, PyArray1<i16>> {
+        let mut v = vec![0i16; obs::PRIV_IDS];
+        self.s.game.observe_privileged(&mut v);
+        PyArray1::from_vec(py, v)
+    }
+
+    /// True `(hand, deck)` of `seat`, deck top first. Ground truth for `privileged`.
+    fn true_pile(&self, seat: u8) -> PyResult<(Vec<u8>, Vec<u8>)> {
+        let p = self.s.game.players.get(seat as usize).ok_or_else(|| err("seat"))?;
+        Ok((p.hand.clone(), p.deck.iter().rev().copied().collect()))
+    }
+
     /// Action a scripted bot would take now.
     #[pyo3(signature = (name, seed=0))]
     fn bot_action(&self, name: &str, seed: u64) -> PyResult<u16> {
@@ -387,6 +450,12 @@ fn card_catalog() -> String {
 #[pyfunction]
 fn obs_layout() -> Vec<(&'static str, usize, usize)> {
     obs::LAYOUT.to_vec()
+}
+
+/// (name, offset, length) of the privileged card-id observation.
+#[pyfunction]
+fn priv_layout() -> Vec<(&'static str, usize, usize)> {
+    obs::PRIV_LAYOUT.to_vec()
 }
 
 /// (name, first id, count) of each action family, in id order.
@@ -451,10 +520,12 @@ fn _engine(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(arena, m)?)?;
     m.add_function(wrap_pyfunction!(card_catalog, m)?)?;
     m.add_function(wrap_pyfunction!(obs_layout, m)?)?;
+    m.add_function(wrap_pyfunction!(priv_layout, m)?)?;
     m.add_function(wrap_pyfunction!(srnn_forward, m)?)?;
     m.add_function(wrap_pyfunction!(action_layout, m)?)?;
     m.add_function(wrap_pyfunction!(card_features, m)?)?;
     m.add("OBS_DIM", OBS_DIM)?;
+    m.add("PRIV_IDS", obs::PRIV_IDS)?;
     m.add("N_ACTIONS", N_ACTIONS)?;
     m.add("N_CARDS", sr_core::N_CARDS)?;
     m.add("N_IDS", obs::N_IDS)?;

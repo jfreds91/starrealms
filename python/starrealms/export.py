@@ -28,9 +28,14 @@ from . import N_ACTIONS, N_CARDS, OBS_DIM
 MAGIC = b"SRNN0001"
 
 
+# The privileged critic is training-only. The Rust net loads tensors by name and never runs it.
+_PRIV_EXPORT = ("critic_tok", "priv_type_emb.", "value_priv1.", "value_priv2.")
+
+
 def _arrays(policy) -> dict[str, np.ndarray]:
     return {name: np.ascontiguousarray(t.detach().float().cpu().numpy(), dtype="<f4")
-            for name, t in policy.state_dict().items()}
+            for name, t in policy.state_dict().items()
+            if not name.startswith(_PRIV_EXPORT)}
 
 
 def export_srnn(policy) -> bytes:

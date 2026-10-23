@@ -10,10 +10,12 @@ from ._engine import (
     SCALAR_NAMES,
     SKIP,
     Game,
+    PRIV_IDS,
     VecEnv,
     arena,
     card_catalog,
     obs_layout,
+    priv_layout,
 )
 from .env import LAYOUT, SCALAR, MultiEnv, StepResult, cards
 
@@ -25,6 +27,7 @@ __all__ = [
     "N_CARDS",
     "N_IDS",
     "OBS_DIM",
+    "PRIV_IDS",
     "SCALAR",
     "SCALAR_NAMES",
     "SKIP",
@@ -36,4 +39,5 @@ __all__ = [
     "card_catalog",
     "cards",
     "obs_layout",
+    "priv_layout",
 ]

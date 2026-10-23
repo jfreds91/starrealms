@@ -83,6 +83,19 @@ pub const OFF_ROW: usize = OFF_OPP + MAX_OPP_BASES * OPP_BASE_FEATS;
 pub const OFF_IDS: usize = OFF_ROW + ROW * ROW_FEATS;
 pub const OBS_DIM: usize = OFF_IDS + N_IDS;
 
+/// Privileged observation for the training critic only: card ids (`id + 1`, `0` = none) the
+/// player to move is not allowed to know. Opponent hand (first `PRIV_HAND` cards), then the
+/// next `PRIV_NEXT` draws from each deck (top card first). Cards still in a discard pile,
+/// which would only be seen after a future shuffle, are left as none.
+pub const PRIV_HAND: usize = 12;
+pub const PRIV_NEXT: usize = 5;
+pub const PRIV_IDS: usize = PRIV_HAND + 2 * PRIV_NEXT;
+pub const PRIV_LAYOUT: [(&str, usize, usize); 3] = [
+    ("opp_hand", 0, PRIV_HAND),
+    ("my_next", PRIV_HAND, PRIV_NEXT),
+    ("opp_next", PRIV_HAND + PRIV_NEXT, PRIV_NEXT),
+];
+
 /// (name, offset, length) of each segment.
 pub const LAYOUT: [(&str, usize, usize); 7] = [
     ("scalars", OFF_SCALARS, N_SCALARS),
@@ -291,5 +304,25 @@ impl Game {
         let mut v = vec![0.0; OBS_DIM];
         self.observe(&mut v);
         v
+    }
+
+    /// Hidden cards for the player to move, into `out` (length `PRIV_IDS`). See `PRIV_LAYOUT`.
+    pub fn observe_privileged(&self, out: &mut [i16]) {
+        debug_assert_eq!(out.len(), PRIV_IDS);
+        out.fill(0);
+        let me = self.me();
+        let opp = self.opp();
+        for (i, &c) in opp.hand.iter().take(PRIV_HAND).enumerate() {
+            out[i] = c as i16 + 1;
+        }
+        // The top of a deck is its last element (`draw` pops).
+        let write_next = |deck: &[crate::CardId], dst: &mut [i16]| {
+            let n = deck.len().min(dst.len());
+            for i in 0..n {
+                dst[i] = deck[deck.len() - 1 - i] as i16 + 1;
+            }
+        };
+        write_next(&me.deck, &mut out[PRIV_HAND..PRIV_HAND + PRIV_NEXT]);
+        write_next(&opp.deck, &mut out[PRIV_HAND + PRIV_NEXT..]);
     }
 }

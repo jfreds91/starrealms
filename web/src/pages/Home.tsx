@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { api, loadMe, setName, type Me } from "../api";
+import { ratings } from "../elo";
 import { Link, navigate } from "../router";
-import { SET_NAMES, seatName, type GameSummary } from "../types";
+import { SET_NAMES, opponentName, seatName, type GameSummary } from "../types";
+import { AboutAI } from "./AboutAI";
 
 const ALL_SETS = ["core", "colony_wars", "frontiers"];
 
@@ -76,8 +78,25 @@ function GameList() {
     finished: games.filter((g) => g.status === "finished"),
   };
   const shown = lists[tab];
+  const rated = ratings(games);
   return (
     <section className="panel">
+      <h2>Elo</h2>
+      {rated ? (
+        <div className="ratings">
+          <div className="rating-row"><span>{rated.you.name}</span><b>{rated.you.elo > 0 ? `+${rated.you.elo}` : rated.you.elo}</b></div>
+          {rated.opponents.map((o) => (
+            <div className="rating-row" key={o.key}>
+              <span>{o.name}</span>
+              <span className="game-sets">{o.wins}–{o.draws}–{o.losses}</span>
+              <b>{o.elo > 0 ? `+${o.elo}` : o.elo}</b>
+            </div>
+          ))}
+          <p className="empty-hint">Fit from finished games. Uncle Jesse with all three sets is 0.</p>
+        </div>
+      ) : (
+        <p className="empty-hint">Finished games record you, the opponent, and the winner. Elo shows up here.</p>
+      )}
       <div className="tabs">
         {(["turn", "waiting", "finished"] as const).map((t) => (
           <button key={t} className={`tab ${tab === t ? "on" : ""}`} onClick={() => setTab(t)}>
@@ -113,11 +132,12 @@ function GameList() {
 export function Home() {
   const [me, setMe] = useState<Me | null>(loadMe);
   const [opponents, setOpponents] = useState<{ spec: string; name: string }[]>([]);
-  const [sets, setSets] = useState<string[]>(["core"]);
-  const [opponent, setOpponent] = useState("human");
+  const [sets, setSets] = useState<string[]>(ALL_SETS);
+  const [opponent, setOpponent] = useState("model:phase_f");
   const [seat, setSeat] = useState("random");
   const [err, setErr] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
+  const [about, setAbout] = useState(false);
 
   useEffect(() => {
     api.opponents().then(setOpponents, () => {});
@@ -137,13 +157,20 @@ export function Home() {
     <div className="home">
       <header className="home-head">
         <h1>Star Realms</h1>
-        {me && !editing && (
-          <div className="me">
-            Playing as <b>{me.name}</b>
-            <button className="btn ghost small" onClick={() => setEditing(true)}>Rename</button>
-          </div>
-        )}
+        <div className="me">
+          {me && !editing && (
+            <>
+              Playing as <b>{me.name}</b>
+              <button className="btn ghost small" onClick={() => setEditing(true)}>Rename</button>
+            </>
+          )}
+          <button className={`btn small ${about ? "" : "ghost"}`} onClick={() => setAbout((v) => !v)}>
+            How does the AI work?
+          </button>
+        </div>
       </header>
+
+      {about && <AboutAI onClose={() => setAbout(false)} />}
 
       {(!me || editing) && (
         <section className="panel">
@@ -160,8 +187,9 @@ export function Home() {
               <span>Opponent</span>
               <select value={opponent} onChange={(e) => setOpponent(e.target.value)}>
                 <option value="human">A friend (get an invite link)</option>
+                {opponents.every((o) => o.spec !== "model:phase_f") && <option value="model:phase_f">Uncle Jesse</option>}
                 {opponents.map((o) => (
-                  <option key={o.spec} value={o.spec}>{o.name}</option>
+                  <option key={o.spec} value={o.spec}>{opponentName(o.spec, o.name)}</option>
                 ))}
               </select>
             </label>

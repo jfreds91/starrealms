@@ -39,10 +39,11 @@ import tyro
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 
-from . import N_ACTIONS, OBS_DIM
+from . import N_ACTIONS, OBS_DIM, PRIV_IDS
+from . import tokens as tk
 from .env import SCALAR, MultiEnv, parse_sets_mix, sets_tag
 from .evaluate import evaluate
-from .league import League, Ratings, snapshot_name
+from .league import FixedPool, League, Ratings, snapshot_name
 from .model import EntityConfig, EntityPolicy, ModelConfig, Policy, load
 
 PHI_INDEX = SCALAR["authority_diff"]  # (my authority - opp authority) / 50
@@ -94,6 +95,14 @@ class Args:
     """stop the epoch loop once approx KL exceeds this (0 = never)"""
     shaping: float = 0.3
     """potential-based shaping coefficient (0 = off)"""
+    privileged: bool = False
+    """entity models: critic sees the opponent's hand and the next draws; the policy does not"""
+    vf_coef_pub: float = 0.25
+    """weight of the public value head when --privileged; it keeps serving the exported model"""
+    critic_only: bool = False
+    """fit the value heads and privileged tokens, and leave the policy weights untouched"""
+    critic_patience: int = 0
+    """critic-only: stop after this many updates with no MC explained-variance gain (0 = off)"""
 
     p_self: float = 0.5
     """self-play envs: P(opponent = current policy)"""
@@ -172,6 +181,41 @@ def compute_gae(values, seats, dones, rewards, phi, v_last, seat_last, phi_last,
     return adv
 
 
+def explained_var(pred, target) -> float:
+    var = float(np.var(target))
+    if var == 0:
+        return float("nan")
+    return float(1 - np.var(target - pred) / var)
+
+
+_PURCHASE: np.ndarray | None = None
+
+
+def purchase_index() -> np.ndarray:
+    global _PURCHASE
+    if _PURCHASE is None:
+        idx = []
+        for name in ("buy", "buy_explorer"):
+            start, n = tk.ACTIONS[name]
+            idx.extend(range(start, start + n))
+        _PURCHASE = np.asarray(idx, np.int64)
+    return _PURCHASE
+
+
+def buy_advantage_std(adv, actions, mask, train) -> float:
+    """Std of `adv` on learner decisions with at least two legal purchases."""
+    cols = purchase_index()
+    act = np.asarray(actions).reshape(-1)
+    keep = np.asarray(train).reshape(-1) & np.isin(act, cols)
+    keep &= np.asarray(mask).reshape(-1, mask.shape[-1])[:, cols].sum(1) >= 2
+    if int(keep.sum()) < 2:
+        return float("nan")
+    return float(np.asarray(adv).reshape(-1)[keep].std())
+
+
+_CRITIC_TRAIN = ("priv_type_emb.", "critic_tok", "value_priv1.", "value_priv2.", "value1.", "value2.")
+
+
 def main(args: Args) -> Path:
     if args.snapshot_every % args.eval_every:
         raise ValueError("snapshot_every must be a multiple of eval_every")
@@ -188,7 +232,7 @@ def main(args: Args) -> Path:
     rng = np.random.default_rng(args.seed)
     dev = torch.device(args.device)
 
-    env = MultiEnv(groups, sets=sets, seed=args.seed, sets_mix=mix)
+    env = MultiEnv(groups, sets=sets, seed=args.seed, sets_mix=mix, privileged=args.privileged)
     N, T = env.num_envs, args.num_steps
     if args.init:
         policy = load(args.init, dev)
@@ -196,15 +240,27 @@ def main(args: Args) -> Path:
         policy = EntityPolicy(EntityConfig(d=args.d, layers=args.tf_layers, heads=args.heads, ff=args.ff)).to(dev)
     else:
         policy = Policy(ModelConfig(embed=args.embed, hidden=args.hidden, layers=args.layers)).to(dev)
-    opt = torch.optim.AdamW(policy.parameters(), lr=args.lr, eps=1e-5, weight_decay=args.weight_decay)
+    if args.privileged and not isinstance(policy, EntityPolicy):
+        raise ValueError("--privileged requires an entity model")
+    if args.critic_only and not args.privileged:
+        raise ValueError("--critic-only requires --privileged")
+    if args.critic_only:
+        for name, p in policy.named_parameters():
+            p.requires_grad_(name.startswith(_CRITIC_TRAIN))
+    trainable = [p for p in policy.parameters() if p.requires_grad]
+    opt = torch.optim.AdamW(trainable, lr=args.lr, eps=1e-5, weight_decay=args.weight_decay)
     def amp():
         return torch.autocast(dev.type, torch.bfloat16, enabled=args.bf16)
 
     n_params = sum(p.numel() for p in policy.parameters())
+    n_train = sum(p.numel() for p in trainable)
     print(f"run {run}: {N} envs {dict(zip(env.labels, env.sizes))}, device {dev}, "
-          f"{policy.ARCH} {n_params/1e6:.2f}M params")
+          f"{policy.ARCH} {n_params/1e6:.2f}M params, {n_train/1e6:.2f}M trainable"
+          + (" privileged" if args.privileged else "")
+          + (" critic-only" if args.critic_only else ""))
 
     league = League(args.league_size, args.pfsp_power)
+    fixed_pool = FixedPool(env.fixed_paths, dev) if env.fixed_paths else None
     ratings = Ratings()
     for s in eval_sets:
         ratings.calibrate_bots(list(BOTS), s)
@@ -264,6 +320,8 @@ def main(args: Args) -> Path:
     done_np = np.zeros((T, N), bool)
     rew_np = np.zeros((T, N, 2), np.float32)
     phi_np = np.zeros((T, N), np.float32)
+    val_pub_np = np.zeros((T, N), np.float32) if args.privileged else None
+    priv_buf = torch.zeros((T, N, PRIV_IDS), dtype=torch.int16, device=dev) if args.privileged else None
 
     opp_of = np.full(N, -1)
     for i in np.flatnonzero(env.self_play):
@@ -276,6 +334,9 @@ def main(args: Args) -> Path:
     steps = 0
     t_start = time.time()
     best: str | None = None  # name of the checkpoint saved as best.pt; its rating moves with each refit
+    best_mc = {"priv": -1e9, "pub": -1e9}
+    since_mc = 0
+    halt = False
     for update in range(1, num_updates + 1):
         lr = args.lr * (1.0 - (update - 1) / num_updates) if args.anneal_lr else args.lr
         if update <= args.warmup_updates:
@@ -286,19 +347,35 @@ def main(args: Args) -> Path:
         for t in range(T):
             obs = torch.from_numpy(res.obs).to(dev, non_blocking=True)
             mask = torch.from_numpy(res.mask).to(dev, non_blocking=True)
-            with amp():
-                a, logp, v = policy.act(obs, mask)
+            priv_t = None
+            if args.privileged:
+                priv_t = torch.from_numpy(np.ascontiguousarray(res.priv)).to(dev, non_blocking=True)
+                priv_buf[t] = priv_t
+            with torch.no_grad(), amp():
+                if args.privileged:
+                    logits, v_pub, v_priv = policy(obs, mask, priv_t)
+                    logits = logits.float()
+                    a = torch.distributions.Categorical(logits=logits).sample()
+                    logp = torch.log_softmax(logits, -1).gather(1, a[:, None]).squeeze(1)
+                    v = v_priv.float()
+                    val_pub_np[t] = v_pub.float().cpu().numpy()
+                else:
+                    a, logp, v = policy.act(obs, mask)
                 opp_rows = env.self_play & (res.seat != res.learner_seat) & (opp_of >= 0)
+                fixed_rows = env.fixed & (res.seat != res.learner_seat)
                 if opp_rows.any():
                     idx = torch.from_numpy(np.flatnonzero(opp_rows)).to(dev)
                     a[idx] = league.act(obs[idx], mask[idx], opp_of[opp_rows])
+                if fixed_rows.any():
+                    idx = torch.from_numpy(np.flatnonzero(fixed_rows)).to(dev)
+                    a[idx] = fixed_pool.act(obs[idx], mask[idx], env.fixed_id[fixed_rows])
             obs_buf[t] = obs
             mask_buf[t] = mask
             act_buf[t] = a
             logp_buf[t] = logp
             val_np[t] = v.float().cpu().numpy()
             seat_np[t] = res.seat
-            train_np[t] = ~opp_rows
+            train_np[t] = ~(opp_rows | fixed_rows)
             phi_np[t] = res.obs[:, PHI_INDEX]
             res = env.step(a.cpu().numpy())
             done_np[t] = res.done
@@ -321,12 +398,40 @@ def main(args: Args) -> Path:
 
         with torch.no_grad(), amp():
             obs = torch.from_numpy(res.obs).to(dev)
-            v_last = policy.value(obs).float().cpu().numpy()
-        adv_np = compute_gae(
-            val_np, seat_np, done_np, rew_np, phi_np, v_last, res.seat.astype(np.int64),
-            res.obs[:, PHI_INDEX], args.gamma, args.gae_lambda, args.shaping,
-        )
+            seat_last = res.seat.astype(np.int64)
+            phi_last = res.obs[:, PHI_INDEX]
+            if args.privileged:
+                priv_last = torch.from_numpy(np.ascontiguousarray(res.priv)).to(dev)
+                h_last = policy.encode(obs, priv_last)[0]
+                v_last = policy._value_priv(h_last).float().cpu().numpy()
+                v_last_pub = policy._value(h_last).float().cpu().numpy()
+            else:
+                v_last = policy.value(obs).float().cpu().numpy()
+                v_last_pub = None
+        def gae(values, v_boot, lam):
+            return compute_gae(
+                values, seat_np, done_np, rew_np, phi_np, v_boot, seat_last, phi_last,
+                args.gamma, lam, args.shaping,
+            )
+
+        adv_np = gae(val_np, v_last, args.gae_lambda)
         ret_np = adv_np + val_np
+        # Held-out critic diagnostics, from the values predicted before this update.
+        if args.privileged:
+            train = train_np
+            adv_pub = gae(val_pub_np, v_last_pub, args.gae_lambda)
+            mc_priv = gae(val_np, v_last, 1.0) + val_np
+            mc_pub = gae(val_pub_np, v_last_pub, 1.0) + val_pub_np
+            ev_priv = explained_var(val_np[train], (adv_np + val_np)[train])
+            ev_pub = explained_var(val_pub_np[train], (adv_pub + val_pub_np)[train])
+            ev_mc_priv = explained_var(val_np[train], mc_priv[train])
+            ev_mc_pub = explained_var(val_pub_np[train], mc_pub[train])
+            acts_np = act_buf.cpu().numpy()
+            masks_np = mask_buf.cpu().numpy()
+            std_priv = buy_advantage_std(adv_np, acts_np, masks_np, train)
+            std_pub = buy_advantage_std(adv_pub, acts_np, masks_np, train)
+        else:
+            ev_priv = ev_pub = ev_mc_priv = ev_mc_pub = std_priv = std_pub = float("nan")
 
         sel = torch.from_numpy(train_np.reshape(-1)).to(dev)
         b_obs = obs_buf.view(T * N, OBS_DIM)[sel]
@@ -336,6 +441,7 @@ def main(args: Args) -> Path:
         b_adv = torch.from_numpy(adv_np.reshape(-1)).to(dev)[sel]
         b_ret = torch.from_numpy(ret_np.reshape(-1)).to(dev)[sel]
         b_val = torch.from_numpy(val_np.reshape(-1)).to(dev)[sel]
+        b_priv = priv_buf.view(T * N, PRIV_IDS)[sel] if args.privileged else None
         B = b_obs.shape[0]
 
         policy.train()
@@ -348,7 +454,12 @@ def main(args: Args) -> Path:
             # advantage std NaN
             for mb in torch.tensor_split(perm, max(1, B // args.minibatch)):
                 with amp():
-                    logits, newv = policy(b_obs[mb], b_mask[mb])
+                    if args.privileged:
+                        logits, v_pub_mb, newv = policy(b_obs[mb], b_mask[mb], b_priv[mb])
+                        v_pub_mb = v_pub_mb.float()
+                    else:
+                        logits, newv = policy(b_obs[mb], b_mask[mb])
+                        v_pub_mb = None
                 logits, newv = logits.float(), newv.float()
                 logp_all = torch.log_softmax(logits, -1)
                 newlogp = logp_all.gather(1, b_act[mb, None]).squeeze(1)
@@ -366,11 +477,15 @@ def main(args: Args) -> Path:
                 v_clip = b_val[mb] + (newv - b_val[mb]).clamp(-args.clip, args.clip)
                 v_loss = 0.5 * torch.max((newv - b_ret[mb]) ** 2, (v_clip - b_ret[mb]) ** 2).mean()
                 ent = entropy.mean()
-                loss = pg - args.ent_coef * ent + args.vf_coef * v_loss
+                loss = args.vf_coef * v_loss
+                if v_pub_mb is not None:
+                    loss = loss + args.vf_coef_pub * (v_pub_mb - b_ret[mb]).pow(2).mean()
+                if not args.critic_only:
+                    loss = loss + pg - args.ent_coef * ent
                 opt.zero_grad(set_to_none=True)
                 if torch.isfinite(loss):
                     loss.backward()
-                    gnorm = nn.utils.clip_grad_norm_(policy.parameters(), args.max_grad_norm)
+                    gnorm = nn.utils.clip_grad_norm_(trainable, args.max_grad_norm)
                 if not torch.isfinite(loss) or not torch.isfinite(gnorm):
                     skipped += 1
                     dump = out / "nonfinite.pt"
@@ -381,7 +496,7 @@ def main(args: Args) -> Path:
                                     "state": policy.state_dict()}, dump)
                     continue
                 opt.step()
-                if args.target_kl and approx_kl > args.target_kl:
+                if not args.critic_only and args.target_kl and approx_kl > args.target_kl:
                     stop = True
                     break
             if stop:
@@ -407,10 +522,28 @@ def main(args: Args) -> Path:
             "losses/explained_variance": float(explained),
             "losses/skipped_minibatches": skipped,
         }
+        if args.privileged:
+            scalars.update({
+                "losses/ev_priv": ev_priv,
+                "losses/ev_pub": ev_pub,
+                "losses/ev_mc_priv": ev_mc_priv,
+                "losses/ev_mc_pub": ev_mc_pub,
+                "losses/adv_std_buy_priv": std_priv,
+                "losses/adv_std_buy_pub": std_pub,
+            })
+            if args.critic_only and args.critic_patience:
+                improved = False
+                for key, val in (("priv", ev_mc_priv), ("pub", ev_mc_pub)):
+                    if np.isfinite(val) and val > best_mc[key] + 1e-4:
+                        best_mc[key] = val
+                        improved = True
+                since_mc = 0 if improved else since_mc + 1
+                if since_mc >= args.critic_patience:
+                    halt = True
         for k, q in sorted(recent.items()):
             scalars[f"winrate/{k}"] = float(np.mean(q))
 
-        if update % args.eval_every == 0 or update == num_updates:
+        if update % args.eval_every == 0 or update == num_updates or halt:
             scalars.update(rate_checkpoint(update))
             rating = scalars["rating/learner"]
             policy.save(out / "latest.pt", update=update, steps=steps, rating=rating, args=config)
@@ -437,11 +570,16 @@ def main(args: Args) -> Path:
         print(
             f"[{update}/{num_updates}] steps {steps/1e6:.2f}M sps {sps} ent {ent.item():.3f} "
             f"kl {approx_kl:.4f} ev {explained:.3f} turns {scalars['charts/game_turns']:.1f}"
+            + (f" ev_mc {ev_mc_priv:.3f}/{ev_mc_pub:.3f} buy_std {std_priv:.3f}/{std_pub:.3f}"
+               if args.privileged else "")
             + (f" skipped {skipped}" if skipped else "")
             + f" | train {wr}"
             + (f" | eval {ev}" if ev else ""),
             flush=True,
         )
+        if halt:
+            print(f"critic patience {args.critic_patience}: stopping at update {update}", flush=True)
+            break
     writer.close()
     if args.track:
         wandb.finish()

@@ -15,7 +15,10 @@ mixes them, and each action's logit is a dot product between a per-verb query co
 the global token and the key of the token the action targets (a card in hand, a trade-row
 slot, an opponent base, ...). Card ids absent from the hand/discard tokens (overflow) fall
 back to a context-free key of the card itself. End turn, skip, choices and attacking the
-opponent are scored from the global token directly.
+opponent are scored from the global token directly. An optional privileged critic reads three
+extra zone tokens (opponent hand, own upcoming draws, opponent upcoming draws) plus a learned
+critic token that public tokens are not allowed to attend to. `value_priv` is that critic;
+`value` stays the public head the exported model serves. Rust never sees the privileged weights.
 """
 
 from __future__ import annotations
@@ -67,9 +70,10 @@ class Base(nn.Module):
     ARCH = ""
 
     @torch.no_grad()
-    def act(self, obs: torch.Tensor, mask: torch.Tensor, greedy: bool = False):
-        logits, value = self(obs, mask)
-        logits, value = logits.float(), value.float()
+    def act(self, obs: torch.Tensor, mask: torch.Tensor, greedy: bool = False, priv: torch.Tensor | None = None):
+        out = self(obs, mask) if priv is None else self(obs, mask, priv)
+        # With privileged input the last value is the critic; otherwise it is the only value head.
+        logits, value = out[0].float(), out[-1].float()
         if greedy:
             a = logits.argmax(-1)
         else:
@@ -91,8 +95,18 @@ class Base(nn.Module):
             m: Base = EntityPolicy(EntityConfig(**ck["config"]))
         else:
             m = Policy(ModelConfig(**ck["config"]))
-        m.load_state_dict(ck["state_dict"])
+        missing, unexpected = m.load_state_dict(ck["state_dict"], strict=False)
+        if unexpected or not _missing_is_privileged(list(missing)):
+            raise RuntimeError(f"checkpoint {path} missing {missing} unexpected {unexpected}")
         return m.to(device)
+
+
+# Added with the privileged critic. Checkpoints from before it omit them; a fresh init is correct.
+_PRIV_PARAMS = ("priv_type_emb.", "critic_tok", "value_priv1.", "value_priv2.")
+
+
+def _missing_is_privileged(keys: list[str]) -> bool:
+    return all(k.startswith(_PRIV_PARAMS) for k in keys)
 
 
 load = Base.load
@@ -154,7 +168,7 @@ class Block(nn.Module):
         nn.init.zeros_(self.ff2.weight)
 
     def forward(self, x: torch.Tensor, key_mask: torch.Tensor) -> torch.Tensor:
-        """`key_mask` [B, 1, 1, N]: True for tokens that may be attended to."""
+        """`key_mask` is True where attention is allowed: `[B, 1, 1, N]` or `[B, 1, N, N]`."""
         b, n, d = x.shape
         h, dh = self.heads, d // self.heads
         q, k, v = self.qkv(self.ln1(x)).view(b, n, 3, h, dh).permute(2, 0, 3, 1, 4)
@@ -198,14 +212,25 @@ class EntityPolicy(Base):
         self.global_out = layer_init(nn.Linear(d, tk.N_GLOBAL_LOGITS), std=0.01)
         self.query = layer_init(nn.Linear(d, len(tk.VERBS) * d), std=0.01)
         self.key = nn.Linear(d, d)
+        self.priv_type_emb = nn.Embedding(len(tk.PRIV_ZONES), d)
+        nn.init.normal_(self.priv_type_emb.weight, std=0.02)
+        self.critic_tok = nn.Parameter(torch.zeros(d))
+        nn.init.normal_(self.critic_tok, std=0.02)
+        self.value_priv1 = nn.Linear(d, d)
+        self.value_priv2 = layer_init(nn.Linear(d, 1), std=1.0)
 
     def card_table(self) -> torch.Tensor:
         """[N_CARDS + 1, d] card vectors; row 0 (empty) is zero."""
         t = self.card_id.weight + self.card_feat(self.card_feats)
         return torch.cat([torch.zeros_like(t[:1]), t[1:]])
 
-    def encode(self, obs: torch.Tensor) -> tuple[torch.Tensor, tk.Tokens, torch.Tensor]:
-        """Final token states [B, N_TOKENS, d], the tokens, and the card table."""
+    def encode(self, obs: torch.Tensor, priv: torch.Tensor | None = None) -> tuple[torch.Tensor, tk.Tokens, torch.Tensor]:
+        """Final token states [B, N, d], the public tokens, and the card table.
+
+        `priv` `[B, PRIV_IDS]` appends the privileged zones and the critic token. Public tokens
+        cannot attend to those, so their states (and therefore the logits and public value)
+        do not depend on `priv`.
+        """
         t = tk.tokenize(obs, self.compact)
         e = self.card_table()
         b = obs.shape[0]
@@ -229,13 +254,32 @@ class EntityPolicy(Base):
         if key not in self._types:
             self._types[key] = tk.token_types(t.sizes).to(x.device)
         x = x + self.type_emb(self._types[key])
-        key_mask = t.valid.view(b, 1, 1, -1)
+        if priv is None:
+            key_mask = t.valid.view(b, 1, 1, -1)
+        else:
+            counts = tk.priv_zones(priv)
+            bag = torch.matmul(counts, e[1:])
+            total = counts.sum(-1, keepdim=True)
+            zones = self.zone_in(torch.cat([bag, total], -1)) + self.priv_type_emb.weight
+            critic = self.critic_tok.view(1, 1, -1).expand(b, -1, -1)
+            n_pub = x.shape[1]
+            x = torch.cat([x, zones, critic], 1)
+            n = x.shape[1]
+            valid = torch.cat([t.valid, torch.ones(b, n - n_pub, dtype=torch.bool, device=x.device)], 1)
+            is_priv = torch.zeros(n, dtype=torch.bool, device=x.device)
+            is_priv[n_pub:] = True
+            # query q may see key k when k is valid and (q is privileged or k is public)
+            allow = valid[:, None, :] & (is_priv[None, :, None] | ~is_priv[None, None, :])
+            key_mask = allow[:, None]
         for blk in self.blocks:
             x = blk(x, key_mask)
         return self.ln_f(x), t, e
 
     def _value(self, h: torch.Tensor) -> torch.Tensor:
         return self.value2(F.gelu(self.value1(h[:, 0]))).squeeze(-1)
+
+    def _value_priv(self, h: torch.Tensor) -> torch.Tensor:
+        return self.value_priv2(F.gelu(self.value_priv1(h[:, -1]))).squeeze(-1)
 
     def logits(self, h: torch.Tensor, t: tk.Tokens, e: torch.Tensor) -> torch.Tensor:
         """Unmasked [B, N_ACTIONS] logits."""
@@ -264,10 +308,15 @@ class EntityPolicy(Base):
             parts.append(s)
         return torch.cat(parts, 1)
 
-    def forward(self, obs: torch.Tensor, mask: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
-        """Returns (masked logits, value)."""
-        h, t, e = self.encode(obs)
-        return self.logits(h, t, e).masked_fill(~mask, -1e9), self._value(h)
+    def forward(self, obs: torch.Tensor, mask: torch.Tensor, priv: torch.Tensor | None = None):
+        """`(masked logits, public value)` or, with `priv`, `(logits, public value, privileged value)`."""
+        h, t, e = self.encode(obs, priv)
+        logits = self.logits(h, t, e).masked_fill(~mask, -1e9)
+        v_pub = self._value(h)
+        if priv is None:
+            return logits, v_pub
+        return logits, v_pub, self._value_priv(h)
 
-    def value(self, obs: torch.Tensor) -> torch.Tensor:
-        return self._value(self.encode(obs)[0])
+    def value(self, obs: torch.Tensor, priv: torch.Tensor | None = None) -> torch.Tensor:
+        h = self.encode(obs, priv)[0]
+        return self._value(h) if priv is None else self._value_priv(h)

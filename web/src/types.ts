@@ -131,7 +131,17 @@ export const SET_NAMES: Record<string, string> = {
   frontiers: "Frontiers",
 };
 
+const BOT_NAMES: Record<string, string> = {
+  "model:phase_f": "Uncle Jesse",
+};
+
+/** Player-facing name. `phase_f` is shown as Uncle Jesse; the model file keeps its id. */
+export function opponentName(spec: string, name: string): string {
+  return BOT_NAMES[spec] ?? name;
+}
+
 export function seatName(s: Seat | undefined, fallback: string): string {
   if (!s || s.kind === "open") return fallback;
+  if (s.kind === "bot") return opponentName(s.spec, s.name);
   return s.name;
 }

@@ -6,7 +6,8 @@ import starrealms as sr
 torch = pytest.importorskip("torch")
 
 from starrealms import tokens as tk  # noqa: E402
-from starrealms.league import League, Stack  # noqa: E402
+from starrealms.env import MultiEnv  # noqa: E402
+from starrealms.league import FixedPool, League, Stack  # noqa: E402
 from starrealms.model import EntityConfig, EntityPolicy, load  # noqa: E402
 
 
@@ -123,3 +124,79 @@ def test_league_stack_runs_entity_policies():
         torch.testing.assert_close(got[tag], league.members[tag](o, k)[0], rtol=1e-4, atol=1e-4)
     a = league.act(o, k, tags)
     assert mask[np.arange(len(obs)), a.numpy()].all()
+
+
+def _priv_states(n: int = 4, steps: int = 6, seed: int = 3):
+    env = sr.VecEnv(n, ["core", "colony_wars"], seed, privileged=True)
+    obs, mask, _, _, priv = env.reset()
+    rng = np.random.default_rng(seed)
+    os_, ms, ps = [obs], [mask], [priv]
+    for _ in range(steps):
+        out = env.step(np.array([rng.choice(np.flatnonzero(m)) for m in mask]))
+        obs, mask, priv = out[0], out[1], out[-1]
+        os_.append(obs)
+        ms.append(mask)
+        ps.append(priv)
+    return np.concatenate(os_), np.concatenate(ms), np.concatenate(ps)
+
+
+def test_public_outputs_ignore_privileged_input():
+    obs, mask, priv = _priv_states()
+    m = small()
+    # Attention residuals start at zero, so a fresh critic cannot see the extra tokens yet.
+    with torch.no_grad():
+        for blk in m.blocks:
+            blk.proj.weight.add_(0.05 * torch.randn_like(blk.proj.weight))
+            blk.ff2.weight.add_(0.05 * torch.randn_like(blk.ff2.weight))
+    o, k, p = (torch.as_tensor(x) for x in (obs, mask, priv))
+    l1, v1 = m(o, k)
+    l2, v2, vp = m(o, k, p)
+    torch.testing.assert_close(l1, l2, rtol=1e-4, atol=1e-5)
+    torch.testing.assert_close(v1, v2, rtol=1e-4, atol=1e-5)
+    swapped = p.clone()
+    swapped[:, 0], swapped[:, 1] = p[:, 1].clone(), p[:, 0].clone()
+    _, _, vp_swap = m(o, k, swapped)
+    torch.testing.assert_close(vp, vp_swap, rtol=1e-4, atol=1e-5)
+    changed = p.clone()
+    changed[:, 0] = torch.where(p[:, 0] == 1, torch.ones_like(p[:, 0]) * 2, torch.ones_like(p[:, 0]))
+    _, _, vp_changed = m(o, k, changed)
+    assert not torch.allclose(vp, vp_changed, atol=1e-5)
+
+
+def test_privileged_value_does_not_train_the_policy_query():
+    m = small().train()
+    obs, mask, priv = _priv_states(n=2, steps=2)
+    _, _, vp = m(*map(torch.as_tensor, (obs, mask, priv)))
+    vp.sum().backward()
+    assert m.value_priv2.weight.grad.abs().sum() > 0
+    assert m.critic_tok.grad.abs().sum() > 0
+    assert m.query.weight.grad is None
+
+
+def test_old_checkpoint_loads_without_privileged_weights(tmp_path):
+    m = small()
+    m.save(tmp_path / "e.pt")
+    ck = torch.load(tmp_path / "e.pt", weights_only=False)
+    for key in list(ck["state_dict"]):
+        if key == "critic_tok" or key.startswith(("priv_type_emb.", "value_priv1.", "value_priv2.")):
+            del ck["state_dict"][key]
+    torch.save(ck, tmp_path / "old.pt")
+    m2 = load(tmp_path / "old.pt")
+    obs, mask = _states(2, steps=3)
+    o, k = torch.as_tensor(obs), torch.as_tensor(mask)
+    torch.testing.assert_close(m(o, k)[0], m2(o, k)[0])
+    ck["state_dict"]["nope.weight"] = torch.zeros(1)
+    torch.save(ck, tmp_path / "bad.pt")
+    with pytest.raises(RuntimeError):
+        load(tmp_path / "bad.pt")
+
+
+def test_fixed_pool_plays_legal_moves(tmp_path):
+    small().save(tmp_path / "a.pt")
+    env = MultiEnv({f"model:{tmp_path / 'a.pt'}": 2}, seed=1)
+    assert len(env.fixed_paths) == 1 and env.fixed.all()
+    pool = FixedPool(env.fixed_paths, "cpu")
+    res = env.reset()
+    ids = np.zeros(res.obs.shape[0], np.int64)
+    actions = pool.act(torch.as_tensor(res.obs), torch.as_tensor(res.mask), ids)
+    assert res.mask[np.arange(len(actions)), actions.numpy()].all()

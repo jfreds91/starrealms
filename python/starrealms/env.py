@@ -44,6 +44,7 @@ class StepResult:
     winner: np.ndarray  # [n] i8: seat, -1 draw, -2 not done
     turns: np.ndarray  # [n] u16
     done_learner: np.ndarray  # [n] i8: learner seat of the game that just ended
+    priv: np.ndarray | None = None  # [n, PRIV_IDS] i16, hidden cards for the mover; None unless requested
 
     @property
     def learner_to_move(self) -> np.ndarray:
@@ -64,6 +65,14 @@ def sets_tag(sets) -> str:
     return "+".join(sets)
 
 
+def torch_model_path(name: str) -> str | None:
+    """Path if `name` is a `model:<path>.pt` group, which is played from Python rather than Rust."""
+    if not name.startswith("model:"):
+        return None
+    path = name.split(":", 1)[1].split("@", 1)[0]
+    return path if path.endswith(".pt") else None
+
+
 class MultiEnv:
     """Concatenation of several `VecEnv` groups that share one action batch.
 
@@ -76,46 +85,73 @@ class MultiEnv:
     """
 
     def __init__(self, groups: dict[str, int], sets=("core",), seed: int = 0, max_turns: int = 200,
-                 sets_mix: list[tuple[list[str], float]] | None = None):
+                 sets_mix: list[tuple[list[str], float]] | None = None, privileged: bool = False):
         self.names: list[str] = []
         self.labels: list[str] = []
         self.envs: list[VecEnv] = []
+        self.privileged = privileged
         mix = sets_mix or [(list(sets), 1.0)]
         k = 0
+        pt_index: dict[str, int] = {}
+        fixed_paths: list[str] = []
+        group_fixed: list[int] = []
         for name, n in groups.items():
             counts = [round(n * f) for _, f in mix]
             counts[-1] = n - sum(counts[:-1])
+            pt = torch_model_path(name)
             for (s, _), m in zip(mix, counts):
                 if m <= 0:
                     continue
-                opp = None if name == "self" else name
-                self.envs.append(VecEnv(m, list(s), seed * 7919 + k, opp, max_turns))
+                # `.pt` opponents are decided in Python; Rust would have to load them per step.
+                opp = None if name == "self" or pt else name
+                self.envs.append(VecEnv(m, list(s), seed * 7919 + k, opp, max_turns, True, privileged))
                 self.names.append(name)
-                label = Path(name.split(":", 1)[1]).stem if name.startswith("model:") else name
+                if name.startswith("model:"):
+                    path = Path(name.split(":", 1)[1].split("@", 1)[0])
+                    label = f"{path.parent.name}/{path.stem}" if pt else path.stem
+                else:
+                    label = name
                 self.labels.append(f"{label}@{sets_tag(s)}" if sets_mix else label)
+                if pt:
+                    if pt not in pt_index:
+                        pt_index[pt] = len(fixed_paths)
+                        fixed_paths.append(pt)
+                    group_fixed.append(pt_index[pt])
+                else:
+                    group_fixed.append(-1)
                 k += 1
         self.sizes = [e.num_envs for e in self.envs]
         self.num_envs = sum(self.sizes)
         self.group = np.concatenate([np.full(n, i, np.int8) for i, n in enumerate(self.sizes)])
         self.self_play = np.isin(self.group, [i for i, n in enumerate(self.names) if n == "self"])
+        self.fixed_paths = fixed_paths
+        self.fixed_id = np.array([group_fixed[i] for i in self.group], np.int64)
+        self.fixed = self.fixed_id >= 0
+
+    def _join(self, parts) -> StepResult:
+        cols = [np.concatenate(x) for x in zip(*parts)]
+        priv = cols.pop() if self.privileged else None
+        return StepResult(*cols, priv=priv)
 
     def reset(self) -> StepResult:
-        parts = [e.reset() for e in self.envs]
-        obs, mask, seat, learner = (np.concatenate(x) for x in zip(*parts))
+        parts = [tuple(e.reset()) for e in self.envs]
+        cols = [np.concatenate(x) for x in zip(*parts)]
+        priv = cols.pop() if self.privileged else None
+        obs, mask, seat, learner = cols
         n = self.num_envs
         return StepResult(
             obs, mask, seat, learner,
             np.zeros((n, 2), np.float32), np.zeros(n, bool), np.full(n, -2, np.int8),
-            np.zeros(n, np.uint16), learner.copy(),
+            np.zeros(n, np.uint16), learner.copy(), priv=priv,
         )
 
     def step(self, actions: np.ndarray) -> StepResult:
         actions = np.asarray(actions, dtype=np.int64)
         parts, start = [], 0
         for e, n in zip(self.envs, self.sizes):
-            parts.append(e.step(actions[start : start + n]))
+            parts.append(tuple(e.step(actions[start : start + n])))
             start += n
-        return StepResult(*(np.concatenate(x) for x in zip(*parts)))
+        return self._join(parts)
 
     def features(self) -> dict[str, np.ndarray]:
         fs = [e.features() for e in self.envs]

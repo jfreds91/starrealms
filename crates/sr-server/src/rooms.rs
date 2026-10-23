@@ -258,7 +258,8 @@ impl App {
                 Ok(net) => {
                     let spec = format!("model:{stem}");
                     tracing::info!("loaded model opponent {spec} from {}", path.display());
-                    out.insert(spec.clone(), Opponent { spec, name: format!("Model {stem}"), model: Some(Arc::new(net)) });
+                    let name = if stem == "phase_f" { "Uncle Jesse".into() } else { format!("Model {stem}") };
+                    out.insert(spec.clone(), Opponent { spec, name, model: Some(Arc::new(net)) });
                 }
                 Err(e) => tracing::warn!("skipping {}: {e}", path.display()),
             }

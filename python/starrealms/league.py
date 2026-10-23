@@ -114,6 +114,48 @@ class Stack:
         return torch.distributions.Categorical(logits=logits).sample()
 
 
+class FixedPool:
+    """Frozen `.pt` checkpoints played from Python, one `Stack` per architecture.
+
+    A `model:<path>.pt` opponent cannot run inside the Rust env. Members are never evicted,
+    so a run can train against fixed transformers such as `phase_f` without the candle thread
+    pool fighting the environment's workers.
+    """
+
+    def __init__(self, paths: list[str], device):
+        import json
+        from dataclasses import asdict
+
+        from .model import load
+
+        self.paths = list(paths)
+        models = []
+        for path in self.paths:
+            model = load(path, device).eval()
+            for p in model.parameters():
+                p.requires_grad_(False)
+            if hasattr(model, "compact"):
+                model.compact = False
+            models.append(model)
+        groups: dict[str, dict[int, nn.Module]] = {}
+        for i, model in enumerate(models):
+            key = model.ARCH + json.dumps(asdict(model.cfg), sort_keys=True)
+            groups.setdefault(key, {})[i] = model
+        self.stacks = [Stack(members) for members in groups.values()]
+
+    @torch.no_grad()
+    def act(self, obs: torch.Tensor, mask: torch.Tensor, ids: np.ndarray) -> torch.Tensor:
+        """Sampled actions; `ids[row]` indexes `paths`."""
+        out = torch.empty(obs.shape[0], dtype=torch.long, device=obs.device)
+        for stack in self.stacks:
+            sel = np.isin(ids, stack.tags)
+            if not np.any(sel):
+                continue
+            chosen = torch.as_tensor(sel, device=obs.device)
+            out[chosen] = stack.act(obs[chosen], mask[chosen], ids[sel])
+        return out
+
+
 class Ratings:
     """Elo ratings by name (bots, and checkpoints named `u<update>`), fitted jointly.
 

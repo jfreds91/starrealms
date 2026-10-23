@@ -34,32 +34,100 @@ function sameTarget(a: Target, b: Target): boolean {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
-/** Cards that just left the trade row (or the Explorer pile) on someone else's move. */
-type Taken = { slots: Map<number, CardId>; explorer: boolean; key: number };
+/** A card that just left the trade row, or an Explorer someone else just took. */
+type Departure = {
+  slots: Map<number, { id: CardId; fate: "scrap" | "taken" }>;
+  explorer: boolean;
+  /** True when at least one trade-row card was scrapped, so the hold lasts long enough to read. */
+  scrap: boolean;
+  key: number;
+};
 
 const TAKEN_MS = 600;
+const SCRAP_MS = 720;
+const ROW_SCRAP_PREFIX = "Scrap ";
+const ROW_SCRAP_SUFFIX = " from the trade row";
 
-/** While it isn't the viewer's move, keeps a card taken from the trade row on screen briefly so it can be seen leaving. */
-function useTaken(v: View, watching: boolean): Taken | null {
-  const [taken, setTaken] = useState<Taken | null>(null);
+function rowScrapName(text: string): string | null {
+  if (text.startsWith(ROW_SCRAP_PREFIX) && text.endsWith(ROW_SCRAP_SUFFIX)) {
+    return text.slice(ROW_SCRAP_PREFIX.length, text.length - ROW_SCRAP_SUFFIX.length);
+  }
+  return null;
+}
+
+function sameLog(a: LogEntry, b: LogEntry): boolean {
+  return a.turn === b.turn && a.seat === b.seat && a.text === b.text;
+}
+
+/** Log lines appended since `before`. A backward jump (replay scrub) contributes nothing. */
+function newLog(before: LogEntry[], after: LogEntry[]): LogEntry[] {
+  if (before.length === 0) return after;
+  const last = before[before.length - 1];
+  for (let i = after.length - 1; i >= 0; i--) {
+    if (!sameLog(after[i], last)) continue;
+    let b = before.length - 1;
+    let a = i;
+    while (b >= 0 && a >= 0 && sameLog(before[b], after[a])) {
+      b--;
+      a--;
+    }
+    if (b < 0 || a < 0) return after.slice(i + 1);
+  }
+  return [];
+}
+
+/**
+ * Holds a card that just left the trade row long enough to see how it left.
+ * A scrap is crossed out for anyone; a buy or acquire only lingers while watching someone else.
+ */
+function useDepartures(v: View, watching: boolean): Departure | null {
+  const cat = useCatalog();
+  const names = useRef(cat);
+  names.current = cat;
+  const [dep, setDep] = useState<Departure | null>(null);
   const prev = useRef(v);
   const timer = useRef<number | undefined>(undefined);
   useEffect(() => {
     const before = prev.current;
     prev.current = v;
-    if (!watching || before === v) return;
-    const slots = new Map<number, CardId>();
-    before.trade_row.forEach((c, k) => {
-      if (c != null && c !== v.trade_row[k]) slots.set(k, c);
+    if (before === v) return;
+    const scrapNames = newLog(before.log, v.log).flatMap((e) => {
+      const n = rowScrapName(e.text);
+      return n == null ? [] : [n];
     });
-    const explorer = v.explorers < before.explorers;
+    const heap = v.scrap_heap.length >= before.scrap_heap.length ? v.scrap_heap.slice(before.scrap_heap.length) : [];
+    const consume = <T,>(list: T[], item: T) => {
+      const i = list.indexOf(item);
+      if (i >= 0) list.splice(i, 1);
+      return i >= 0;
+    };
+    const slots = new Map<number, { id: CardId; fate: "scrap" | "taken" }>();
+    const nameOf = (id: CardId) => names.current.cards[id]?.name ?? "";
+    before.trade_row.forEach((c, k) => {
+      if (c == null || c === v.trade_row[k]) return;
+      const scrap = consume(heap, c) || consume(scrapNames, nameOf(c));
+      if (scrap) {
+        consume(heap, c);
+        consume(scrapNames, nameOf(c));
+        slots.set(k, { id: c, fate: "scrap" });
+      } else if (watching) {
+        slots.set(k, { id: c, fate: "taken" });
+      }
+    });
+    // The replacement can be another copy of the same card, so the slot id never changes.
+    for (const name of [...scrapNames]) {
+      const k = before.trade_row.findIndex((c, i) => c != null && !slots.has(i) && v.trade_row[i] === c && nameOf(c) === name);
+      if (k >= 0) slots.set(k, { id: before.trade_row[k]!, fate: "scrap" });
+    }
+    const explorer = watching && v.explorers < before.explorers;
     if (!slots.size && !explorer) return;
-    setTaken({ slots, explorer, key: Date.now() });
+    const scrap = [...slots.values()].some((s) => s.fate === "scrap");
+    setDep({ slots, explorer, scrap, key: Date.now() });
     window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setTaken(null), TAKEN_MS);
+    timer.current = window.setTimeout(() => setDep(null), scrap ? SCRAP_MS : TAKEN_MS);
   }, [v, watching]);
   useEffect(() => () => window.clearTimeout(timer.current), []);
-  return taken;
+  return dep;
 }
 
 export function Table(p: TableProps) {
@@ -72,7 +140,9 @@ export function Table(p: TableProps) {
   const at = (t: Target) => actions.filter((a) => sameTarget(a.target, t));
   const me = v.seat, them = 1 - v.seat;
   const myTurn = v.active === me && !over && !p.spectator;
-  const taken = useTaken(v, v.active !== me || !!p.spectator);
+  const dep = useDepartures(v, v.active !== me || !!p.spectator);
+  const mustDiscard = myTurn && v.pending === "forced_discard";
+  const handDiscard = mustDiscard || (myTurn && v.pending === "discard");
   const act = (id: number) => {
     setPile(null);
     p.onAct(id);
@@ -101,11 +171,11 @@ export function Table(p: TableProps) {
     winner == null ? null : winner === -1 ? "Draw" : !p.spectator && winner === me ? "You win!" : `${p.names[winner]} wins`;
   const ownName = p.spectator ? p.names[me] : "You";
 
-  const choosing = myTurn && !!v.prompt;
+  const choosing = myTurn && !!v.prompt && !mustDiscard;
 
   return (
     <div className="table-layout">
-      <main className={`board ${choosing ? "choosing" : ""}`}>
+      <main className={`board ${mustDiscard ? "discarding" : choosing ? "choosing" : ""}`}>
         <section className="zone opp-zone">
           <PlayerPanel
             name={p.names[them]}
@@ -143,8 +213,8 @@ export function Table(p: TableProps) {
           />
           <div className="pile-stack">
             <Card
-              key={taken?.explorer ? taken.key : "explorer"}
-              className={`pile ${taken?.explorer ? "taken" : ""}`}
+              key={dep?.explorer ? dep.key : "explorer"}
+              className={`pile ${dep?.explorer ? "taken" : ""}`}
               id={cat.explorer}
               actions={at({ zone: "explorer" })}
               onAct={act}
@@ -154,8 +224,10 @@ export function Table(p: TableProps) {
           </div>
           <div className="trade-row">
             {v.trade_row.map((c, k) => {
-              const gone = taken?.slots.get(k);
-              if (gone != null) return <Card key={`taken-${taken!.key}-${k}`} id={gone} className="taken" />;
+              const gone = dep?.slots.get(k);
+              if (gone != null) {
+                return <Card key={`${gone.fate}-${dep!.key}-${k}`} id={gone.id} className={gone.fate === "scrap" ? "scrapped" : "taken"} />;
+              }
               return c == null ? (
                 <div key={k} className="card-wrap"><div className="card empty-slot" /></div>
               ) : (
@@ -175,7 +247,9 @@ export function Table(p: TableProps) {
 
         <section className="zone my-zone">
           <div className="in-play my-play">
-            {v.you.in_play.length === 0 && <div className="empty-hint">{myTurn ? "Play cards from your hand" : "No bases"}</div>}
+            {v.you.in_play.length === 0 && (
+              <div className="empty-hint">{mustDiscard ? "Discard from your hand first" : myTurn ? "Play cards from your hand" : "No bases"}</div>
+            )}
             {v.you.in_play.map((s, j) => (
               <Card
                 key={j}
@@ -195,8 +269,8 @@ export function Table(p: TableProps) {
               {outcomeText ? (
                 <span className="turn-pill over">{outcomeText}</span>
               ) : (
-                <span className={`turn-pill ${myTurn ? "mine" : ""}`}>
-                  {p.spectator ? `${p.names[v.active]}'s turn` : myTurn ? "Your turn" : `${p.names[them]}'s turn`}
+                <span className={`turn-pill ${mustDiscard ? "discard" : myTurn ? "mine" : ""}`}>
+                  {p.spectator ? `${p.names[v.active]}'s turn` : mustDiscard ? "Discard first" : myTurn ? "Your turn" : `${p.names[them]}'s turn`}
                 </span>
               )}
               <span className="turn-number">Turn {Math.ceil(v.turn / 2)}</span>
@@ -204,12 +278,15 @@ export function Table(p: TableProps) {
             </div>
             <div className="center-slot">
               {v.prompt && myTurn ? (
-                <div className="prompt">
+                <div className={`prompt ${mustDiscard ? "discard-prompt" : ""}`}>
                   {v.pending_source != null && (
                     <div className="prompt-source"><CardFace id={v.pending_source} /></div>
                   )}
                   <div className="prompt-body">
-                    <div className="prompt-text">{v.prompt}</div>
+                    <div className="prompt-text">
+                      {mustDiscard && <div className="prompt-kicker">Choose a card in your hand to discard</div>}
+                      {v.prompt}
+                    </div>
                     {discardPicks.length > 0 && (
                       <div className="prompt-picks">
                         {discardPicks.map((a) => (
@@ -260,11 +337,23 @@ export function Table(p: TableProps) {
               active={v.active === me && !over}
               onPile={(pl) => setPile(pl.title === "Discard pile" && discardPicks.length ? { ...pl, picks: discardPicks } : pl)}
             />
-            <div className="hand">
-              {v.you.hand
-                ? v.you.hand.map((c, i) => <Card key={`${c}-${i}`} id={c} actions={at({ zone: "hand", card: c })} onAct={act} />)
-                : Array.from({ length: v.you.hand_count }, (_, i) => <CardBack key={i} />)}
-              {v.you.hand && v.you.hand.length === 0 && <div className="empty-hint">Hand empty</div>}
+            <div className={`hand-area ${mustDiscard ? "must-discard" : ""}`}>
+              {mustDiscard && v.prompt && <div className="discard-banner">{v.prompt}</div>}
+              <div className="hand">
+                {v.you.hand
+                  ? v.you.hand.map((c, i) => (
+                      <Card
+                        key={`${c}-${i}`}
+                        id={c}
+                        actions={at({ zone: "hand", card: c })}
+                        onAct={act}
+                        discard={handDiscard}
+                        buttons={mustDiscard}
+                      />
+                    ))
+                  : Array.from({ length: v.you.hand_count }, (_, i) => <CardBack key={i} />)}
+                {v.you.hand && v.you.hand.length === 0 && <div className="empty-hint">Hand empty</div>}
+              </div>
             </div>
           </div>
         </section>

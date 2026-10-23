@@ -66,6 +66,40 @@ def test_arena():
     assert a + b + d == 50 and a > 40
 
 
+def test_privileged_matches_true_piles():
+    g = sr.Game(["core", "colony_wars"], 7)
+    layout = {name: (off, n) for name, off, n in sr.priv_layout()}
+    assert sr.PRIV_IDS == sum(n for _, n in layout.values())
+    for _ in range(40):
+        if g.winner is not None:
+            break
+        priv = np.asarray(g.privileged())
+        assert priv.shape == (sr.PRIV_IDS,) and priv.dtype == np.int16
+        seat = int(g.active)
+        opp_hand, _ = g.true_pile(1 - seat)
+        _, my_deck = g.true_pile(seat)
+        _, opp_deck = g.true_pile(1 - seat)
+        for key, pile in (("opp_hand", opp_hand), ("my_next", my_deck), ("opp_next", opp_deck)):
+            off, n = layout[key]
+            got = [int(c) for c in priv[off : off + n] if c]
+            assert got == [int(c) + 1 for c in list(pile)[:n]], key
+        g.step(g.legal()[0])
+
+
+def test_vecenv_privileged_roundtrip():
+    env = sr.VecEnv(4, ["core"], 1, privileged=True)
+    obs, mask, _, _, priv = env.reset()
+    assert obs.shape[0] == 4 and priv.shape == (4, sr.PRIV_IDS) and priv.dtype == np.int16
+    acts = np.array([np.flatnonzero(m)[0] for m in mask])
+    out = env.step(acts)
+    assert out[-1].shape == priv.shape
+    wrapped = MultiEnv({"self": 2}, seed=1, privileged=True)
+    res = wrapped.reset()
+    assert res.priv.shape == (2, sr.PRIV_IDS)
+    res = wrapped.step(np.array([np.flatnonzero(m)[0] for m in res.mask]))
+    assert res.priv.shape == (2, sr.PRIV_IDS) and res.rewards.shape == (2, 2)
+
+
 def test_named_scalars():
     assert len(sr.SCALAR_NAMES) == LAYOUT["scalars"].stop - LAYOUT["scalars"].start
     env = sr.VecEnv(8, ["core"], 2)

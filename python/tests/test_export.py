@@ -57,6 +57,21 @@ def test_rust_entity_forward_matches_torch(tmp_path):
         obs, mask, *_ = env.step(np.array([rng.choice(np.flatnonzero(m)) for m in mask]))
 
 
+def test_export_omits_privileged_critic(tmp_path):
+    import json
+    import struct
+
+    torch.manual_seed(0)
+    policy = EntityPolicy(EntityConfig(d=32, layers=1, heads=4, ff=64))
+    path = tmp_path / "m.safetensors"
+    export(policy, path)
+    data = path.read_bytes()
+    n = struct.unpack_from("<Q", data)[0]
+    header = json.loads(data[8 : 8 + n])
+    assert "critic_tok" not in header
+    assert not any(k.startswith(("priv_type_emb.", "value_priv1.", "value_priv2.")) for k in header)
+
+
 def test_export_checks_extension(tmp_path):
     with pytest.raises(ValueError):
         export(EntityPolicy(EntityConfig(d=16, layers=1, heads=2, ff=16)), tmp_path / "m.srnn")

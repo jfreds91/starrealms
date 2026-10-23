@@ -71,8 +71,39 @@ OWN_FEATS = (LAYOUT["own_slots"].stop - LAYOUT["own_slots"].start) // N_OWN
 OPP_FEATS = (LAYOUT["opp_bases"].stop - LAYOUT["opp_bases"].start) // N_OPP
 ROW_FEATS = (LAYOUT["row"].stop - LAYOUT["row"].start) // N_ROW
 COUNT_SCALE = 0.25
+PRIV_ZONES = ("opp_hand", "my_next", "opp_next")
+"""Privileged count-bags, in `priv_layout` order: hidden from the policy, visible to the critic."""
 _EXPLORERS = SCALAR["explorers"]
 _ZONE = {z: i for i, z in enumerate(COUNT_ZONES)}
+
+
+_PRIV_SPANS: list[tuple[int, int]] | None = None
+
+
+def _priv_spans() -> list[tuple[int, int]]:
+    global _PRIV_SPANS
+    if _PRIV_SPANS is None:
+        from ._engine import priv_layout
+
+        _PRIV_SPANS = [(off, n) for _, off, n in priv_layout()]
+    return _PRIV_SPANS
+
+
+def priv_zones(priv_ids: torch.Tensor) -> torch.Tensor:
+    """`[B, PRIV_IDS]` card ids (`0` empty, else `id + 1`) -> `[B, 3, N_CARDS]` scaled counts.
+
+    Same scaling as the public zone bags, so they can share `zone_in`. Order inside a zone
+    does not matter; only which cards are there.
+    """
+    b = priv_ids.shape[0]
+    ids = priv_ids.to(dtype=torch.long)
+    out = torch.zeros(b, len(PRIV_ZONES), N_CARDS, device=ids.device)
+    for z, (off, n) in enumerate(_priv_spans()):
+        chunk = ids[:, off : off + n]
+        valid = chunk > 0
+        idx = (chunk - 1).clamp(min=0, max=N_CARDS - 1)
+        out[:, z].scatter_add_(1, idx, valid.to(out.dtype))
+    return out * COUNT_SCALE
 
 
 def token_types(sizes: dict[str, int]) -> torch.Tensor:

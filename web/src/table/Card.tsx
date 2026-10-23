@@ -68,6 +68,8 @@ interface CardProps {
   copy?: CardId | null;
   /** Ability buttons are shown even for a single action (in-play cards). */
   buttons?: boolean;
+  /** The action discards this card. With `buttons`, the Discard stamp is the control. */
+  discard?: boolean;
   dim?: boolean;
   badge?: React.ReactNode;
   className?: string;
@@ -79,8 +81,11 @@ export function Card(p: CardProps) {
   const preview = usePreview();
   const cat = useCatalog();
   const acts = p.actions ?? [];
+  const discard = !!p.discard && acts.length > 0;
+  // A forced discard is a labeled control on the card, so a play-habit click lands on "Discard".
+  const confirmDiscard = discard && !!p.buttons && acts.length === 1 ? acts[0] : null;
   const single = acts.length === 1 && !p.buttons ? acts[0] : null;
-  const glow = acts.length ? GROUP_CLASS[acts[0].group] ?? "act-pick" : "";
+  const glow = discard ? "act-discard" : acts.length ? GROUP_CLASS[acts[0].group] ?? "act-pick" : "";
   const landscape = p.landscape ?? cat.cards[p.id].kind === "base";
   return (
     <div className={`card-wrap ${landscape ? "landscape" : ""} ${p.className ?? ""}`}>
@@ -88,7 +93,7 @@ export function Card(p: CardProps) {
         className={`card ${glow ? "actionable " + glow : ""} ${p.dim ? "dim" : ""}`}
         role={single ? "button" : undefined}
         tabIndex={single ? 0 : undefined}
-        title={single ? single.label : p.note}
+        title={single ? single.label : confirmDiscard ? confirmDiscard.label : p.note}
         onClick={single ? () => p.onAct?.(single.id) : undefined}
         onKeyDown={single ? (e) => (e.key === "Enter" || e.key === " ") && p.onAct?.(single.id) : undefined}
         onMouseEnter={() => preview.show(p.copy ?? p.id)}
@@ -100,12 +105,19 @@ export function Card(p: CardProps) {
             <CardFace id={p.copy} />
           </div>
         )}
+        {confirmDiscard ? (
+          <button className="discard-cover" title={confirmDiscard.label} onClick={() => p.onAct?.(confirmDiscard.id)}>
+            <span className="discard-stamp">Discard</span>
+          </button>
+        ) : (
+          discard && <span className="discard-stamp">Discard</span>
+        )}
         {p.badge}
       </div>
-      {acts.length > 0 && !single && (
+      {acts.length > 0 && !single && !confirmDiscard && (
         <div className="card-buttons">
           {acts.map((a) => (
-            <button key={a.id} className={`chip ${GROUP_CLASS[a.group] ?? ""}`} title={a.label} onClick={() => p.onAct?.(a.id)}>
+            <button key={a.id} className={`chip ${p.discard ? "act-discard" : GROUP_CLASS[a.group] ?? ""}`} title={a.label} onClick={() => p.onAct?.(a.id)}>
               {abilityLabel(a)}
             </button>
           ))}

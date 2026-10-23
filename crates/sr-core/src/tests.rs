@@ -498,6 +498,38 @@ fn turn_limit_is_a_draw() {
 }
 
 #[test]
+fn privileged_observation_matches_hidden_piles() {
+    use crate::obs::{PRIV_HAND, PRIV_IDS, PRIV_NEXT};
+    let mut g = Game::new(&cfg(&["core", "colony_wars"]), 11).unwrap();
+    let mut buf = vec![0i16; PRIV_IDS];
+    let mut rng = Rng::new(11);
+    for _ in 0..80 {
+        if g.is_over() {
+            break;
+        }
+        g.observe_privileged(&mut buf);
+        let me = g.active as usize;
+        let opp = 1 - me;
+        let hand = &g.players[opp].hand;
+        for i in 0..PRIV_HAND {
+            let want = hand.get(i).copied().map_or(0, |c| c as i16 + 1);
+            assert_eq!(buf[i], want, "opp hand slot {i}");
+        }
+        for (pile, off) in [(&g.players[me].deck, PRIV_HAND), (&g.players[opp].deck, PRIV_HAND + PRIV_NEXT)] {
+            for i in 0..PRIV_NEXT {
+                let want = if i < pile.len() { pile[pile.len() - 1 - i] as i16 + 1 } else { 0 };
+                assert_eq!(buf[off + i], want, "next draw {i}");
+            }
+        }
+        let legal = g.legal_vec();
+        g.step(legal[rng.below(legal.len())]).unwrap();
+    }
+    g.players[g.active as usize].deck.clear();
+    g.observe_privileged(&mut buf);
+    assert!(buf[PRIV_HAND..PRIV_HAND + PRIV_NEXT].iter().all(|&x| x == 0));
+}
+
+#[test]
 fn observation_has_fixed_size_and_is_finite() {
     let g = random_game(&["core", "colony_wars", "frontiers"], 99, false);
     let o = g.observation();
