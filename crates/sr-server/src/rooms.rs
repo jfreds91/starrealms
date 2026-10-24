@@ -65,6 +65,15 @@ pub struct RoomState {
     prev: Option<Game>,
     /// Meter reading per seat, keyed by action count.
     meter: Mutex<[Option<(usize, f32)>; 2]>,
+    /// Not written to the database. Kept on the live room so everyone connected sees it.
+    chat: Vec<ChatLine>,
+}
+
+#[derive(Clone, Serialize)]
+pub struct ChatLine {
+    pub name: String,
+    pub seat: Option<u8>,
+    pub text: String,
 }
 
 #[derive(Serialize)]
@@ -100,6 +109,7 @@ pub enum ServerMsg<'a> {
         meter: Option<f32>,
         /// The viewer can take back the action that opened the current choice.
         can_undo: bool,
+        chat: &'a [ChatLine],
     },
     Error {
         message: String,
@@ -213,6 +223,7 @@ impl RoomState {
             view,
             meter,
             can_undo: seat == Some(g.active) && self.status() == "active" && self.can_undo(),
+            chat: &self.chat,
         })
         .unwrap()
     }
@@ -258,7 +269,11 @@ impl App {
                 Ok(net) => {
                     let spec = format!("model:{stem}");
                     tracing::info!("loaded model opponent {spec} from {}", path.display());
-                    let name = if stem == "phase_f" { "Uncle Jesse".into() } else { format!("Model {stem}") };
+                    let name = match stem.as_str() {
+                        "phase_f" => "Uncle Jesse".into(),
+                        "phase_c" => "MLP".into(),
+                        _ => format!("Model {stem}"),
+                    };
                     out.insert(spec.clone(), Opponent { spec, name, model: Some(Arc::new(net)) });
                 }
                 Err(e) => tracing::warn!("skipping {}: {e}", path.display()),
@@ -285,6 +300,7 @@ impl App {
                 bot_running: false,
                 prev: None,
                 meter: Mutex::new([None, None]),
+                chat: Vec::new(),
             }),
             version: watch::Sender::new(0),
         });
@@ -306,6 +322,7 @@ impl App {
             bot_running: false,
             prev: None,
             meter: Mutex::new([None, None]),
+            chat: Vec::new(),
         };
         self.db.insert_game(&id, &state.session.replay, t, &state.progress()).map_err(|e| e.to_string())?;
         let room = Arc::new(Room { id: id.clone(), state: Mutex::new(state), version: watch::Sender::new(0) });
@@ -351,6 +368,24 @@ impl Room {
         let p = tokio::task::spawn_blocking(move || win_chance(&net, &game, s, METER_SAMPLES)).await.ok()?;
         self.state.lock().unwrap().meter.lock().unwrap()[s as usize] = Some((n, p));
         Some(p)
+    }
+
+    /// Remember a line from a person. Bots never call this.
+    pub fn say(&self, player: &Player, text: &str) -> Result<(), String> {
+        let text: String = text.trim().chars().filter(|c| !c.is_control()).take(200).collect();
+        if text.is_empty() {
+            return Err("say something".into());
+        }
+        let mut st = self.state.lock().unwrap();
+        let seat = st.seat_of(Some(player));
+        st.chat.push(ChatLine { name: player.name.clone(), seat, text });
+        if st.chat.len() > 100 {
+            let extra = st.chat.len() - 100;
+            st.chat.drain(0..extra);
+        }
+        drop(st);
+        self.bump();
+        Ok(())
     }
 
     pub fn set_online(&self, seat: Option<u8>, delta: i32) {

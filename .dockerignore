@@ -1,6 +1,5 @@
 target
 assets
-models
 runs
 checkpoints
 .venv

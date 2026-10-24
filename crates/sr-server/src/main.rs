@@ -218,6 +218,7 @@ enum ClientMsg {
     PlayAll { n: Option<usize> },
     Undo { n: Option<usize> },
     Resign,
+    Chat { text: String },
 }
 
 async fn ws(
@@ -271,16 +272,12 @@ async fn client(app: Arc<App>, room: Arc<Room>, me: Option<Player>, socket: WebS
                 };
                 let result = match (&me, serde_json::from_str::<ClientMsg>(&text)) {
                     (_, Err(e)) => Err(format!("bad message: {e}")),
+                    (Some(p), Ok(ClientMsg::Chat { text })) => room.say(p, &text),
                     (None, _) => Err("spectators cannot play".to_string()),
-                    (Some(p), Ok(m)) => {
-                        let (n, mv) = match m {
-                            ClientMsg::Act { action, n } => (n, Move::Action(action)),
-                            ClientMsg::PlayAll { n } => (n, Move::PlayAll),
-                            ClientMsg::Undo { n } => (n, Move::Undo),
-                            ClientMsg::Resign => (None, Move::Resign),
-                        };
-                        room.play(&app, p, n, mv)
-                    }
+                    (Some(p), Ok(ClientMsg::Act { action, n })) => room.play(&app, p, n, Move::Action(action)),
+                    (Some(p), Ok(ClientMsg::PlayAll { n })) => room.play(&app, p, n, Move::PlayAll),
+                    (Some(p), Ok(ClientMsg::Undo { n })) => room.play(&app, p, n, Move::Undo),
+                    (Some(p), Ok(ClientMsg::Resign)) => room.play(&app, p, None, Move::Resign),
                 };
                 if let Err(message) = result {
                     let msg = serde_json::to_string(&ServerMsg::Error { message }).unwrap();

@@ -20,6 +20,9 @@ export interface TableProps {
   spectator?: boolean;
   /** Shown under the turn indicator (connection state, invite link, errors). */
   notice?: React.ReactNode;
+  /** Live room chat. Omitted on replays. */
+  chat?: { name: string; seat: number | null; text: string }[];
+  onChat?(text: string): void;
   /** Buttons for the menu bar (resign, leave). */
   menu?: React.ReactNode;
   /** Buttons for the game-over panel (replay, rematch). */
@@ -174,7 +177,7 @@ export function Table(p: TableProps) {
   const choosing = myTurn && !!v.prompt && !mustDiscard;
 
   return (
-    <div className="table-layout">
+    <div className={`table-layout ${p.onChat ? "has-chat" : ""}`}>
       <main className={`board ${mustDiscard ? "discarding" : choosing ? "choosing" : ""}`}>
         <section className="zone opp-zone">
           <PlayerPanel
@@ -362,6 +365,7 @@ export function Table(p: TableProps) {
       <aside className="side">
         <div className="side-menu">{p.menu}</div>
         <Log entries={v.log} names={p.names} viewer={p.spectator ? null : me} />
+        {p.onChat && <Chat lines={p.chat ?? []} viewer={p.spectator ? null : me} onSend={p.onChat} />}
       </aside>
 
       {outcomeText && (
@@ -566,9 +570,62 @@ function LastMoves({ log, seat, turn, name, show }: { log: LogEntry[]; seat: num
   );
 }
 
+function Chat({
+  lines,
+  viewer,
+  onSend,
+}: {
+  lines: { name: string; seat: number | null; text: string }[];
+  viewer: number | null;
+  onSend(text: string): void;
+}) {
+  const [text, setText] = useState("");
+  const body = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = body.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [lines.length]);
+  return (
+    <form
+      className="chat"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const t = text.trim();
+        if (!t) return;
+        onSend(t);
+        setText("");
+      }}
+    >
+      <div className="log-title">Chat</div>
+      <div className="chat-body" ref={body}>
+        {lines.length === 0 && <div className="empty-hint">No messages yet.</div>}
+        {lines.map((m, i) => (
+          <div key={i} className={`chat-line ${m.seat != null && m.seat === viewer ? "mine" : ""}`}>
+            <span className="chat-who">{m.seat != null && m.seat === viewer ? "You" : m.name}</span>
+            {m.text}
+          </div>
+        ))}
+      </div>
+      <div className="chat-compose">
+        <input
+          value={text}
+          maxLength={200}
+          placeholder="Message"
+          aria-label="Message"
+          onChange={(e) => setText(e.target.value)}
+        />
+        <button className="btn small" disabled={!text.trim()}>Send</button>
+      </div>
+    </form>
+  );
+}
+
 function Log({ entries, names, viewer }: { entries: LogEntry[]; names: [string, string]; viewer: number | null }) {
-  const end = useRef<HTMLDivElement>(null);
-  useEffect(() => end.current?.scrollIntoView({ block: "end" }), [entries.length]);
+  const body = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = body.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [entries.length]);
   const turns: { turn: number; seat: number; items: string[] }[] = [];
   for (const e of entries) {
     const last = turns[turns.length - 1];
@@ -578,7 +635,7 @@ function Log({ entries, names, viewer }: { entries: LogEntry[]; names: [string, 
   return (
     <div className="log">
       <div className="log-title">Game log</div>
-      <div className="log-body">
+      <div className="log-body" ref={body}>
         {turns.map((t) => (
           <div key={t.turn} className={`log-turn ${t.seat === viewer ? "mine" : ""}`}>
             <div className="log-who">
@@ -589,7 +646,6 @@ function Log({ entries, names, viewer }: { entries: LogEntry[]; names: [string, 
             ))}
           </div>
         ))}
-        <div ref={end} />
       </div>
     </div>
   );

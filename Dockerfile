@@ -41,6 +41,7 @@ RUN useradd --system --home /data starrealms && mkdir -p /data /models && chown 
 COPY --from=rust /out/sr-server /usr/local/bin/sr-server
 COPY --from=web /src/web/dist /app/web
 COPY --from=assets /src/assets /app/assets
+COPY --chown=starrealms:starrealms models /models
 USER starrealms
 ENV SR_BIND=0.0.0.0:3030 \
     SR_DB=/data/starrealms.db \

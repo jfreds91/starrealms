@@ -4,6 +4,7 @@ import { ratings } from "../elo";
 import { Link, navigate } from "../router";
 import { SET_NAMES, opponentName, seatName, type GameSummary } from "../types";
 import { AboutAI } from "./AboutAI";
+import { HowToPlay } from "./HowToPlay";
 
 const ALL_SETS = ["core", "colony_wars", "frontiers"];
 
@@ -138,6 +139,7 @@ export function Home() {
   const [err, setErr] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
   const [about, setAbout] = useState(false);
+  const [rules, setRules] = useState(false);
 
   useEffect(() => {
     api.opponents().then(setOpponents, () => {});
@@ -164,12 +166,16 @@ export function Home() {
               <button className="btn ghost small" onClick={() => setEditing(true)}>Rename</button>
             </>
           )}
-          <button className={`btn small ${about ? "" : "ghost"}`} onClick={() => setAbout((v) => !v)}>
+          <button className={`btn small ${rules ? "" : "ghost"}`} onClick={() => { setRules((v) => !v); setAbout(false); }}>
+            How to play
+          </button>
+          <button className={`btn small ${about ? "" : "ghost"}`} onClick={() => { setAbout((v) => !v); setRules(false); }}>
             How does the AI work?
           </button>
         </div>
       </header>
 
+      {rules && <HowToPlay onClose={() => setRules(false)} />}
       {about && <AboutAI onClose={() => setAbout(false)} />}
 
       {(!me || editing) && (

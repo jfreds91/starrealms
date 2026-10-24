@@ -3,7 +3,14 @@ import { api, loadMe, socketUrl, type Me } from "../api";
 import { Link, navigate } from "../router";
 import { Table } from "../table/Table";
 import { seatName, type GameMeta, type View } from "../types";
+import { HowToPlay } from "./HowToPlay";
 import { NameForm } from "./Home";
+
+export interface ChatLine {
+  name: string;
+  seat: number | null;
+  text: string;
+}
 
 interface StateMsg {
   type: "state";
@@ -14,6 +21,7 @@ interface StateMsg {
   /** The viewer's chance to win, per the server's meter model. */
   meter: number | null;
   can_undo: boolean;
+  chat?: ChatLine[];
 }
 
 type Conn = "connecting" | "open" | "lost";
@@ -68,14 +76,19 @@ function useGameSocket(id: string, me: Me | null) {
     setBusy(true);
     ws.current.send(JSON.stringify(msg));
   };
-  return { state, conn, error, busy, send, clearError: () => setError(null) };
+  const sendChat = (text: string) => {
+    if (ws.current?.readyState !== WebSocket.OPEN) return;
+    ws.current.send(JSON.stringify({ type: "chat", text }));
+  };
+  return { state, conn, error, busy, send, sendChat, clearError: () => setError(null) };
 }
 
 export function OnlineGame({ id, join }: { id: string; join: boolean }) {
   const [me, setMe] = useState<Me | null>(loadMe);
-  const { state, conn, error, busy, send } = useGameSocket(id, me);
+  const { state, conn, error, busy, send, sendChat } = useGameSocket(id, me);
   const [joinErr, setJoinErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [rules, setRules] = useState(false);
   const game = state?.game;
   const openSeat = game?.seats.some((s) => s.kind === "open");
   const mySeat = state?.seat ?? null;
@@ -113,6 +126,8 @@ export function OnlineGame({ id, join }: { id: string; join: boolean }) {
           <h2>You're invited to a game of Star Realms</h2>
           <p className="muted">Pick a name to take your seat.</p>
           <NameForm me={null} cta="Join game" onDone={setMe} />
+          <button className="btn ghost small invite-rules" onClick={() => setRules(true)}>How to play</button>
+          {rules && <HowToPlay onClose={() => setRules(false)} />}
         </div>
       </div>
     );
@@ -161,6 +176,8 @@ export function OnlineGame({ id, join }: { id: string; join: boolean }) {
       onPlayAll={() => send({ type: "play_all", n: state.n })}
       onUndo={state.can_undo ? () => send({ type: "undo", n: state.n }) : undefined}
       meter={state.meter}
+      chat={state.chat ?? []}
+      onChat={me ? sendChat : undefined}
       notice={notice}
       menu={
         <>

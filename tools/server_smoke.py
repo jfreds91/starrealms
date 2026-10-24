@@ -77,6 +77,14 @@ async def two_player_game():
         watcher = asyncio.create_task(watch())
         assert post(f"/games/{gid}/join", token=bob["token"])["seat"] == 1
         async with websockets.connect(f"{WS}/api/games/{gid}/ws?token={bob['token']}") as wb:
+            await wa.send(json.dumps({"type": "chat", "text": "  hello bob  "}))
+            seen = False
+            for _ in range(6):
+                m = await recv_state(wb)
+                if any(c["text"] == "hello bob" and c["name"] == "Alice" and c["seat"] == 0 for c in m.get("chat", [])):
+                    seen = True
+                    break
+            assert seen, "bob should see alice's chat"
             socks = {0: wa, 1: wb}
             latest = {0: None, 1: None}
             rng = random.Random(7)
@@ -142,6 +150,7 @@ async def bot_game(spec_name):
             if s["type"] == "error":
                 continue
             if s["game"]["status"] == "finished":
+                assert s.get("chat") == [], "bots do not chat"
                 break
             if s["view"]["active"] == s["seat"] and s["view"]["actions"]:
                 await ws.send(json.dumps({"type": "act", "action": rng.choice(s["view"]["actions"])["id"], "n": s["n"]}))
